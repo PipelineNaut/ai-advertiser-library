@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.2: How Online Advertising Actually Works — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .pizza-card { background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(59,130,246,0.02) 100%); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+    .pizza-card .emoji { font-size: 2rem; margin-bottom: 8px; }
+    .pizza-card h4 { color: #3B82F6; margin: 0 0 6px 0; font-size: 1rem; }
+    .pizza-card .real-term { color: #666; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .pizza-card p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0; }
+    .funnel-step { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .funnel-step:last-child { border-bottom: none; }
+    .funnel-num { background: #3B82F6; color: #fff; width: 36px; height: 36px; min-width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+    .funnel-arrow { color: #3B82F6; font-size: 1.2rem; text-align: center; padding: 4px 0; }
+    .calc-container { background: #161616; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; overflow: hidden; }
+    .calc-header { background: rgba(59,130,246,0.1); padding: 20px 24px; border-bottom: 1px solid rgba(59,130,246,0.2); }
+    .calc-header h3 { color: #3B82F6; margin: 0; font-size: 1.1rem; }
+    .calc-body { padding: 24px; }
+    .calc-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .calc-row label { color: #ccc; font-size: 0.92rem; min-width: 200px; }
+    .calc-row input, .calc-row select { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 1rem; width: 140px; font-family: inherit; }
+    .calc-row input:focus { border-color: #3B82F6; outline: none; }
+    .calc-results { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px 24px; margin-top: 20px; }
+    .calc-result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .calc-result-row:last-child { border-bottom: none; }
+    .calc-result-label { color: #888; font-size: 0.9rem; }
+    .calc-result-value { color: #fff; font-weight: 700; font-size: 1rem; }
+    .calc-result-value.green { color: #22c55e; }
+    .calc-result-value.red { color: #ef4444; }
+    .real-example { background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .real-example h4 { color: #3B82F6; margin: 0 0 16px 0; }
+    .example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; text-align: center; }
+    .example-stat { background: rgba(59,130,246,0.06); border-radius: 8px; padding: 14px 8px; }
+    .example-stat .num { color: #3B82F6; font-size: 1.3rem; font-weight: 800; }
+    .example-stat .label { color: #888; font-size: 0.75rem; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.2 — Module 3: Fulfillment</div>
+      <h1>How Online Advertising <span>Actually Works</span></h1>
+      <div class="subtitle">
+        <span class="tag">Fulfillment</span>
+        <span class="tag">Beginner</span>
+        <span class="tag">~10 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Forget everything you think you know about ads. This lesson explains the entire thing using one example: a pizza shop. By the end, you'll be able to explain online advertising to any business owner in 60 seconds — and do the napkin math to show them why it's a no-brainer.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE PIZZA SHOP             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🍕</span> 1. The Pizza Shop — One Analogy to Rule Them All</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+        Imagine you're running ads for Tony's Pizza in Tampa. Tony's been around 15 years, makes a great pie, but his only marketing is a faded sign out front and some Yelp reviews from 2019. Here's how online ads work for Tony:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+        <div class="pizza-card">
+          <div class="emoji">💰</div>
+          <div class="real-term">Ad Spend / Budget</div>
+          <h4>Paying for flyers on doors</h4>
+          <p>Tony gives you $10/day. That's like paying someone to put flyers on doors. More money = more doors. But instead of random doors, Meta puts your flyer on the phones of people who actually order pizza.</p>
+        </div>
+        <div class="pizza-card">
+          <div class="emoji">🎯</div>
+          <div class="real-term">Targeting / Audience</div>
+          <h4>Choosing WHICH doors</h4>
+          <p>You don't put flyers on every door in Tampa. You pick: within 5 miles of Tony's, people aged 25-55, who've ordered food delivery before, who like Italian food. That's targeting. You're choosing who sees the ad.</p>
+        </div>
+        <div class="pizza-card">
+          <div class="emoji">🎨</div>
+          <div class="real-term">Creative / Ad</div>
+          <h4>The flyer itself</h4>
+          <p>The photo of the pizza. The headline ("Family Deal: 2 Large Pizzas, $24.99"). The coupon. That's your creative. A boring flyer gets thrown away. A good one makes them hungry and call.</p>
+        </div>
+        <div class="pizza-card">
+          <div class="emoji">👆</div>
+          <div class="real-term">Click / Engagement</div>
+          <h4>Someone picks up the flyer</h4>
+          <p>Out of 500 people who see your ad, maybe 15-25 actually tap on it. That's a click. They're interested enough to look closer. Now they're on Tony's page or website.</p>
+        </div>
+        <div class="pizza-card">
+          <div class="emoji">📞</div>
+          <div class="real-term">Conversion / Lead</div>
+          <h4>Someone calls and orders</h4>
+          <p>Out of those 15-25 clicks, maybe 3-5 people actually call, order online, or fill out a form. That's a conversion. That's money in Tony's register. That's what you're paid to deliver.</p>
+        </div>
+        <div class="pizza-card">
+          <div class="emoji">📊</div>
+          <div class="real-term">ROAS (Return on Ad Spend)</div>
+          <h4>Did Tony make more than he spent?</h4>
+          <p>Tony spent $10 on flyers. He got 3 orders worth $80 total. That's 8x ROAS. For every $1 Tony spent, he got $8 back. That's the number that keeps Tony paying you every month.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: WHERE YOUR $10 GOES        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔍</span> 2. Where Tony's $10 Actually Goes</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+        When Tony gives you $10/day to spend on ads, here's exactly what happens to that money:
+      </p>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 24px;">
+        <div class="funnel-step">
+          <div class="funnel-num">$10</div>
+          <div>
+            <div style="color: #fff; font-weight: 600;">Tony's daily ad budget</div>
+            <div style="color: #888; font-size: 0.85rem;">This goes straight to Meta (Facebook/Instagram)</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step">
+          <div class="funnel-num" style="background: #6366f1;">~$3</div>
+          <div>
+            <div style="color: #fff; font-weight: 600;">Meta's cut (platform profit)</div>
+            <div style="color: #888; font-size: 0.85rem;">Meta keeps ~30% as profit. That's their business model. The rest goes to showing your ad.</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step">
+          <div class="funnel-num" style="background: #8b5cf6;">500–1,000</div>
+          <div>
+            <div style="color: #fff; font-weight: 600;">People see Tony's ad (impressions)</div>
+            <div style="color: #888; font-size: 0.85rem;">Your ad shows up in their Instagram feed or Facebook. Most scroll past. That's normal.</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step">
+          <div class="funnel-num" style="background: #a855f7;">15–25</div>
+          <div>
+            <div style="color: #fff; font-weight: 600;">People tap on the ad (clicks)</div>
+            <div style="color: #888; font-size: 0.85rem;">2-5% click rate is normal. These people are interested. They land on Tony's page or website.</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step">
+          <div class="funnel-num" style="background: #22c55e;">3–5</div>
+          <div>
+            <div style="color: #fff; font-weight: 600;">People take action (conversions)</div>
+            <div style="color: #888; font-size: 0.85rem;">They call, order online, book an appointment, or fill out a form. This is what you're measured on.</div>
+          </div>
+        </div>
+        <div class="funnel-arrow">↓</div>
+        <div class="funnel-step">
+          <div class="funnel-num" style="background: #16a34a;">$80+</div>
+          <div>
+            <div style="color: #fff; font-weight: 600;">Revenue generated for Tony</div>
+            <div style="color: #888; font-size: 0.85rem;">3 pizza orders × ~$27 average = $80. Tony spent $10, made $80. That's 8x return. Tony's happy. You get paid.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 16px 20px; margin-top: 20px;">
+        <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0;">
+          <strong style="color: #3B82F6;">Key insight:</strong> Most of the people who see the ad won't click. Most people who click won't convert. That's normal. Your job is to make the numbers work so Tony makes more than he spends. If he does, he pays you forever.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: REAL EXAMPLE               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📸</span> 3. Real Numbers From a Real Campaign</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px;">
+        Here's what an actual local business campaign looks like after 30 days. This is the kind of result you're aiming for with your first client:
+      </p>
+
+      <div class="real-example">
+        <h4>🏪 Local Service Business — 30 Day Results</h4>
+        <div class="example-grid">
+          <div class="example-stat">
+            <div class="num">$312</div>
+            <div class="label">Total ad spend</div>
+          </div>
+          <div class="example-stat">
+            <div class="num">31,400</div>
+            <div class="label">People saw the ad</div>
+          </div>
+          <div class="example-stat">
+            <div class="num">847</div>
+            <div class="label">Clicks</div>
+          </div>
+          <div class="example-stat">
+            <div class="num">47</div>
+            <div class="label">Leads</div>
+          </div>
+          <div class="example-stat">
+            <div class="num">31</div>
+            <div class="label">Booked jobs</div>
+          </div>
+          <div class="example-stat">
+            <div class="num" style="color: #22c55e;">$4,200</div>
+            <div class="label">Revenue generated</div>
+          </div>
+        </div>
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(59,130,246,0.15);">
+          <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div><span style="color: #888; font-size: 0.85rem;">Cost per lead:</span> <span style="color: #fff; font-weight: 700;">$6.64</span></div>
+            <div><span style="color: #888; font-size: 0.85rem;">Cost per booked job:</span> <span style="color: #fff; font-weight: 700;">$10.06</span></div>
+            <div><span style="color: #888; font-size: 0.85rem;">ROAS:</span> <span style="color: #22c55e; font-weight: 700;">13.5x</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6;">
+        This business spent $312 and made $4,200. For every dollar they spent, they got $13.50 back. When you show numbers like this on a sales call, the client doesn't need convincing. The math does the selling.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: NAPKIN MATH CALCULATOR     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧮</span> 4. Napkin Math Calculator</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+        Use this to run the numbers for any niche before you pitch a client. Change the inputs and see if the math makes sense. If it does, it's a good niche. If it doesn't, move on.
+      </p>
+
+      <div class="calc-container">
+        <div class="calc-header">
+          <h3>🍕 Napkin Math — Will This Client Be Profitable?</h3>
+        </div>
+        <div class="calc-body">
+          <div class="calc-row">
+            <label>Average customer value ($)</label>
+            <input type="number" id="calcCustomerValue" value="135" min="1" oninput="calculate()">
+          </div>
+          <div class="calc-row">
+            <label>Daily ad budget ($)</label>
+            <input type="number" id="calcDailyBudget" value="15" min="1" oninput="calculate()">
+          </div>
+          <div class="calc-row">
+            <label>Estimated cost per lead ($)</label>
+            <input type="number" id="calcCPL" value="8" min="1" oninput="calculate()">
+          </div>
+          <div class="calc-row">
+            <label>Lead → Customer conversion rate (%)</label>
+            <input type="number" id="calcConvRate" value="65" min="1" max="100" oninput="calculate()">
+          </div>
+          <div class="calc-row">
+            <label>Your monthly fee ($)</label>
+            <input type="number" id="calcFee" value="2000" min="0" oninput="calculate()">
+          </div>
+
+          <div class="calc-results" id="calcResults">
+            <!-- filled by JS -->
+          </div>
+
+          <div style="margin-top: 16px;">
+            <p style="color: #666; font-size: 0.82rem; line-height: 1.5;">
+              <strong style="color: #888;">How to use this on a sales call:</strong> "Mr. Tony, your average pizza order is $27 and you get about 3 orders per customer over time, so each customer is worth about $80. If I can get you customers for $10 each, would you pay me $2,000/month for that?" Pull up this calculator on your phone and show them live.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: THE 60-SECOND PITCH        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🗣️</span> 5. The 60-Second Explanation (Use This on Calls)</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 28px;">
+        <p style="color: #ccc; font-size: 0.95rem; line-height: 1.8; margin: 0; font-style: italic;">
+          "Here's how it works in simple terms. I put an ad for your business on Facebook and Instagram. That ad shows up on the phone of people in your area who are already looking for what you sell. When they see it, they tap on it and either call you, book online, or fill out a form. You get the customer, you make money. My job is to make sure you're getting way more back than you're spending on the ads. Most of our clients see a 5 to 10x return — meaning for every dollar they put in, they get five to ten dollars back. And I handle everything. You just answer the phone."
+        </p>
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin-top: 12px;">
+        Memorize this. Practice it until it sounds natural. This is how you explain ads to a business owner who's never run one. No jargon. No confusion. Just "I put your ad in front of the right people and you get customers."
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: JARGON CHEAT SHEET        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📖</span> 6. Jargon → English Cheat Sheet</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        You'll hear these terms in Ads Manager. Here's what they mean in plain English:
+      </p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(59,130,246,0.2); background: rgba(59,130,246,0.06);">
+          <div style="padding: 12px 20px; font-weight: 700; color: #3B82F6; font-size: 0.85rem;">JARGON</div>
+          <div style="padding: 12px 20px; font-weight: 700; color: #3B82F6; font-size: 0.85rem;">WHAT IT ACTUALLY MEANS</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">Impression</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">Someone saw your ad (scrolled past it)</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">CTR (Click-Through Rate)</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">% of people who tapped the ad. 2-5% is normal.</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">CPM</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">Cost per 1,000 views. How expensive it is to show your ad. $5-15 is normal for local.</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">CPC (Cost Per Click)</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">How much each tap costs you. $0.50-$3 is normal for local.</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">CPL (Cost Per Lead)</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">How much each phone call / form fill costs. $5-25 for local businesses.</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">CPA (Cost Per Acquisition)</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">How much a paying customer costs you. This is the number that matters most.</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">ROAS</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">Return on ad spend. Spent $100, made $500 = 5x ROAS. Above 3x is good for most local businesses.</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">Pixel</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">A tracking code on the website that tells Meta "this person bought / called / booked."</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr;">
+          <div style="padding: 12px 20px; color: #fff; font-weight: 600; font-size: 0.9rem;">Learning Phase</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.9rem;">First 3-7 days where Meta figures out who responds to your ad. Results are messy. Don't panic.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 7. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Explain online ads using the pizza shop analogy</strong>
+            <span>Practice saying it out loud. If you can explain it to a 10-year-old using the pizza shop, you can explain it to any business owner.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Understand the funnel: impressions → clicks → leads → customers</strong>
+            <span>500-1000 people see it → 15-25 click → 3-5 convert. These ratios are normal. Don't expect 100% of anything.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Run the napkin math for your niche</strong>
+            <span>Use the calculator above. Plug in your niche's average customer value, realistic CPL, and see if the math works at $2K/month fee.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Memorize the 60-second explanation</strong>
+            <span>Say it out loud 5 times. Record yourself. Play it back. Does it sound like a person explaining something simple, or does it sound like a sales pitch?</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Know all 10 jargon terms in plain English</strong>
+            <span>Impression, CTR, CPM, CPC, CPL, CPA, ROAS, Pixel, Learning Phase. You don't need to use these with clients. You need to know them for Ads Manager.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Understand ROAS is the number that keeps clients paying</strong>
+            <span>Above 3x = client is happy. Above 5x = client never leaves. Below 2x = you need to optimize or the client churns.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>beginner</span><span>advertising-basics</span><span>napkin-math</span><span>ROAS</span><span>sales-calls</span><span>client-pitch</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.1-fulfillment-overview.html" class="nav-link">← Fulfillment Overview</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.3-the-ad-platforms.html" class="nav-link">The Ad Platforms →</a>
+    </div>
+  </div>
+
+  <script>
+    // === NAPKIN MATH CALCULATOR ===
+    function calculate() {
+      const cv = parseFloat(document.getElementById('calcCustomerValue').value) || 0;
+      const daily = parseFloat(document.getElementById('calcDailyBudget').value) || 0;
+      const cpl = parseFloat(document.getElementById('calcCPL').value) || 1;
+      const convRate = (parseFloat(document.getElementById('calcConvRate').value) || 0) / 100;
+      const fee = parseFloat(document.getElementById('calcFee').value) || 0;
+
+      const monthlySpend = daily * 30;
+      const leadsPerMonth = Math.round(monthlySpend / cpl);
+      const customersPerMonth = Math.round(leadsPerMonth * convRate);
+      const revenueGenerated = customersPerMonth * cv;
+      const roas = monthlySpend > 0 ? (revenueGenerated / monthlySpend).toFixed(1) : 0;
+      const clientTotalCost = monthlySpend + fee;
+      const clientProfit = revenueGenerated - clientTotalCost;
+      const roasClass = roas >= 3 ? 'green' : roas >= 1.5 ? '' : 'red';
+      const profitClass = clientProfit >= 0 ? 'green' : 'red';
+
+      document.getElementById('calcResults').innerHTML = `
+        <div style="color: #3B82F6; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Monthly Projection</div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">Monthly ad spend</span>
+          <span class="calc-result-value">$${monthlySpend.toLocaleString()}</span>
+        </div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">Leads per month</span>
+          <span class="calc-result-value">${leadsPerMonth}</span>
+        </div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">Customers per month (at ${Math.round(convRate*100)}% conversion)</span>
+          <span class="calc-result-value">${customersPerMonth}</span>
+        </div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">Revenue generated for client</span>
+          <span class="calc-result-value green">$${revenueGenerated.toLocaleString()}</span>
+        </div>
+        <div class="calc-result-row">
+          <span class="calc-result-label">ROAS</span>
+          <span class="calc-result-value ${roasClass}">${roas}x</span>
+        </div>
+        <div class="calc-result-row" style="border-top: 1px solid rgba(59,130,246,0.2); padding-top: 12px; margin-top: 4px;">
+          <span class="calc-result-label">Client's total cost (ads + your fee)</span>
+          <span class="calc-result-value">$${clientTotalCost.toLocaleString()}</span>
+        </div>
+        <div class="calc-result-row">
+          <span class="calc-result-label"><strong style="color:#fff;">Client's net profit from ads</strong></span>
+          <span class="calc-result-value ${profitClass}">$${clientProfit.toLocaleString()}</span>
+        </div>
+        <div style="margin-top: 12px; padding: 12px 16px; background: rgba(${clientProfit >= 0 ? '34,197,94' : '239,68,68'},0.08); border-radius: 8px;">
+          <p style="color: ${clientProfit >= 0 ? '#22c55e' : '#ef4444'}; font-size: 0.88rem; margin: 0; font-weight: 600;">
+            ${clientProfit >= 0
+              ? `✅ Client spends $${clientTotalCost.toLocaleString()}/mo (ads + your fee) and gets $${revenueGenerated.toLocaleString()} back. That's a no-brainer.`
+              : `⚠️ Client loses money at these numbers. Lower your fee, lower CPL, or pick a niche with higher customer value.`}
+          </p>
+        </div>
+      `;
+    }
+    calculate();
+
+    // === CHECKLIST PROGRESS ===
+    const STORAGE_KEY = 'ai-adv-3.2-advertising-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

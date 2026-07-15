@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.10: Automated Lead Scraping — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card { background: #161616; border-radius: 12px; padding: 20px; }
+    .compare-card h4 { margin: 0 0 8px 0; font-size: 0.95rem; }
+    .compare-card p { color: #888; font-size: 0.82rem; line-height: 1.5; margin: 0; }
+    .compare-card ul { color: #888; font-size: 0.82rem; line-height: 1.8; padding-left: 18px; margin: 8px 0 0; }
+    .flow-step { display: flex; align-items: flex-start; gap: 16px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-num { background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; min-width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .flow-text strong { color: #fff; display: block; font-size: 0.9rem; margin-bottom: 2px; }
+    .flow-text span { color: #888; font-size: 0.82rem; }
+    .screenshot-placeholder { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px 20px; margin: 16px 0; text-align: center; }
+    .screenshot-placeholder p { color: #555; font-size: 0.8rem; margin: 0; }
+    .screenshot-placeholder .label { color: #888; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.10 — Module 5: AI Integration</div>
+      <h1>Automated <span>Lead Scraping</span></h1>
+      <div class="subtitle">
+        <span class="tag">Advanced</span>
+        <span class="tag">Automation</span>
+        <span class="tag">~20 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">In lesson 5.9 you learned how to scrape leads manually with Claude Code. This lesson turns that into an automated system. One command, 50 scored prospects land in your Google Sheet automatically. Run it every Monday morning and never worry about finding clients again.</div>
+
+    <!-- DOWNLOAD -->
+    <div class="section">
+      <h2><span class="icon">📦</span> Download the Tool</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Download the zip, unzip it into your Claude Code project folder, and you're ready to go. Claude reads the instructions automatically and sets everything up for you.</p>
+
+      <a href="../downloads/lead-scraper.zip" download style="display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05)); border: 2px solid rgba(59,130,246,0.4); border-radius: 14px; padding: 24px; text-decoration: none; transition: border-color 0.2s; margin-bottom: 16px;">
+        <div style="font-size: 2.5rem;">📥</div>
+        <div>
+          <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Download Lead Scraper</div>
+          <div style="color: #3B82F6; font-size: 0.85rem; margin-top: 2px;">lead-scraper.zip — 6 KB</div>
+          <div style="color: #888; font-size: 0.78rem; margin-top: 4px;">Includes: scrape.py, INSTRUCTIONS.md, README, requirements.txt, prospects/ folder</div>
+        </div>
+      </a>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px;">
+        <p style="color: #fff; font-weight: 700; font-size: 0.9rem; margin: 0 0 12px;">After downloading:</p>
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; padding-left: 20px; margin: 0;">
+          <li>Unzip the folder into your Claude Code project</li>
+          <li>Open it in Claude Code (VS Code)</li>
+          <li>Tell Claude: <strong style="color: #3B82F6;">"Read lead-scraper/INSTRUCTIONS.md and set up the lead scraper for me. Make the search function work with real web search."</strong></li>
+          <li>Claude reads the INSTRUCTIONS.md automatically and configures everything</li>
+          <li>Run: <code style="color: #3B82F6;">python scrape.py "dentists" "Tampa, FL"</code></li>
+        </ol>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 The INSTRUCTIONS.md file is the magic. When you tell Claude to read it, it and knows exactly what to do. It'll make the search function work with real data, set up Google Sheets if you want, and walk you through everything.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MANUAL VS AUTOMATED                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Manual vs Automated</h2>
+
+      <div class="compare-grid">
+        <div class="compare-card" style="border: 1px solid rgba(255,255,255,0.08);">
+          <h4 style="color: #888;">Lesson 5.9 (Manual)</h4>
+          <ul>
+            <li>Paste a prompt into Claude Code</li>
+            <li>Claude gives you a markdown table</li>
+            <li>You copy it into a spreadsheet</li>
+            <li>Add tracking columns yourself</li>
+            <li>Repeat every week manually</li>
+          </ul>
+        </div>
+        <div class="compare-card" style="border: 1px solid rgba(59,130,246,0.3);">
+          <h4 style="color: #3B82F6;">Lesson 5.10 (Automated)</h4>
+          <ul>
+            <li>Run one command in Claude Code</li>
+            <li>Claude builds the scraping script for you</li>
+            <li>Prospects go directly to Google Sheets</li>
+            <li>Pre-formatted with scores and tracking</li>
+            <li>Schedule it to run every Monday automatically</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Do lesson 5.9 first.</strong> You need to understand the manual process before automating it. If you haven't done 5.9 yet, go back and do it. Automation without understanding is a mess.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HOW IT WORKS                           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> How the System Works</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">You're going to ask Claude Code to build you a tool. Here's what the tool does:</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px;">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">
+            <strong>You type a command</strong>
+            <span>Example: python scrape.py "dentists" "Tampa, FL"</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text">
+            <strong>The script searches for businesses</strong>
+            <span>Pulls name, phone, website, address, Google rating, review count from web search results</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">
+            <strong>Checks the Meta Ad Library</strong>
+            <span>Sees which businesses are running Facebook/Instagram ads and how many</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-text">
+            <strong>Scores each prospect 1-5</strong>
+            <span>Same scoring from 5.9 (5 = bad ads = easiest close, 1 = no presence = skip)</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-text">
+            <strong>Pushes everything to Google Sheets</strong>
+            <span>New tab for each scrape. Pre-formatted with outreach tracking columns. Sorted by score.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 1: BUILD THE TOOL                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> Step 1: Ask Claude Code to Build the Tool</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Open Claude Code and paste this prompt. Claude will build the entire scraping tool for you.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Build me an automated lead scraping tool for my ad agency. Here's exactly what I need:
+
+1. A Python script called scrape.py that takes two arguments: a niche and a city
+   Example usage: python scrape.py "dentists" "Tampa, FL"
+
+2. The script should:
+   - Search the web for 50 businesses matching that niche and city
+   - For each business, collect: name, phone number, website URL, address, Google rating, number of reviews, whether they have a Facebook page
+   - Check the Meta Ad Library to see if each business is running Facebook/Instagram ads
+   - Score each prospect 1-5:
+     * 5 = running ads that look low quality (easiest to close)
+     * 4 = running ads, decent quality
+     * 3 = has Facebook page but no ads
+     * 2 = no Facebook page but good reviews (3.5+ stars)
+     * 1 = no online presence
+   - Filter out businesses with less than 3.5 stars or fewer than 20 reviews
+   - Sort by score (highest first), then by rating
+
+3. Output the results to Google Sheets:
+   - Connect to Google Sheets API using a service account
+   - Create a new tab named "[City] - [Niche] - [Date]"
+   - Columns: Score, Business Name, Phone, Website, Address, Rating, Reviews, Facebook Page, Running Ads, Number of Ads, Ad Quality Notes, Outreach Date, Response, Notes, Follow-Up Date
+   - Format the header row bold with a light blue background
+   - Auto-resize columns to fit content
+   - Also save a local CSV backup in a prospects/ folder
+
+4. Include a README with:
+   - How to set up Google Sheets API credentials (step by step for beginners)
+   - How to run the script
+   - How to change the Google Sheet ID
+
+5. Include a requirements.txt with all dependencies
+
+Make sure the script handles errors gracefully. If it can't find info for a business, leave that field blank instead of crashing. Print progress to the terminal so I can see it working.
+
+Create everything in a folder called lead-scraper/</pre>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Claude Code building the scraping tool</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Claude builds the whole thing.</strong> You don't need to write any code. Claude creates the script, the README, the requirements file, everything. You just paste the prompt and let it work.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 2: GOOGLE SHEETS SETUP            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> Step 2: Connect Google Sheets</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">The script needs permission to write to your Google Sheet. Claude's README will walk you through this, but here's the overview:</p>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Create a Google Sheet</h4>
+        <p>Go to <a href="https://sheets.google.com" target="_blank" style="color: #3B82F6;">sheets.google.com</a> and create a new spreadsheet. Name it something like "Agency Prospects". Copy the Sheet ID from the URL (the long string of letters and numbers between /d/ and /edit).</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Set Up Google API Credentials</h4>
+        <p>Go to <a href="https://console.cloud.google.com" target="_blank" style="color: #3B82F6;">console.cloud.google.com</a>. Create a project, enable the Google Sheets API, and create a service account. Download the JSON key file.</p>
+        <p>If this sounds confusing, don't worry. Just tell Claude Code:</p>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Walk me through setting up Google Sheets API credentials step by step. I'm a complete beginner. Tell me exactly what to click.</pre>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Share the Sheet</h4>
+        <p>Share your Google Sheet with the service account email (it looks like something@your-project.iam.gserviceaccount.com). Give it Editor access.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 4">
+        <h4>Add Your Sheet ID to the Script</h4>
+        <p>Open the config file Claude created and paste your Sheet ID. That's it. The script now has permission to write to your spreadsheet.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Google Sheet with prospect data populated by the script</div>
+        <p>Screenshot will be added here</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 3: RUN IT                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">▶️</span> Step 3: Run the Scraper</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Install the dependencies and run it:</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>cd lead-scraper
+pip install -r requirements.txt
+python scrape.py "dentists" "Tampa, FL"</pre>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 12px 0;">You'll see progress in the terminal as it finds businesses, checks the Ad Library, and scores each one. When it's done, open your Google Sheet. Fresh tab with all your prospects.</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin: 16px 0;">
+        <p style="color: #fff; font-weight: 700; font-size: 0.9rem; margin: 0 0 12px;">More examples:</p>
+        <div class="code-block" style="margin: 8px 0;">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>python scrape.py "HVAC companies" "Phoenix, AZ"</pre>
+        </div>
+        <div class="code-block" style="margin: 8px 0;">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>python scrape.py "med spas" "Miami, FL"</pre>
+        </div>
+        <div class="code-block" style="margin: 8px 0;">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>python scrape.py "gyms" "Austin, TX"</pre>
+        </div>
+        <div class="code-block" style="margin: 8px 0;">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>python scrape.py "roofing contractors" "Dallas, TX"</pre>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Run it for multiple niches.</strong> Each run creates a new tab in your Google Sheet. By the end of the week you could have 200+ prospects across 4 different niches, all scored and organized.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 4: SCHEDULE IT                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Step 4: Schedule It (Optional)</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Want it to run every Monday morning automatically? Ask Claude Code:</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Set up a weekly schedule so my lead scraper runs automatically every Monday at 8 AM. I want it to scrape these niches and cities:
+
+1. "dentists" in "Tampa, FL"
+2. "HVAC companies" in "Tampa, FL"  
+3. "med spas" in "Tampa, FL"
+
+Each one should create a new tab in my Google Sheet. Send me a notification when it's done (email or Slack or Discord, whatever is easiest to set up).</pre>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 12px 0;">Claude will set up a cron job (Mac/Linux) or Task Scheduler (Windows) to run the script on a schedule. You wake up Monday morning with 150 fresh prospects in your Google Sheet.</p>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Your computer needs to be on.</strong> The schedule runs on your machine. If your laptop is closed Monday morning, it won't run. If that's a problem, ask Claude to set it up on a free cloud service instead (like a GitHub Action or a small server).</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 5: WORK THE LIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📞</span> Step 5: Work the List</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">The automation gets you the list. YOU still do the outreach. That's where the money is.</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px;">
+        <div class="flow-step">
+          <div class="flow-num" style="background: #22c55e;">1</div>
+          <div class="flow-text">
+            <strong>Monday morning: review your fresh sheet</strong>
+            <span>Sort by Score 5 first. Those are businesses running bad ads. Start there.</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num" style="background: #22c55e;">2</div>
+          <div class="flow-text">
+            <strong>Quick-check their ads in Meta Ad Library</strong>
+            <span>Spend 30 seconds per prospect. Note what's bad about their ads. That's your opener.</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num" style="background: #3B82F6;">3</div>
+          <div class="flow-text">
+            <strong>Send personalized outreach to your top 15</strong>
+            <span>Use the templates from lesson 5.9. Mention their specific ads or competitors.</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num" style="background: #3B82F6;">4</div>
+          <div class="flow-text">
+            <strong>Update the tracking columns in your Sheet</strong>
+            <span>Mark outreach date, response, and schedule follow-ups for Wednesday.</span>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num" style="background: rgba(59,130,246,0.4);">5</div>
+          <div class="flow-text">
+            <strong>Follow up Wednesday and Friday</strong>
+            <span>Most replies come on the 2nd or 3rd touch. Don't skip follow-ups.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't automate the outreach.</strong> Scraping is fine to automate. Outreach is not. Personalized messages from a real person convert. Mass-blasted AI messages get ignored and can get your accounts flagged.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TROUBLESHOOTING                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔧</span> If Something Breaks</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Just ask Claude Code to fix it. Copy the error and paste it:</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>I ran the scraper and got this error: [paste the error here]
+
+Fix it and explain what went wrong.</pre>
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin: 12px 0;">Common issues:</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; margin-bottom: 8px;">
+        <p style="color: #fff; font-weight: 600; font-size: 0.88rem; margin: 0;">"Google Sheets permission denied"</p>
+        <p style="color: #888; font-size: 0.82rem; margin: 4px 0 0;">You forgot to share the sheet with the service account email. Go back to Step 2.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; margin-bottom: 8px;">
+        <p style="color: #fff; font-weight: 600; font-size: 0.88rem; margin: 0;">"Module not found"</p>
+        <p style="color: #888; font-size: 0.82rem; margin: 4px 0 0;">Run pip install -r requirements.txt again. A dependency didn't install.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; margin-bottom: 8px;">
+        <p style="color: #fff; font-weight: 600; font-size: 0.88rem; margin: 0;">"Rate limited" or "Too many requests"</p>
+        <p style="color: #888; font-size: 0.82rem; margin: 4px 0 0;">You're searching too fast. Tell Claude to add a delay between searches (2-3 seconds per business).</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+        <p style="color: #fff; font-weight: 600; font-size: 0.88rem; margin: 0;">"Script found 0 businesses"</p>
+        <p style="color: #888; font-size: 0.82rem; margin: 4px 0 0;">Your niche or city might be too specific. Try a broader search ("restaurants" instead of "Italian restaurants") or a bigger city.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHECKLIST                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> Homework Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Automation Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="autoChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Completed lesson 5.9 (manual lead scraping)</strong>
+            <span>Don't skip the basics. You need to understand the process first.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Pasted the build prompt into Claude Code</strong>
+            <span>Let Claude build the entire lead-scraper/ tool for you</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Created a Google Sheet and connected API credentials</strong>
+            <span>Service account key + shared the sheet with the service account email</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Ran the scraper for your first niche + city</strong>
+            <span>python scrape.py "[niche]" "[city, state]"</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Verified prospects appeared in your Google Sheet</strong>
+            <span>New tab, scored, sorted, with tracking columns</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Ran it for a second niche or city</strong>
+            <span>Each run = new tab. Build a library of prospects.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>(Optional) Set up the weekly schedule</strong>
+            <span>Automate Monday morning scrapes so you wake up with fresh leads</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c8">
+          <label class="check-content" for="c8">
+            <strong>Sent outreach to your top 10 Score-5 prospects</strong>
+            <span>The tool finds them. YOU close them.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>automation</span><span>lead-scraping</span><span>claude-code</span><span>google-sheets</span><span>prospecting</span><span>advanced</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.9-lead-scraping.html" class="nav-link">← Manual Lead Scraping</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.1-intro-ai-media-buying.html" class="nav-link">Back to Module 5 →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.10-auto-scrape-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

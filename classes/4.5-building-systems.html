@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4.5: Building Systems — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 4.5 — Module 4: Scaling</div>
+      <h1>Building Systems — <span>The 80/15/5 Rule</span></h1>
+      <div class="subtitle">
+        <span class="tag">SOPs</span>
+        <span class="tag">Systems</span>
+        <span class="tag">~20 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">The difference between a freelancer and a business owner is systems. A freelancer does everything from scratch. A business owner has SOPs, templates, and workflows that make everything repeatable. This lesson builds your entire operating system.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: 80/15/5 RULE               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> 1. The 80/15/5 Rule</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Here's how your work should be distributed when your systems are running:</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="color: #3B82F6; font-weight: 800; font-size: 2.5rem;">80%</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-top: 4px;">AI Does This</div>
+          <div style="color: #888; font-size: 0.78rem; margin-top: 8px;">Ad copy, creative concepts, audience research, report drafts, optimization suggestions</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="color: #22c55e; font-weight: 800; font-size: 2.5rem;">15%</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-top: 4px;">VA Does This</div>
+          <div style="color: #888; font-size: 0.78rem; margin-top: 8px;">Uploads, formatting, screenshots, scheduling, file organization, data entry</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(139,92,246,0.2); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="color: #a78bfa; font-weight: 800; font-size: 2.5rem;">5%</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-top: 4px;">YOU Do This</div>
+          <div style="color: #888; font-size: 0.78rem; margin-top: 8px;">Strategy decisions, client calls, approvals, quality control, new business</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.2); border-radius: 10px; padding: 16px 20px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #a78bfa;">Your 5% is the highest-value work:</strong> Making decisions, talking to clients, and approving deliverables. Everything else should run without you touching it. That's how you manage 7 clients in 2-3 hours per day.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE 5 SOPs                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 2. The 5 SOPs You Need</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">SOP = Standard Operating Procedure. It's just a document that says "here's how we do X." You need exactly 5:</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: #161616; border-left: 4px solid #3B82F6; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="color: #3B82F6; font-weight: 800; font-size: 0.9rem; margin-bottom: 8px;">SOP 1: Client Onboarding</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">
+            New client signs → Get business info → Set up Business Manager access → Install pixel → Create campaign structure → Launch first ads → Send welcome email with expectations.
+            <div style="color: #ccc; margin-top: 6px;"><strong>Time to build:</strong> 30 min (you already did this in Module 3)</div>
+          </div>
+        </div>
+
+        <div style="background: #161616; border-left: 4px solid #22c55e; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="color: #22c55e; font-weight: 800; font-size: 0.9rem; margin-bottom: 8px;">SOP 2: Campaign Launch</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">
+            AI generates ad copy → AI generates creatives → VA uploads to Ads Manager → You review → Set targeting (location + broad) → Set budget → Launch → Monitor first 48 hours.
+            <div style="color: #ccc; margin-top: 6px;"><strong>Time to build:</strong> 20 min</div>
+          </div>
+        </div>
+
+        <div style="background: #161616; border-left: 4px solid #eab308; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="color: #eab308; font-weight: 800; font-size: 0.9rem; margin-bottom: 8px;">SOP 3: Weekly Optimization</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">
+            VA takes screenshots → You review metrics → Kill ads with CPL 2x+ target → Duplicate winners with new audiences → Increase budget on winners by 20% max → Note changes in tracker.
+            <div style="color: #ccc; margin-top: 6px;"><strong>Time to build:</strong> 20 min</div>
+          </div>
+        </div>
+
+        <div style="background: #161616; border-left: 4px solid #a78bfa; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="color: #a78bfa; font-weight: 800; font-size: 0.9rem; margin-bottom: 8px;">SOP 4: Weekly & Monthly Reporting</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">
+            VA fills in report template with numbers → You add insights and recommendations → VA formats and sends → Monthly: same but more detailed + strategy call prep.
+            <div style="color: #ccc; margin-top: 6px;"><strong>Time to build:</strong> 15 min (templates from lessons 3.11 and 4.2)</div>
+          </div>
+        </div>
+
+        <div style="background: #161616; border-left: 4px solid #ef4444; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="color: #ef4444; font-weight: 800; font-size: 0.9rem; margin-bottom: 8px;">SOP 5: Creative Refresh</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">
+            Identify fatigued creatives (frequency 3+, CTR dropping) → AI generates 5-10 new ad copy variations → AI generates new images → VA uploads → You review and launch → Test for 3-5 days.
+            <div style="color: #ccc; margin-top: 6px;"><strong>Time to build:</strong> 20 min</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open Google Docs. Create a new doc titled "SOP: Weekly Optimization." Write out the steps live. Show how simple it is — just numbered steps with Loom links.</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: FOLDER STRUCTURE           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📂</span> 3. Google Drive Folder Structure</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every client gets the same folder structure. Duplicate it, don't recreate it.</p>
+
+      <div style="background: #0a0a0a; border: 1px solid rgba(37,99,235,0.3); border-radius: 12px; padding: 20px;">
+        <div style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; line-height: 2; color: #ccc;">
+          <div>📁 <strong style="color: #3B82F6;">Agency</strong></div>
+          <div style="padding-left: 24px;">📁 <strong style="color: #fff;">SOPs</strong> — All 5 SOP docs</div>
+          <div style="padding-left: 24px;">📁 <strong style="color: #fff;">Templates</strong> — Report templates, proposal templates</div>
+          <div style="padding-left: 24px;">📁 <strong style="color: #fff;">_CLIENT TEMPLATE</strong> — Duplicate this for each new client</div>
+          <div style="padding-left: 48px;">📁 01-Onboarding — Contract, business info, access checklist</div>
+          <div style="padding-left: 48px;">📁 02-Creatives — Ad images, videos, copy docs</div>
+          <div style="padding-left: 48px;">📁 03-Reports — Weekly and monthly reports</div>
+          <div style="padding-left: 48px;">📁 04-Assets — Logos, brand colors, fonts, photos</div>
+          <div style="padding-left: 48px;">📁 05-Notes — Call notes, strategy docs</div>
+          <div style="padding-left: 24px;">📁 <strong style="color: #22c55e;">Tony's Pizza</strong> — (duplicated from template)</div>
+          <div style="padding-left: 24px;">📁 <strong style="color: #22c55e;">Bright Smile Dental</strong> — (duplicated from template)</div>
+          <div style="padding-left: 24px;">📁 <strong style="color: #22c55e;">FitZone Gym</strong> — (duplicated from template)</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">The golden rule:</strong> Templates → Duplicate → Don't Recreate. Every new client should take 5 minutes to set up because you're just duplicating a folder and renaming it.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: OPS HUB                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎛️</span> 4. Your Operations Hub (Google Sheets)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">You need ONE place to see everything at a glance. A simple Google Sheet with 3 tabs:</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #3B82F6; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">Tab 1: Client Dashboard</div>
+          <div style="font-size: 0.82rem; color: #888;">
+            Columns: Client Name | Retainer | Start Date | Ad Spend | Next Report Due | Next Call | Status | Notes
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">Tab 2: Task Tracker</div>
+          <div style="font-size: 0.82rem; color: #888;">
+            Columns: Task | Client | Assigned To (You/VA) | Due Date | Status (To Do / In Progress / Done)
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(234,179,8,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #eab308; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">Tab 3: Revenue Tracker</div>
+          <div style="font-size: 0.82rem; color: #888;">
+            Columns: Month | Revenue | Expenses (VA, tools, ads) | Net Profit | # of Clients | Revenue Per Client
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: WORKFLOW EXAMPLE           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 5. A Real Workflow: Creative Refresh (Example)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Here's how the 80/15/5 rule works in practice for a creative refresh:</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px;">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: rgba(139,92,246,0.2); color: #a78bfa; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; flex-shrink: 0;">YOU</div>
+            <div>
+              <div style="color: #a78bfa; font-weight: 700; font-size: 0.85rem;">Notice CTR dropping → decide it's time for new creatives</div>
+              <div style="color: #666; font-size: 0.75rem; margin-top: 2px;">⏱️ 2 minutes</div>
+            </div>
+          </div>
+          <div style="text-align: center; color: #333;">↓</div>
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: rgba(59,130,246,0.2); color: #3B82F6; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0;">AI</div>
+            <div>
+              <div style="color: #3B82F6; font-weight: 700; font-size: 0.85rem;">Generate 10 new ad copy variations + 5 image concepts</div>
+              <div style="color: #666; font-size: 0.75rem; margin-top: 2px;">⏱️ 10 minutes</div>
+            </div>
+          </div>
+          <div style="text-align: center; color: #333;">↓</div>
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: rgba(139,92,246,0.2); color: #a78bfa; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; flex-shrink: 0;">YOU</div>
+            <div>
+              <div style="color: #a78bfa; font-weight: 700; font-size: 0.85rem;">Review and pick the best 5 copy + 3 images</div>
+              <div style="color: #666; font-size: 0.75rem; margin-top: 2px;">⏱️ 5 minutes</div>
+            </div>
+          </div>
+          <div style="text-align: center; color: #333;">↓</div>
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: rgba(34,197,94,0.2); color: #22c55e; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0;">VA</div>
+            <div>
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.85rem;">Upload to Ads Manager, set up ad variations, save to Drive</div>
+              <div style="color: #666; font-size: 0.75rem; margin-top: 2px;">⏱️ 15 minutes</div>
+            </div>
+          </div>
+          <div style="text-align: center; color: #333;">↓</div>
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: rgba(139,92,246,0.2); color: #a78bfa; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.7rem; flex-shrink: 0;">YOU</div>
+            <div>
+              <div style="color: #a78bfa; font-weight: 700; font-size: 0.85rem;">Final review → hit publish</div>
+              <div style="color: #666; font-size: 0.75rem; margin-top: 2px;">⏱️ 3 minutes</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center;">
+          <div style="color: #fff; font-weight: 800; font-size: 0.95rem;">Total: 35 minutes. Your time: 10 minutes.</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Without systems, this takes 2+ hours and it's all you.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section">
+      <h2><span class="icon">✅</span> Lesson Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li><input type="checkbox" id="c1"><label class="check-content" for="c1"><strong>Understand the 80/15/5 rule</strong><span>AI does 80%, VA does 15%, you do 5%. If you're doing more than 5%, you don't have systems yet.</span></label></li>
+        <li><input type="checkbox" id="c2"><label class="check-content" for="c2"><strong>Create your 5 SOP documents</strong><span>Client onboarding, campaign launch, weekly optimization, reporting, creative refresh. Google Docs + Loom links.</span></label></li>
+        <li><input type="checkbox" id="c3"><label class="check-content" for="c3"><strong>Set up your Google Drive folder structure</strong><span>Create the _CLIENT TEMPLATE folder with 5 subfolders. Duplicate for each client.</span></label></li>
+        <li><input type="checkbox" id="c4"><label class="check-content" for="c4"><strong>Build your Operations Hub spreadsheet</strong><span>Google Sheet with 3 tabs: Client Dashboard, Task Tracker, Revenue Tracker.</span></label></li>
+        <li><input type="checkbox" id="c5"><label class="check-content" for="c5"><strong>Run through one workflow end-to-end</strong><span>Do a creative refresh using the 80/15/5 system. Time yourself. You should spend under 10 minutes.</span></label></li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="4.4-hiring-your-first-va.html" class="nav-link">← Hiring Your First VA</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="4.6-troubleshooting.html" class="nav-link">Troubleshooting →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-4.5-building-systems';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

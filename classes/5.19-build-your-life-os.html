@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.19: Build Your Life OS — Run Your Life Like You Run Your Agency</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Slim helpers */
+    .lede { color: #ccc; font-size: 1rem; line-height: 1.65; margin: 0 0 18px; max-width: 720px; }
+
+    /* Stat row */
+    .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0; }
+    .stat { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 22px; text-align: center; }
+    .stat .v { color: #3B82F6; font-weight: 900; font-size: 2rem; line-height: 1; }
+    .stat .l { color: #aaa; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; line-height: 1.4; }
+
+    /* YouTube thumbnail */
+    .video-card { display: block; position: relative; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); margin: 18px 0; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; }
+    .video-card:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(59,130,246,0.18); }
+    .video-card img { width: 100%; height: auto; display: block; }
+    .video-card .play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.35)); }
+    .video-card .play-btn { width: 76px; height: 76px; border-radius: 50%; background: rgba(255,0,0,0.92); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 32px rgba(0,0,0,0.4); transition: transform 0.2s; }
+    .video-card:hover .play-btn { transform: scale(1.08); }
+    .video-card .play-btn::after { content: ''; display: block; width: 0; height: 0; border-style: solid; border-width: 14px 0 14px 22px; border-color: transparent transparent transparent #fff; margin-left: 5px; }
+    .video-card .vmeta { position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px; background: linear-gradient(0deg, rgba(0,0,0,0.85), transparent); }
+    .video-card .vtag { color: #ff0000; font-weight: 800; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .video-card .vtitle { color: #fff; font-weight: 800; font-size: 1.1rem; line-height: 1.3; }
+    .video-card .vsub { color: #ddd; font-size: 0.82rem; margin-top: 4px; }
+
+    /* Pull quote */
+    .pull { background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.01)); border-left: 4px solid #3B82F6; border-radius: 0 12px 12px 0; padding: 22px 26px; margin: 20px 0; }
+    .pull .qmark { color: #3B82F6; font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+    .pull p { color: #fff; font-size: 1.05rem; line-height: 1.55; margin: 0 0 10px; font-weight: 500; font-style: italic; }
+    .pull .attr { color: #888; font-size: 0.82rem; margin: 0; font-weight: 600; }
+
+    /* The trap — 2 sides */
+    .vs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .vs-card { background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 22px; }
+    .vs-card.bad { border-color: rgba(239,68,68,0.3); background: linear-gradient(135deg, rgba(239,68,68,0.06), transparent); }
+    .vs-card.good { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.07), transparent); }
+    .vs-card .label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+    .vs-card.bad .label { color: #ef4444; }
+    .vs-card.good .label { color: #22c55e; }
+    .vs-card ul { margin: 0; padding-left: 18px; color: #ccc; font-size: 0.9rem; line-height: 1.85; }
+
+    /* 5 area cards */
+    .area-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
+    .area { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; position: relative; overflow: hidden; }
+    .area::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+    .area.finances::before { background: #22c55e; }
+    .area.professional::before { background: #3B82F6; }
+    .area.relationships::before { background: #ec4899; }
+    .area.health::before { background: #f97316; }
+    .area.mind::before { background: #a855f7; }
+    .area .icon-big { font-size: 2.4rem; margin-bottom: 8px; }
+    .area .atitle { color: #fff; font-weight: 800; font-size: 1.15rem; margin-bottom: 4px; }
+    .area .atag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+    .area.finances .atag { color: #22c55e; }
+    .area.professional .atag { color: #3B82F6; }
+    .area.relationships .atag { color: #ec4899; }
+    .area.health .atag { color: #f97316; }
+    .area.mind .atag { color: #a855f7; }
+    .area .adesc { color: #999; font-size: 0.85rem; line-height: 1.55; margin-bottom: 12px; }
+    .area .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .area .row { padding: 10px 12px; border-radius: 8px; font-size: 0.78rem; line-height: 1.45; }
+    .area .row .rl { font-weight: 800; font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.85; display: block; margin-bottom: 4px; }
+    .area .neglect { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18); color: #f87171; }
+    .area .winning { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.22); color: #86efac; }
+
+    /* Compound effect */
+    .compound { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.18); border-radius: 14px; padding: 24px; margin-top: 18px; }
+    .compound-row { display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .compound-node { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; text-align: center; min-width: 110px; }
+    .compound-node .ci { font-size: 1.4rem; }
+    .compound-node .ct { color: #fff; font-weight: 700; font-size: 0.78rem; margin-top: 2px; }
+    .compound-node .cd { color: #666; font-size: 0.65rem; margin-top: 2px; line-height: 1.4; }
+    .compound-arrow { color: #444; font-size: 1.2rem; align-self: center; }
+    .compound-caption { color: #888; font-size: 0.78rem; text-align: center; margin: 14px 0 0; line-height: 1.55; }
+    @media (max-width: 720px) { .compound-row { flex-direction: column; } .compound-arrow { transform: rotate(90deg); } }
+
+    /* Feature deep-dive cards */
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
+    .feature-card { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; }
+    .feature-card .ficon { font-size: 2.2rem; margin-bottom: 8px; }
+    .feature-card .ftag { color: #3B82F6; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+    .feature-card .ftitle { color: #fff; font-weight: 800; font-size: 1.15rem; margin-bottom: 6px; }
+    .feature-card .fdesc { color: #aaa; font-size: 0.88rem; line-height: 1.55; margin-bottom: 14px; }
+    .feature-card .sub-list { margin: 0; padding-left: 18px; color: #ccc; font-size: 0.84rem; line-height: 1.75; }
+    .feature-card .sub-list li { margin-bottom: 5px; }
+    .feature-card .sub-list strong { color: #fff; font-weight: 700; }
+
+    /* AI architecture (kept for inside feature section) */
+    .arch { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: stretch; margin-top: 18px; }
+    .arch-block { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 18px; text-align: center; }
+    .arch-block .icon-xl { font-size: 1.8rem; margin-bottom: 6px; }
+    .arch-block .at { color: #fff; font-weight: 800; font-size: 0.95rem; margin-bottom: 4px; }
+    .arch-block .ad { color: #888; font-size: 0.76rem; line-height: 1.55; }
+    .arch-arrow { color: #3B82F6; font-size: 1.4rem; font-weight: 800; align-self: center; }
+    @media (max-width: 820px) { .arch { grid-template-columns: 1fr; } .arch-arrow { transform: rotate(90deg); } }
+
+    /* TL;DR ritual */
+    .ritual { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-items: stretch; margin-top: 16px; }
+    .ritual-step { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; text-align: center; }
+    .ritual-step .rn { color: #3B82F6; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; }
+    .ritual-step .rsicon { font-size: 2rem; margin: 8px 0 6px; }
+    .ritual-step .rstitle { color: #fff; font-weight: 700; font-size: 0.9rem; }
+    .ritual-step .rsdesc { color: #888; font-size: 0.74rem; margin-top: 4px; line-height: 1.5; }
+    @media (max-width: 720px) { .ritual { grid-template-columns: 1fr; } }
+
+    /* Detailed routine blocks */
+    .routine { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+    .routine-block { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; }
+    .rb-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .rb-icon { font-size: 1.8rem; flex: none; }
+    .rb-meta { flex: 1; }
+    .rb-time { font-size: 0.7rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .rb-title { color: #fff; font-weight: 800; font-size: 1rem; }
+    .routine-block.morning .rb-time { color: #f97316; }
+    .routine-block.day .rb-time { color: #3B82F6; }
+    .routine-block.night .rb-time { color: #a855f7; }
+    .routine-block.weekly .rb-time { color: #22c55e; }
+    .routine-block.monthly .rb-time { color: #ec4899; }
+    .routine-block.morning { border-left: 3px solid #f97316; }
+    .routine-block.day { border-left: 3px solid #3B82F6; }
+    .routine-block.night { border-left: 3px solid #a855f7; }
+    .routine-block.weekly { border-left: 3px solid #22c55e; }
+    .routine-block.monthly { border-left: 3px solid #ec4899; }
+    .rb-steps { margin: 0; padding-left: 24px; color: #ccc; font-size: 0.88rem; line-height: 1.85; }
+    .rb-steps li { margin-bottom: 4px; }
+    .rb-steps strong { color: #fff; font-weight: 700; }
+
+    /* Prompt */
+    .prompt-box { background: #0a0a0a; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 22px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.82rem; color: #d4d4d4; line-height: 1.75; white-space: pre-wrap; position: relative; margin-top: 16px; }
+    .prompt-box .copy-hint { position: absolute; top: 12px; right: 14px; background: #3B82F6; color: #fff; font-size: 0.66rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Inter', sans-serif; }
+    .prompt-box .k { color: #3B82F6; font-weight: 700; }
+
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.86rem; line-height: 1.5; }
+
+    .section { margin-bottom: 40px; }
+    .section h2 { margin-bottom: 12px; }
+
+    @media (max-width: 720px) {
+      .area-grid, .vs-row, .stat-row, .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.19 — Module 5: AI Integration</div>
+      <h1>Build Your <span>Life OS</span></h1>
+      <div class="subtitle">
+        <span class="tag">5 Life Areas</span>
+        <span class="tag">AI Accountability</span>
+        <span class="tag">~40 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Most agency owners can run a 6-figure business but can't run their own life. We fix that with one tab you keep open all day.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: WHY                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎓</span> 1. The 85-Year Harvard Study</h2>
+
+      <p class="lede">In 1938, Harvard started tracking 724 people. Two groups: Harvard sophomores (one of them: future president JFK) and boys from Boston's poorest neighborhoods. They followed them for 85 years.</p>
+
+      <div class="stat-row">
+        <div class="stat"><div class="v">85</div><div class="l">Years of data</div></div>
+        <div class="stat"><div class="v">724</div><div class="l">Lives tracked</div></div>
+        <div class="stat"><div class="v">$0</div><div class="l">Predictor: money</div></div>
+      </div>
+
+      <a class="video-card" href="https://www.youtube.com/watch?v=8KkKuTCFvzI" target="_blank" rel="noopener">
+        <img src="https://img.youtube.com/vi/8KkKuTCFvzI/maxresdefault.jpg" alt="Robert Waldinger TED Talk thumbnail">
+        <div class="play"><div class="play-btn"></div></div>
+        <div class="vmeta">
+          <div class="vtag">▶ Watch on YouTube · 12 min</div>
+          <div class="vtitle">What makes a good life? Lessons from the longest study on happiness</div>
+          <div class="vsub">Robert Waldinger · Director, Harvard Study of Adult Development</div>
+        </div>
+      </a>
+
+      <div class="pull">
+        <div class="qmark">"</div>
+        <p>Good relationships keep us happier and healthier. Period.</p>
+        <p class="attr">— Robert Waldinger</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE TRAP                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚠️</span> 2. The "Rich But Burnt Out" Trap</h2>
+
+      <div class="vs-row">
+        <div class="vs-card bad">
+          <div class="label">⚠ 2 of 5 dialed in</div>
+          <ul>
+            <li>Revenue + net worth growing</li>
+            <li>Sleep at 5-6h, HR climbing</li>
+            <li>Hasn't called family in weeks</li>
+            <li>Constant anxiety</li>
+            <li><strong style="color:#fff;">Eventually: burnout, lost client, contract</strong></li>
+          </ul>
+        </div>
+        <div class="vs-card good">
+          <div class="label">✓ All 5 in motion</div>
+          <ul>
+            <li>Revenue grows steadily</li>
+            <li>Sleep 7.5h, energy high</li>
+            <li>Strong relationships absorb shocks</li>
+            <li>Clear values, fewer wrong yeses</li>
+            <li><strong style="color:#fff;">Compounds for decades, not sprints</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: THE 5 AREAS                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⭐</span> 3. The 5 Areas</h2>
+
+      <div class="area-grid">
+        <div class="area finances">
+          <div class="icon-big">💰</div>
+          <div class="atag">Area 1</div>
+          <div class="atitle">Finances</div>
+          <div class="adesc">Net worth, P&L, investments, runway.</div>
+          <div class="pair">
+            <div class="row neglect"><span class="rl">Neglect</span>No idea where money is</div>
+            <div class="row winning"><span class="rl">Win</span>Net worth grows monthly</div>
+          </div>
+        </div>
+
+        <div class="area professional">
+          <div class="icon-big">💼</div>
+          <div class="atag">Area 2</div>
+          <div class="atitle">Professional</div>
+          <div class="adesc">Revenue, MRR, deals, brand.</div>
+          <div class="pair">
+            <div class="row neglect"><span class="rl">Neglect</span>Fragile income, no brand</div>
+            <div class="row winning"><span class="rl">Win</span>Brand that compounds</div>
+          </div>
+        </div>
+
+        <div class="area relationships">
+          <div class="icon-big">❤️</div>
+          <div class="atag">Area 3 · Harvard's #1</div>
+          <div class="atitle">Relationships</div>
+          <div class="adesc">People, cadence, birthdays.</div>
+          <div class="pair">
+            <div class="row neglect"><span class="rl">Neglect</span>Lonely at the top</div>
+            <div class="row winning"><span class="rl">Win</span>People who absorb shocks</div>
+          </div>
+        </div>
+
+        <div class="area health">
+          <div class="icon-big">🏃</div>
+          <div class="atag">Area 4</div>
+          <div class="atitle">Health & Fitness</div>
+          <div class="adesc">Sleep, HR, weight, training.</div>
+          <div class="pair">
+            <div class="row neglect"><span class="rl">Neglect</span>5h sleep, brain fog</div>
+            <div class="row winning"><span class="rl">Win</span>Energy = edge</div>
+          </div>
+        </div>
+
+        <div class="area mind">
+          <div class="icon-big">🧠</div>
+          <div class="atag">Area 5</div>
+          <div class="atitle">Mind</div>
+          <div class="adesc">Values, journal, reading, decisions.</div>
+          <div class="pair">
+            <div class="row neglect"><span class="rl">Neglect</span>Reactive ego-driven calls</div>
+            <div class="row winning"><span class="rl">Win</span>Values pre-decide tradeoffs</div>
+          </div>
+        </div>
+
+        <div class="area" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,rgba(59,130,246,0.08),transparent);border-color:rgba(59,130,246,0.25);">
+          <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#3B82F6;margin-bottom:8px;">The rule</div>
+          <div style="color:#fff;font-weight:700;font-size:0.95rem;line-height:1.5;max-width:240px;">Your lowest spoke caps how high the others can go.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: COMPOUND                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔁</span> 4. Why Fixing One Lifts All 5</h2>
+
+      <div class="compound">
+        <div class="compound-row">
+          <div class="compound-node"><div class="ci">🏃</div><div class="ct">Health</div><div class="cd">Sleep well</div></div>
+          <div class="compound-arrow">→</div>
+          <div class="compound-node"><div class="ci">🧠</div><div class="ct">Mind</div><div class="cd">Think clearly</div></div>
+          <div class="compound-arrow">→</div>
+          <div class="compound-node"><div class="ci">💼</div><div class="ct">Professional</div><div class="cd">Better calls</div></div>
+          <div class="compound-arrow">→</div>
+          <div class="compound-node"><div class="ci">💰</div><div class="ct">Finances</div><div class="cd">Money compounds</div></div>
+          <div class="compound-arrow">→</div>
+          <div class="compound-node"><div class="ci">❤️</div><div class="ct">Relationships</div><div class="cd">Less stress, more time</div></div>
+        </div>
+        <p class="compound-caption">Fix one upstream spoke and the downstream ones get easier automatically.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: FEATURE DEEP DIVE            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧭</span> 5. What's Inside Your Life OS</h2>
+
+      <p class="lede">Four core pieces. Each one stays out of your way until you need it.</p>
+
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <div class="ficon">🏠</div>
+          <div class="ftag">Feature 1 · Home</div>
+          <div class="ftitle">Command Center</div>
+          <div class="fdesc">Your launch screen. Tells you in 10 seconds how your life is doing today.</div>
+          <ul class="sub-list">
+            <li><strong>Balance Wheel</strong> — radial chart, 5 spokes, one per area, filled to its 0-100 score. Your signature visual.</li>
+            <li><strong>Life Score</strong> — combined 0-100 number always visible in the top bar.</li>
+            <li><strong>What Matters Now</strong> — 3 SMART recommendation cards: Top Priority · Biggest Risk · Biggest Opportunity.</li>
+            <li><strong>Domain Tiles</strong> — 5 cards, one per area, with the key metric + trend arrow. Click to drill in.</li>
+            <li><strong>This Week</strong> — calendar slice with open commitments for the next 7 days.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">📂</div>
+          <div class="ftag">Feature 2 · Detail</div>
+          <div class="ftitle">5 Domain Screens</div>
+          <div class="fdesc">One screen per area. Same template. Click the wheel or a tile to dive in.</div>
+          <ul class="sub-list">
+            <li><strong>Score header</strong> — 0-100 with target bar showing how far to go.</li>
+            <li><strong>Metrics row</strong> — 3-4 key metrics with sparklines showing the trend.</li>
+            <li><strong>Trend chart</strong> — your primary metric over time, clean line.</li>
+            <li><strong>Log</strong> — recent entries (workouts, calls, decisions, journal).</li>
+            <li><strong>Advisor card</strong> — one SMART recommendation specific to that area.</li>
+            <li><strong>Domain extras:</strong> Finances has Money Map + P&L sub-tabs; Mind has Journal + Reading list + Considering + Values; Relationships has the People directory with cadence + birthdays.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">🤖</div>
+          <div class="ftag">Feature 3 · Intelligence</div>
+          <div class="ftitle">The AI Advisor</div>
+          <div class="fdesc">Reads your 5 areas plus your values from Mega-Brain. Surfaces what to fix next.</div>
+          <ul class="sub-list">
+            <li><strong>Daily briefing</strong> — 1 paragraph: where you are, what to do today.</li>
+            <li><strong>SMART recommendations</strong> — every suggestion is specific, measurable, deadlined. Nothing vague ever ships.</li>
+            <li><strong>Per-domain advice</strong> — each screen gets its own "where you're lacking" call.</li>
+            <li><strong>"Where you're lacking" ranking</strong> — ranks the 5 areas by score, jumps you to the weakest.</li>
+            <li><strong>Chat panel</strong> — ask anything; it answers grounded in YOUR data + Mega-Brain, not a generic LLM.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">✅</div>
+          <div class="ftag">Feature 4 · Action</div>
+          <div class="ftitle">The Tasks System</div>
+          <div class="fdesc">One click turns any AI suggestion into action. Stays gone once you act.</div>
+          <ul class="sub-list">
+            <li><strong>"Create Task" button</strong> on every Advisor card → adds it to your Tasks list.</li>
+            <li><strong>Persistent storage</strong> — survives refresh, tab close, and tomorrow's session.</li>
+            <li><strong>Sound + animation</strong> — quick pop sound + slide-out. You feel the action land.</li>
+            <li><strong>No zombie suggestions</strong> — once you Accept or Dismiss, that card never comes back.</li>
+            <li><strong>Monthly P&L auto-task</strong> — fires automatically on the 30th of every month so you never forget the books.</li>
+            <li><strong>SMART rule enforced</strong> — the system rejects vague suggestions before they reach you.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="arch">
+        <div class="arch-block">
+          <div class="icon-xl">📊</div>
+          <div class="at">Your 5 areas</div>
+          <div class="ad">Scores · metrics · logs · journal</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-block">
+          <div class="icon-xl">🧠</div>
+          <div class="at">Advisor + Mega-Brain</div>
+          <div class="ad">Reads against your values, finds the weakest spoke</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-block">
+          <div class="icon-xl">✅</div>
+          <div class="at">SMART tasks</div>
+          <div class="ad">Specific · measurable · deadlined · one-click</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: THE EXACT ROUTINE            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> 6. The Exact Daily Routine</h2>
+
+      <p class="lede">The dashboard only works if you run the routine. Five touchpoints — total time ~13 min/day plus a 15-min weekly review and a 30-min monthly close.</p>
+
+      <!-- TL;DR visual -->
+      <div class="ritual">
+        <div class="ritual-step"><div class="rn">Morning</div><div class="rsicon">☀️</div><div class="rstitle">5 min</div><div class="rsdesc">Briefing + pick #1 priority</div></div>
+        <div class="ritual-step"><div class="rn">Day</div><div class="rsicon">📝</div><div class="rstitle">Glances</div><div class="rsdesc">Log + create tasks</div></div>
+        <div class="ritual-step"><div class="rn">Night</div><div class="rsicon">🌙</div><div class="rstitle">5 min</div><div class="rsdesc">Journal + mark done</div></div>
+        <div class="ritual-step"><div class="rn">Weekly</div><div class="rsicon">📊</div><div class="rstitle">15 min</div><div class="rsdesc">Domain review + plan</div></div>
+      </div>
+
+      <!-- Detailed routine -->
+      <div class="routine">
+
+        <div class="routine-block morning">
+          <div class="rb-head">
+            <div class="rb-icon">☀️</div>
+            <div class="rb-meta">
+              <div class="rb-time">Morning · 5 min · First thing on the laptop</div>
+              <div class="rb-title">Open the tab. Pick the day's #1.</div>
+            </div>
+          </div>
+          <ol class="rb-steps">
+            <li>Open your Life OS tab (it's pinned, so it's already there)</li>
+            <li>Glance at the <strong>Life Score</strong> — note any change vs. yesterday</li>
+            <li>Look at the <strong>Balance Wheel</strong> — identify the shortest spoke today</li>
+            <li>Read the <strong>AI Advisor briefing</strong> (1 paragraph) — that's your context for the day</li>
+            <li>Pick ONE card from <strong>"What Matters Now"</strong> → click <strong>Create Task</strong></li>
+            <li>Skim today's commitments in <strong>This Week</strong></li>
+            <li>Close the tab? NO. Leave it open behind your other windows all day.</li>
+          </ol>
+        </div>
+
+        <div class="routine-block day">
+          <div class="rb-head">
+            <div class="rb-icon">📝</div>
+            <div class="rb-meta">
+              <div class="rb-time">During the day · glances · ~3 min total</div>
+              <div class="rb-title">Log it when it happens. Don't batch.</div>
+            </div>
+          </div>
+          <ol class="rb-steps">
+            <li>Finished a workout / run → log it in <strong>Health</strong> (30 sec)</li>
+            <li>Had a meaningful conversation or call → log in the right domain's <strong>Log</strong></li>
+            <li>New decision came up → drop it in <strong>Mind → Considering</strong></li>
+            <li>New AI recommendation appears → Accept OR Dismiss; don't leave it hanging</li>
+            <li>Something hits emotionally (good or bad) → 1-line journal entry in <strong>Mind</strong></li>
+            <li>Quick mental check at lunch: how am I tracking on today's #1?</li>
+          </ol>
+        </div>
+
+        <div class="routine-block night">
+          <div class="rb-head">
+            <div class="rb-icon">🌙</div>
+            <div class="rb-meta">
+              <div class="rb-time">Night · 5 min · Before bed</div>
+              <div class="rb-title">Close the loop. Set tomorrow's #1.</div>
+            </div>
+          </div>
+          <ol class="rb-steps">
+            <li>Open <strong>Mind → Journal</strong> → 1-line entry on the day (mood word + 1 sentence)</li>
+            <li>Open <strong>Tasks</strong> → check off completed; move incomplete to tomorrow</li>
+            <li>Update any manual metrics for the day (hours slept planned, training done, etc.)</li>
+            <li>Set tomorrow's #1 priority — write it as a SMART task with tomorrow's deadline</li>
+            <li>Glance the Balance Wheel one more time — is any spoke moving the wrong way?</li>
+          </ol>
+        </div>
+
+        <div class="routine-block weekly">
+          <div class="rb-head">
+            <div class="rb-icon">📊</div>
+            <div class="rb-meta">
+              <div class="rb-time">Weekly · Sunday or Friday · 15 min</div>
+              <div class="rb-title">Review the wheel. Plan the week.</div>
+            </div>
+          </div>
+          <ol class="rb-steps">
+            <li>Look at the Balance Wheel — which spoke moved up or down vs. last week?</li>
+            <li>Update any metrics that need manual entry (weight, training count, MRR)</li>
+            <li>Open <strong>Relationships → People</strong> — call (or schedule) anyone past their cadence</li>
+            <li>Read your <strong>Mind → Considering</strong> list — close any decision you've been sitting on for 2+ weeks</li>
+            <li>Pick the week's <strong>ONE big priority</strong> — add it as a SMART task with Sunday's deadline</li>
+            <li>If a spoke dropped 5+ points, re-read its Advisor card and create one fix-it task</li>
+          </ol>
+        </div>
+
+        <div class="routine-block monthly">
+          <div class="rb-head">
+            <div class="rb-icon">📆</div>
+            <div class="rb-meta">
+              <div class="rb-time">Monthly · the 30th · 30 min</div>
+              <div class="rb-title">Close the books. Look for patterns.</div>
+            </div>
+          </div>
+          <ol class="rb-steps">
+            <li>Auto-task fires: <strong>"Log expenses and close [Month]'s P&L"</strong> — open it</li>
+            <li>Update <strong>Finances</strong> — net worth pieces, monthly P&L, investment allocation</li>
+            <li>Take a new <strong>Net Worth</strong> snapshot — it auto-adds to the trend chart</li>
+            <li>Read your <strong>Journal</strong> entries from the last 30 days — look for mood patterns + recurring issues</li>
+            <li>Re-check <strong>Mind → Values</strong> — are your actions matching what you said matters?</li>
+            <li>Adjust targets for next month based on what actually happened (not what you hoped)</li>
+            <li>Optional: change your password if you've been sharing the screen</li>
+          </ol>
+        </div>
+
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 18px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">🏆 Total time investment:</strong> ~13 min/day + 15 min/wk + 30 min/mo. Under 5 hours per month for a system that compounds across 5 areas of your life. There is no other 5-hour investment that comes close.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: BUILD YOUR OWN               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> 7. Build Yours — The Prompt</h2>
+
+      <p class="lede">Open Claude Design (or Base44 / Lovable / v0). Paste this. 5-15 min to build.</p>
+
+      <div class="prompt-box"><span class="copy-hint">COPY ALL</span><span class="k">ROLE / CONTEXT:</span>
+You're helping me build my personal "Life OS" — a single command center web app where 5 areas of my life feed a dashboard, and an AI layer reads everything and tells me what to fix next. I'm an entrepreneur / agency owner. I'll be the only user.
+
+<span class="k">GOAL:</span>
+Build the first working version with 5 domain screens (Finances, Professional, Relationships, Health & Fitness, Mind), a Command Center home, and an Advisor panel that gives SMART recommendations.
+
+<span class="k">CONSTRAINTS:</span>
+- Use placeholder data I can swap later
+- Minimalist visual identity: WHITE MODE, generous whitespace, one accent color
+- No corporate AI phrases. No em dashes. No "unlock/empower/leverage."
+- Mobile-responsive
+- Login gate with placeholder password "demo"
+- Tasks persist in localStorage
+- Every Advisor recommendation must be SMART (specific, measurable, attainable, deadlined). If it can't be measured + deadlined, skip it.
+
+<span class="k">INPUTS:</span>
+The 5 areas:
+1. Finances — net worth, P&L, investments, money map, runway
+2. Professional — MRR, target revenue, deals, brand metrics
+3. Relationships — people directory (tiers: inner/close/network), contact cadence, birthdays
+4. Health & Fitness — sleep, HR, weight, training sessions/wk
+5. Mind — journal (1-line entries), reading list + covers, decisions weighing, defined values
+
+Domain template: header with 0-100 score → metric cards row → trend chart → log → Advisor card.
+
+Command Center home:
+- Life Balance Wheel: radial chart, 5 spokes, one per area, each filled to score
+- "What Matters Now": 3 cards (Top Priority · Biggest Risk · Biggest Opportunity)
+- Domain Tiles: 5 cards with key metric + trend
+- This Week: calendar slice with commitments
+
+<span class="k">OUTPUT FORMAT:</span>
+Static prototype runnable with `python -m http.server`:
+- index.html (shell + login gate)
+- app/data.js (placeholder data)
+- app/screens.jsx (React via in-browser Babel)
+- app/store.js (tasks + toast, localStorage)
+- css/style.css
+
+<span class="k">EXAMPLES:</span>
+Visual style: Linear or Notion's lightness. NOT Bloomberg-terminal density. One accent color, neutral grays, generous whitespace. Balance Wheel is the SIGNATURE visual.
+
+<span class="k">EVALUATION:</span>
+Before finishing, confirm:
+1. All 5 domain screens render with placeholder data
+2. Balance Wheel renders with exactly 5 spokes
+3. Login gate works (password "demo")
+4. Advisor "Create Task" buttons add to persistent Tasks list
+5. Every recommendation is SMART (or removed)
+6. No em dashes, no "unlock/empower/leverage"
+7. Loads under 3 sec, mobile-responsive</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 8: HOMEWORK                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 8. Homework</h2>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Watched the Waldinger TED Talk</strong>
+            <span>12 min. Locks in the WHY before you build.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Scored your 5 areas 0-100, honestly</strong>
+            <span>Lowest score = where the system tells you to start.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Pasted the prompt into Claude Design (or Base44 / Lovable / v0)</strong>
+            <span>5-15 min build. Got a working prototype.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Filled ONE area with real data</strong>
+            <span>Start with Finances or Mind. Don't try all 5 at once.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Ran the full daily routine for 7 days straight</strong>
+            <span>Morning + Day + Night. No skip days. 13 min/day total.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Ran your first weekly review on Sunday</strong>
+            <span>15 min. Review wheel, update metrics, plan one big priority.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Posted a screenshot of your Balance Wheel in #wins</strong>
+            <span>Accountability + inspiration for the cohort.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>life-os</span><span>5-areas</span><span>balance-wheel</span><span>ai-accountability</span><span>harvard-study</span><span>smart-tasks</span><span>daily-routine</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.18-process-documentation.html" class="nav-link">← 5.18 Process Docs</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.0-ai-operators-playbook.html" class="nav-link">5.0 The Playbook →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.19-life-os-v3';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

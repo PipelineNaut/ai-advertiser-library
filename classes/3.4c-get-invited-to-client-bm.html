@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.4c: Get Invited to Your Client's Business Manager — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .click-step .click-path { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; font-family: 'SF Mono', monospace; font-size: 0.85rem; color: #3B82F6; margin-bottom: 12px; display: inline-block; }
+    .click-step .click-path span { color: #666; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .copy-btn { position: absolute; top: 8px; right: 10px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #3B82F6; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .copy-btn:hover { background: rgba(59,130,246,0.3); }
+    .copy-btn.copied { background: #22c55e; color: #fff; border-color: #22c55e; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    @media (max-width: 720px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card { padding: 20px; border-radius: 12px; }
+    .compare-card.hard { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); }
+    .compare-card.easy { background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.25); }
+    .compare-card h4 { margin: 0 0 10px 0; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .compare-card.hard h4 { color: #ef4444; }
+    .compare-card.easy h4 { color: #22c55e; }
+    .compare-card ul { margin: 0; padding-left: 20px; color: #bbb; font-size: 0.88rem; line-height: 1.7; }
+    .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+    .role-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 16px; }
+    .role-card.recommended { background: rgba(59,130,246,0.1); border-color: #3B82F6; box-shadow: 0 0 0 1px rgba(59,130,246,0.2); }
+    .role-card .role-name { color: #3B82F6; font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .role-card.recommended .role-name::after { content: ' ✓ ASK FOR THIS'; font-size: 0.65rem; color: #22c55e; font-weight: 800; letter-spacing: 0.5px; }
+    .role-card .role-desc { color: #bbb; font-size: 0.85rem; line-height: 1.5; margin-top: 6px; }
+    .role-card .role-can { font-size: 0.78rem; color: #888; margin-top: 8px; }
+    .role-card .role-can strong { color: #ccc; }
+    .message-block { background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(34,197,94,0.02)); border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 22px; margin: 14px 0; position: relative; }
+    .message-block::before { content: '📨 SEND THIS TO YOUR CLIENT'; position: absolute; top: -10px; left: 16px; background: #22c55e; color: #0a0a0a; font-size: 0.7rem; padding: 3px 12px; border-radius: 6px; font-weight: 800; letter-spacing: 0.5px; }
+    .message-block pre { margin: 8px 0 0 0; color: #e6e6e6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+    .step-arrow { text-align: center; color: #3B82F6; font-size: 1.6rem; margin: -4px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.4c — Module 3: Fulfillment</div>
+      <h1>Get Invited to Your Client's <span>Business Manager</span></h1>
+      <div class="subtitle">
+        <span class="tag">~10 min</span>
+        <span class="tag">Recommended Path</span>
+        <span class="tag">No BM Verification Needed</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      Forget building your own Business Manager for every client. The simpler, faster path: have the client invite you as a person to THEIR BM. You skip the verification headache, the document upload, the 5-day wait. You're inside their account in 5 minutes. This is what 90% of solo operators should do for their first 3 clients.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHY THIS PATH -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> Why You Don't Need Your Own BM (Yet)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        <a href="3.4-meta-business-manager.html" style="color: #3B82F6;">Lesson 3.4</a> walked through setting up your own Business Manager. That's the right path if you're running a 5-figure-per-month agency, hiring VAs, and need a central command center. <strong style="color: #fff;">For your first few clients, it's overkill.</strong>
+      </p>
+
+      <div class="compare-grid">
+        <div class="compare-card hard">
+          <h4>❌ Build your own BM (lesson 3.4)</h4>
+          <ul>
+            <li>Create + verify business (1-5 day wait)</li>
+            <li>Upload LLC paperwork or utility bill</li>
+            <li>Add Page</li>
+            <li>Request access to client's ad account</li>
+            <li>Wait for client approval</li>
+            <li>Risk getting flagged for new BM activity</li>
+            <li>Manage permissions across multiple BMs</li>
+          </ul>
+        </div>
+        <div class="compare-card easy">
+          <h4>✅ Get invited to client's BM (this lesson)</h4>
+          <ul>
+            <li>Client adds you as a person — done in 2 clicks</li>
+            <li>You accept the email invite — done in 1 click</li>
+            <li>You're inside their ad account in ~5 min</li>
+            <li>No verification, no documents, no wait</li>
+            <li>Client owns everything (assets stay theirs if you part ways)</li>
+            <li>Cleaner from a legal / IP perspective</li>
+            <li>You can do this for unlimited clients in parallel</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 When to graduate to your own BM:</strong> Once you're managing 5+ clients OR hiring a VA OR want to run YOUR OWN ads (course launch, agency lead gen). Until then, this path beats it on every dimension that matters.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT YOU NEED -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> What You Need Before Starting</h2>
+
+      <ul class="checklist" id="prereqs">
+        <li>
+          <input type="checkbox" id="c1">
+          <label for="c1" class="check-content">
+            <strong>A personal Facebook account</strong>
+            <span>This is what gets invited. Yes — your real personal profile. Don't make a fake "agency" profile, Meta will ban it. Your client will see your name and photo when they add you, that's normal.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label for="c2" class="check-content">
+            <strong>Your Facebook profile email</strong>
+            <span>The exact email tied to your personal Facebook account. The client uses this email to send the invite. If you forgot which email it is — go to facebook.com → Settings → Personal Details → Contact → that's your email.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label for="c3" class="check-content">
+            <strong>Confirmation that the client has a Business Manager</strong>
+            <span>If they don't yet, they need to create one first. <a href="3.4b-client-meta-setup.html" style="color: #3B82F6;">Lesson 3.4b</a> walks through what to send them.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label for="c4" class="check-content">
+            <strong>The client is admin on their own BM</strong>
+            <span>Only BM admins can invite people. If your client built the BM, they're admin by default. If their cousin/partner/old marketer built it, you need them to add you instead.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE MESSAGE -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📨</span> The Exact Message to Send Your Client</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Stop "explaining" Business Manager over Zoom. Send this. Their job becomes a 5-step click sequence. They'll thank you for not making them think.
+      </p>
+
+      <div class="message-block">
+        <button class="copy-btn" data-copy="Hey [CLIENT NAME] — quick one. To get your ads running I need to be added to your Business Manager. Takes ~3 min on your end. Here's exactly what to do:&#10;&#10;1. Go to business.facebook.com/settings&#10;2. Click &quot;Users&quot; in the left sidebar → &quot;People&quot;&#10;3. Click the blue &quot;+ Add&quot; button&#10;4. Enter my email: [YOUR FACEBOOK EMAIL]&#10;5. Choose role: &quot;Employee access&quot; → check the box for &quot;Manage business assets&quot;&#10;6. Click &quot;Next&quot;&#10;7. Select your Ad Account from the list and toggle &quot;Manage ad account&quot;&#10;8. Select your Page and toggle &quot;Manage Page&quot; → click &quot;Invite&quot;&#10;&#10;I'll get an email — accept it, done. Send me a thumbs up when you've done it and I'll confirm I'm in. Should take 5 minutes total.">Copy</button>
+<pre>Hey [CLIENT NAME] — quick one. To get your ads running I need to be added to your Business Manager. Takes ~3 min on your end. Here's exactly what to do:
+
+1. Go to business.facebook.com/settings
+2. Click "Users" in the left sidebar → "People"
+3. Click the blue "+ Add" button
+4. Enter my email: [YOUR FACEBOOK EMAIL]
+5. Choose role: "Employee access" → check the box for "Manage business assets"
+6. Click "Next"
+7. Select your Ad Account from the list and toggle "Manage ad account"
+8. Select your Page and toggle "Manage Page" → click "Invite"
+
+I'll get an email — accept it, done. Send me a thumbs up when you've done it and I'll confirm I'm in. Should take 5 minutes total.</pre>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Loom > text every time.</strong> If they're tech-anxious, record a 90-second Loom doing the steps yourself on a fake BM, send the Loom + message. They'll mirror your screen exactly. You'll never have a "wait what page am I on" call again.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT THE CLIENT DOES -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">👤</span> What Happens on the Client's Side</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Here's the visual map of the 5 clicks the client makes. Useful if you're walking them through it on a call.
+      </p>
+
+      <div class="click-step" data-step="Their step 1">
+        <h4>Open BM Settings</h4>
+        <div class="click-path">business.facebook.com/settings</div>
+        <p>If they have multiple businesses, the dropdown at the top-left lets them switch. They want to be on the BM that owns the ad account you'll be running.</p>
+      </div>
+
+      <div class="click-step" data-step="Their step 2">
+        <h4>Users → People → + Add</h4>
+        <div class="click-path">Left sidebar <span>→</span> Users <span>→</span> People <span>→</span> blue + Add button</div>
+        <p>This opens an "Add people to this Business" modal.</p>
+      </div>
+
+      <div class="click-step" data-step="Their step 3">
+        <h4>Type your email + pick role</h4>
+        <p>They paste your Facebook email. Then they pick a role — this is the part most clients get wrong (see "Roles" section below). Tell them upfront: <strong style="color: #fff;">"pick Employee access and check Manage business assets."</strong></p>
+        <div class="warning-box">
+          <p><strong>⚠️ Don't let them pick "Admin access" for you.</strong> Admin on the BM means you can change ownership, delete assets, kick the client out, etc. You don't need that. You need to RUN ADS, which is Employee + Manage assets.</p>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Their step 4">
+        <h4>Assign assets (Ad Account + Page)</h4>
+        <p>The next screen lists every asset in the client's BM. They check the boxes for the ad account you'll use and toggle "Manage ad account." Same for the Page — toggle "Manage Page." Pixel access usually comes automatically with the ad account.</p>
+        <p>If you also need access to the Pixel separately or to a Catalog, tell them upfront — easier than asking them to come back later.</p>
+      </div>
+
+      <div class="click-step" data-step="Their step 5">
+        <h4>Click Invite</h4>
+        <p>Meta sends an invitation email to your Facebook email. The button is blue and says "Invite." They're done.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT YOU DO -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📥</span> What You Do When the Invite Arrives</h2>
+
+      <div class="click-step" data-step="Your step 1">
+        <h4>Check your email</h4>
+        <p>Subject line is something like <em>"[Client Business Name] invited you to access their Business Manager"</em>. From: notification@facebookmail.com. Sometimes lands in Promotions or Spam — check there if you don't see it within 2 minutes.</p>
+      </div>
+
+      <div class="click-step" data-step="Your step 2">
+        <h4>Click "Accept invitation" → log into Facebook</h4>
+        <p>The email button takes you to a Facebook page asking you to log in (use your personal account — same email the client invited). You'll see a screen confirming the role and assets. Click <strong style="color: #fff;">"Accept"</strong>.</p>
+        <div class="tip-box">
+          <p><strong>💡 Pro move:</strong> Right after accepting, bookmark <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">business.facebook.com</code>. From now on, when you log in there, you'll see a dropdown at the top that lets you switch between every client BM you've been added to. One Facebook profile → unlimited client BMs visible.</p>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Your step 3">
+        <h4>Verify you can see the ad account</h4>
+        <p>Go to <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">adsmanager.facebook.com</code>. The top-left has a dropdown showing all ad accounts you have access to. The client's account should appear with their business name. Click into it. If you can see campaigns / create campaigns / view billing, you're properly in.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- ROLES EXPLAINED -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔑</span> Roles Explained — What to Ask For</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Meta has a confusing two-layer permission system: BM-level role + asset-level access. Here's what the choices actually mean.
+      </p>
+
+      <h3 style="color: #fff; margin-top: 22px; font-size: 1.05rem;">BM-level role (the first dropdown)</h3>
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="role-name">Admin access</div>
+          <div class="role-desc">Full god mode. Can transfer ownership, delete the BM, kick the actual client out.</div>
+          <div class="role-can"><strong>For you:</strong> Overkill. Don't ask for it. Clients shouldn't give it.</div>
+        </div>
+        <div class="role-card recommended">
+          <div class="role-name">Employee access</div>
+          <div class="role-desc">Can only manage assets the client explicitly assigned to you. Can't delete BM or kick anyone.</div>
+          <div class="role-can"><strong>For you:</strong> This is what you need. Always.</div>
+        </div>
+      </div>
+
+      <h3 style="color: #fff; margin-top: 22px; font-size: 1.05rem;">Ad account-level access (the second toggle)</h3>
+      <div class="role-grid">
+        <div class="role-card">
+          <div class="role-name">Manage Performance</div>
+          <div class="role-desc">View ads + see reports. Cannot create or edit anything.</div>
+          <div class="role-can"><strong>For you:</strong> Useless if you actually run ads. Fine if you're only doing analytics.</div>
+        </div>
+        <div class="role-card recommended">
+          <div class="role-name">Manage Ad Account</div>
+          <div class="role-desc">Create campaigns, edit budgets, run/pause ads, view billing, manage everything inside the ad account.</div>
+          <div class="role-can"><strong>For you:</strong> The right level for media buying. Default ask.</div>
+        </div>
+      </div>
+
+      <div class="warning-box" style="margin-top: 16px;">
+        <p><strong>⚠️ Billing is separate.</strong> Even with "Manage Ad Account" you can VIEW the payment method but you can't CHANGE the credit card on file. That's intentional — Meta keeps card management with the BM admin (the client). If they ever need to update the card, they have to do it themselves. Tell them this on day one so it doesn't surprise them later.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TROUBLESHOOTING -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔧</span> Troubleshooting</h2>
+
+      <div class="click-step" data-step="Issue 1">
+        <h4>"I never got the invite email"</h4>
+        <p>Check spam / Promotions tab. Search "facebookmail.com" in your inbox. If still nothing after 5 minutes, the client probably typed your email wrong. Have them go back to Users → People, find you in the list (you'll show as "Pending"), delete the pending invite, and re-add with the correct email. <strong style="color: #fff;">Confirm the spelling on a Loom or screen share.</strong></p>
+      </div>
+
+      <div class="click-step" data-step="Issue 2">
+        <h4>"I accepted the invite but I can't see the ad account in Ads Manager"</h4>
+        <p>Two possibilities: (1) the client invited you to the BM but forgot to assign the ad account asset. Have them go back to Users → People → click your name → "Add Assets" → add the ad account. (2) You're looking at the wrong account in the dropdown. The top-left of Ads Manager has a selector — click it and search for the client's business name.</p>
+      </div>
+
+      <div class="click-step" data-step="Issue 3">
+        <h4>"The client says they're in their BM but the Users option isn't there"</h4>
+        <p>They're not actually a BM admin. They might be an "employee" their old marketer added them as. Or they might be looking at the regular Facebook account settings, not Business Manager settings. Have them confirm the URL is <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">business.facebook.com/settings</code> (not just facebook.com).</p>
+      </div>
+
+      <div class="click-step" data-step="Issue 4">
+        <h4>"It says 'You can't be added because you're already in another BM'"</h4>
+        <p>You're not — that error means there's a stale pending invite hanging around. Go to <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">business.facebook.com</code> while logged in as you, look for any pending invitations notice at the top, and clear them. Then have the client send a fresh invite.</p>
+      </div>
+
+      <div class="click-step" data-step="Issue 5">
+        <h4>"The client's BM doesn't have an ad account at all"</h4>
+        <p>They have a BM but never created an ad account inside it. Easy fix — they need to go to Business Settings → Accounts → Ad Accounts → "+ Add" → "Create a new ad account." Walk them through naming it after their business, picking USD/EUR/etc., and adding a payment method. Then they re-do the invite step adding the new ad account to your access.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WRAP UP -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> You're In</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        That's the whole flow. ~10 minutes start to finish if the client is online. From here you can start running ads, install the pixel (<a href="3.5-the-pixel.html" style="color: #3B82F6;">Lesson 3.5</a>), and connect everything to Claude Code via the Meta MCP (<a href="5.3-meta-mcp-connection.html" style="color: #3B82F6;">Lesson 5.3</a>).
+      </p>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        When your operation grows past 5 clients or you start running your own ads, that's when it makes sense to come back and do <a href="3.4-meta-business-manager.html" style="color: #3B82F6;">Lesson 3.4</a> and build your own BM. Until then, this path keeps you fast and lean.
+      </p>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="../index.html" style="color: #3B82F6; text-decoration: none; font-weight: 600;">← Back to all lessons</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy') || btn.parentElement.querySelector('pre').innerText;
+        navigator.clipboard.writeText(text);
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1400);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.9: AI Creative Builder — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .screen-link { display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; margin-bottom: 6px; }
+    .screen-link:hover { border-color: rgba(59,130,246,0.4); }
+
+    /* Format cards */
+    .format-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 768px) { .format-grid { grid-template-columns: repeat(2, 1fr); } }
+    .format-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+    .format-card:hover { border-color: rgba(124,58,237,0.5); background: rgba(124,58,237,0.03); }
+    .format-card .fc-icon { font-size: 2rem; margin-bottom: 10px; }
+    .format-card .fc-name { color: #fff; font-weight: 700; font-size: 0.95rem; }
+    .format-card .fc-desc { color: #888; font-size: 0.78rem; margin-top: 4px; line-height: 1.4; }
+    .format-card .fc-example { color: #7c3aed; font-size: 0.78rem; margin-top: 10px; font-style: italic; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 10px; line-height: 1.4; }
+    .format-card .fc-badge { position: absolute; top: 12px; right: 12px; font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 3px; background: rgba(124,58,237,0.15); color: #a78bfa; }
+
+    /* Dimension visual */
+    .dim-container { display: flex; gap: 24px; justify-content: center; align-items: flex-end; padding: 30px 20px; }
+    .dim-box { text-align: center; }
+    .dim-preview { background: #161616; border: 2px solid rgba(124,58,237,0.3); display: flex; align-items: center; justify-content: center; color: #666; font-size: 0.75rem; font-weight: 700; margin: 0 auto; }
+
+    /* Tool cards */
+    .tool-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; transition: border-color 0.2s; }
+    .tool-card:hover { border-color: rgba(124,58,237,0.3); }
+
+    /* Niche tabs */
+    .niche-tabs { display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .niche-tab { padding: 12px 18px; color: #666; font-size: 0.82rem; font-weight: 700; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .niche-tab:hover { color: #999; }
+    .niche-tab.active { color: #7c3aed; border-bottom-color: #7c3aed; }
+    .niche-panel { display: none; padding: 20px; }
+    .niche-panel.active { display: block; }
+
+    /* Diversity checker */
+    .dc-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .dc-row:last-child { border-bottom: none; }
+    .dc-label { color: #ccc; font-size: 0.85rem; flex: 1; }
+    .dc-input { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; width: 60px; padding: 6px 10px; color: #fff; font-size: 0.9rem; text-align: center; font-family: inherit; outline: none; }
+    .dc-input:focus { border-color: rgba(124,58,237,0.5); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.9 — Module 3: Fulfillment</div>
+      <h1>AI Creative Builder — <span>Visuals That Stop the Scroll</span></h1>
+      <div class="subtitle">
+        <span class="tag">AI Tools</span>
+        <span class="tag">Ad Creatives</span>
+        <span class="tag">~20 min</span>
+      </div>
+    </div>
+
+    <!-- Agent badge -->
+    <div style="display: flex; align-items: center; gap: 16px; background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;">
+      <img src="../images/agents/vortex.svg" alt="Vortex" style="width: 56px; height: 56px; border-radius: 12px;">
+      <div>
+        <div style="color: #7c3aed; font-weight: 800; font-size: 1rem;">VORTEX — Creative Reviewer</div>
+        <div style="color: #888; font-size: 0.85rem; margin-top: 2px;">Aurelius wrote the copy. Now you build the visuals. Vortex reviews your creative mix to make sure you have enough diversity before you spend a dollar. This lesson: how to build ad creatives with AI tools — fast.</div>
+      </div>
+    </div>
+
+    <div class="summary-box">You don't need a graphic designer. You don't need Photoshop. AI tools + Canva + your swipe file = 15-25 unique ad creatives per client in under an hour.</div>
+
+    <!-- SCREENS TO OPEN -->
+    <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 0.95rem;">🖥️ Screens to Open</h3>
+      <a href="https://www.canva.com/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">1.</span>
+        <span><strong style="color: #fff;">Canva</strong> — Your main creative tool. Free plan works fine to start.</span>
+      </a>
+      <a href="https://claude.ai/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">2.</span>
+        <span><strong style="color: #fff;">Claude</strong> — For generating image descriptions, video scripts, and creative concepts</span>
+      </a>
+      <a href="https://www.capcut.com/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">3.</span>
+        <span><strong style="color: #fff;">CapCut</strong> — Free video editor for quick video ads and UGC-style content</span>
+      </a>
+      <a href="https://aistudio.google.com/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">4.</span>
+        <span><strong style="color: #fff;">Google AI Studio</strong> — Nano Banana 2 (Gemini 3.1 Flash Image) — sketch-to-design + AI image generation</span>
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE 2-SECOND RULE          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">👁️</span> 1. The 2-Second Rule</h2>
+
+      <div style="background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(124,58,237,0.02)); border: 1px solid rgba(124,58,237,0.3); border-radius: 14px; padding: 28px; text-align: center; margin-bottom: 20px;">
+        <div style="color: #7c3aed; font-weight: 800; font-size: 1.3rem; margin-bottom: 8px;">IF THEY CAN'T GET IT IN 2 SECONDS, THEY SCROLL</div>
+        <div style="color: #ccc; font-size: 0.92rem; max-width: 500px; margin: 0 auto; line-height: 1.6;">Your ad is competing against their friends, memes, news, and reels. You get 2 seconds. Maybe less.</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+        <div style="background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.15); border-radius: 10px; padding: 18px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">✅ SCROLL STOPPERS</div>
+          <div style="font-size: 0.82rem; line-height: 1.8; color: #ccc;">
+            <div>🟢 Human faces (especially eyes looking at camera)</div>
+            <div>🟢 Bold contrast (dark bg + bright text)</div>
+            <div>🟢 One clear message (not 5 things at once)</div>
+            <div>🟢 Real photos > stock photos</div>
+            <div>🟢 Numbers in the image ("$12.99" / "20 min")</div>
+            <div>🟢 Before/after visuals</div>
+            <div>🟢 Movement (video > static always)</div>
+          </div>
+        </div>
+        <div style="background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 18px;">
+          <div style="color: #ef4444; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">❌ SCROLL PAST</div>
+          <div style="font-size: 0.82rem; line-height: 1.8; color: #888;">
+            <div>🔴 Generic stock photos (handshake guy, pointing lady)</div>
+            <div>🔴 Too much text crammed in</div>
+            <div>🔴 Low contrast (grey on grey)</div>
+            <div>🔴 No focal point (where do I look?)</div>
+            <div>🔴 Business logo taking up 30% of the ad</div>
+            <div>🔴 Fancy fonts nobody can read</div>
+            <div>🔴 Looking like an ad (people scroll past "ads")</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open your Instagram feed. Scroll. Point out which ads stop you and which you scroll past. Ask "why?"</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE 6 FORMATS              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎨</span> 2. The 6 Ad Formats You Need</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Vortex checks that your creative mix has variety. You need multiple <em>formats</em>, not just multiple images. Here are the 6 you'll use for every client:</p>
+
+      <div class="format-grid">
+        <div class="format-card">
+          <div class="fc-badge">ESSENTIAL</div>
+          <div class="fc-icon">🖼️</div>
+          <div class="fc-name">Single Image</div>
+          <div class="fc-desc">One strong image + text overlay. The workhorse of Facebook ads. Quick to make, easy to test.</div>
+          <div class="fc-example">Tony's: Photo of a steaming pizza just out of the oven. Bold text: "$12.99 — Delivered in 20 min." Simple. Done.</div>
+        </div>
+        <div class="format-card">
+          <div class="fc-badge">HIGH CTR</div>
+          <div class="fc-icon">📸</div>
+          <div class="fc-name">Carousel</div>
+          <div class="fc-desc">2-10 swipeable cards. Tells a story or shows multiple products. Gets more engagement because people swipe.</div>
+          <div class="fc-example">Tony's: Card 1: "🍕 Friday Night?" → Card 2: Menu options → Card 3: "2 large + 4 drinks = $19.99" → Card 4: "Order Now"</div>
+        </div>
+        <div class="format-card">
+          <div class="fc-badge">BEST PERFORMER</div>
+          <div class="fc-icon">🎬</div>
+          <div class="fc-name">Video (15-30s)</div>
+          <div class="fc-desc">Outperforms static 9 out of 10 times. Hook in first 2 seconds. Show the product. End with CTA.</div>
+          <div class="fc-example">Tony's: Close-up of dough being tossed → cheese stretching → delivery at door → family eating → "$12.99" text card</div>
+        </div>
+        <div class="format-card">
+          <div class="fc-badge">TRUST BUILDER</div>
+          <div class="fc-icon">🤳</div>
+          <div class="fc-name">UGC-Style</div>
+          <div class="fc-desc">Looks like a real person filmed it on their phone. Not polished. That's the point — it feels authentic in the feed.</div>
+          <div class="fc-example">Tony's: Someone filming themselves opening the pizza box: "Yo I just found this place and... are you serious right now? This is $12.99??"</div>
+        </div>
+        <div class="format-card">
+          <div class="fc-badge">CONVERSION</div>
+          <div class="fc-icon">↔️</div>
+          <div class="fc-name">Before / After</div>
+          <div class="fc-desc">Split-screen or swipe comparison. Extremely powerful for services (dental, fitness, cleaning, landscaping).</div>
+          <div class="fc-example">Tony's: Left side: sad microwave meal, grey lighting. Right side: Tony's pizza on a nice table, family laughing. Same person, different dinner.</div>
+        </div>
+        <div class="format-card">
+          <div class="fc-badge">ENGAGEMENT</div>
+          <div class="fc-icon">😂</div>
+          <div class="fc-name">Meme / Relatable</div>
+          <div class="fc-desc">Humor + relatability = shares + saves. Doesn't look like an ad. Gets organic reach on top of paid.</div>
+          <div class="fc-example">Tony's: Drake meme format — "Cooking after work" (nah) vs "Tony's at the door in 20 min" (yeah). Caption: "You know the vibe 🍕"</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #a78bfa;">Vortex's rule: every client needs at least 4 of these 6 formats.</strong> Not 15 single images. Not 10 videos. A MIX. The algorithm needs variety to test what resonates with different audience segments.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: DIMENSIONS                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📐</span> 3. Dimensions Cheat Sheet</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every ad you make gets exported in two sizes. Always. No exceptions.</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden;">
+        <div class="dim-container">
+          <div class="dim-box">
+            <div class="dim-preview" style="width: 140px; height: 140px; border-radius: 10px;">1080 × 1080</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-top: 12px;">Square (1:1)</div>
+            <div style="color: #888; font-size: 0.75rem; margin-top: 4px;">Feed posts</div>
+            <div style="display: flex; gap: 4px; margin-top: 8px; justify-content: center;">
+              <span style="font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; background: rgba(59,130,246,0.15); color: #60a5fa;">FB Feed</span>
+              <span style="font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; background: rgba(139,92,246,0.15); color: #a78bfa;">IG Feed</span>
+            </div>
+          </div>
+          <div style="color: #444; font-size: 1.5rem; padding-bottom: 40px;">+</div>
+          <div class="dim-box">
+            <div class="dim-preview" style="width: 90px; height: 160px; border-radius: 10px;">1080 × 1920</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-top: 12px;">Vertical (9:16)</div>
+            <div style="color: #888; font-size: 0.75rem; margin-top: 4px;">Stories & Reels</div>
+            <div style="display: flex; gap: 4px; margin-top: 8px; justify-content: center;">
+              <span style="font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; background: rgba(59,130,246,0.15); color: #60a5fa;">Stories</span>
+              <span style="font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; background: rgba(139,92,246,0.15); color: #a78bfa;">Reels</span>
+            </div>
+          </div>
+          <div style="color: #444; font-size: 1.5rem; padding-bottom: 40px;">=</div>
+          <div class="dim-box">
+            <div style="background: rgba(34,197,94,0.1); border: 2px solid rgba(34,197,94,0.3); border-radius: 10px; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center;">
+              <div style="text-align: center;">
+                <div style="color: #22c55e; font-weight: 800; font-size: 1.5rem;">2x</div>
+                <div style="color: #22c55e; font-size: 0.7rem;">placements</div>
+              </div>
+            </div>
+            <div style="color: #22c55e; font-weight: 700; font-size: 0.85rem; margin-top: 12px;">Maximum Reach</div>
+            <div style="color: #888; font-size: 0.75rem; margin-top: 4px;">Every ad, both sizes</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: In Canva, show how to create both sizes. Start with 1080x1080, duplicate, resize to 1080x1920. Takes 30 seconds.</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: TOOL STACK                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> 4. Your Tool Stack</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">You only need 3 tools. All free or cheap. No Photoshop, no After Effects, no design degree.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+        <div class="tool-card">
+          <div style="font-size: 2rem; margin-bottom: 10px;">🎨</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Canva</div>
+          <div style="color: #7c3aed; font-size: 0.75rem; font-weight: 600; margin-top: 2px;">BUILD THE FINAL AD</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 8px;">Templates, drag-and-drop, brand kits. This is where you assemble the final ad — add text overlays, CTAs, export both sizes. 80% of your creatives get finished here.</div>
+          <div style="margin-top: 10px;">
+            <span style="font-size: 0.7rem; padding: 2px 7px; border-radius: 3px; background: rgba(34,197,94,0.15); color: #22c55e;">Free plan works</span>
+            <span style="font-size: 0.7rem; padding: 2px 7px; border-radius: 3px; background: rgba(59,130,246,0.15); color: #60a5fa;">Pro = $13/mo</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div style="font-size: 2rem; margin-bottom: 10px;">🎬</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">CapCut</div>
+          <div style="color: #7c3aed; font-size: 0.75rem; font-weight: 600; margin-top: 2px;">VIDEO ADS</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 8px;">Free video editor. Auto-captions, transitions, templates. Turn stock footage + text into scroll-stopping video ads. Mobile and desktop.</div>
+          <div style="margin-top: 10px;">
+            <span style="font-size: 0.7rem; padding: 2px 7px; border-radius: 3px; background: rgba(34,197,94,0.15); color: #22c55e;">Free</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div style="font-size: 2rem; margin-bottom: 10px;">🤖</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Claude</div>
+          <div style="color: #7c3aed; font-size: 0.75rem; font-weight: 600; margin-top: 2px;">CONCEPTS + SCRIPTS</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 8px;">Generate image descriptions, video scripts (hook → body → CTA), carousel storylines, and creative concepts. Feed it your angles from 3.8.</div>
+          <div style="margin-top: 10px;">
+            <span style="font-size: 0.7rem; padding: 2px 7px; border-radius: 3px; background: rgba(34,197,94,0.15); color: #22c55e;">Free plan works</span>
+          </div>
+        </div>
+        <div class="tool-card" style="border-color: rgba(234,179,8,0.25); background: rgba(234,179,8,0.02);">
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">🍌</div>
+            <span style="font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 3px; background: rgba(234,179,8,0.2); color: #eab308;">NEW — FEB 2026</span>
+          </div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Gemini (Nano Banana 2)</div>
+          <div style="color: #eab308; font-size: 0.75rem; font-weight: 600; margin-top: 2px;">SKETCH → DESIGN</div>
+          <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 8px;">Google's new image model. The killer feature: <strong style="color: #ccc;">sketch an ad on paper, take a photo, and it turns your sketch into a professional design.</strong> Also generates images from text descriptions. Best image model available right now.</div>
+          <div style="margin-top: 10px;">
+            <span style="font-size: 0.7rem; padding: 2px 7px; border-radius: 3px; background: rgba(34,197,94,0.15); color: #22c55e;">Free via AI Studio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nano Banana sketch demo -->
+      <div style="border: 1px solid rgba(234,179,8,0.25); border-radius: 12px; overflow: hidden; margin-top: 16px;">
+        <div style="background: rgba(234,179,8,0.08); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <span style="color: #eab308; font-weight: 700; font-size: 0.78rem;">🍌 NANO BANANA 2 — Sketch to Professional Design in Seconds</span>
+        </div>
+        <img src="../images/nano-banana-sketch.jpg" alt="Nano Banana 2 demo — a messy whiteboard sketch of the digestive system gets transformed into a high-end textbook infographic in seconds" style="width: 100%; display: block;">
+      </div>
+      <p style="color: #888; font-size: 0.82rem; line-height: 1.6; margin-top: 10px;">Sketch your ad idea on paper → take a photo → Nano Banana 2 turns it into a professional design. Client has no photos? No designer? Doesn't matter. You can literally draw what you want the ad to look like and AI builds it. This is the workflow: <strong style="color: #ccc;">Sketch idea → Nano Banana generates the image → Canva assembles the final ad with text + CTA.</strong></p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-top: 12px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Sketch a simple pizza ad on paper (or whiteboard). Take a photo. Upload to Google AI Studio. Show the output. Students will lose their minds.</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: NICHE TEMPLATES            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏪</span> 5. Niche Creative Templates</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Different businesses need different creative styles. Click each niche to see the playbook:</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Click through 2-3 niches. For each one, open Canva and show a template that matches. Point out the visual style differences.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden;">
+        <div class="niche-tabs">
+          <div class="niche-tab active" onclick="showNiche('pizza')">🍕 Restaurant</div>
+          <div class="niche-tab" onclick="showNiche('dentist')">🦷 Dentist</div>
+          <div class="niche-tab" onclick="showNiche('gym')">💪 Gym</div>
+          <div class="niche-tab" onclick="showNiche('realtor')">🏠 Real Estate</div>
+          <div class="niche-tab" onclick="showNiche('cleaning')">🧹 Home Services</div>
+        </div>
+
+        <div class="niche-panel active" id="niche-pizza">
+          <div style="color: #fff; font-weight: 700; margin-bottom: 12px;">Restaurant / Food — Tony's Pizza Example</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #7c3aed; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">📸 WHAT TO SHOOT</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Close-up food shots (cheese pull, steam, toppings). Real kitchen footage. Delivery moment (door opens). Happy customers eating. The chef making food.</div>
+            </div>
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #e67e22; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🎨 VISUAL STYLE</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Warm colors (orange, red, yellow). Dark backgrounds make food pop. Big price/deal text. Show the food FIRST — not the logo. Natural lighting.</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; background: #161616; border-radius: 8px; padding: 14px;">
+            <div style="color: #22c55e; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🏆 TOP PERFORMING FORMATS</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">1. Video of food being made (UGC style) → 2. Carousel of menu items → 3. Single image with deal overlay → 4. Before/after (empty table → full pizza spread)</div>
+          </div>
+        </div>
+
+        <div class="niche-panel" id="niche-dentist">
+          <div style="color: #fff; font-weight: 700; margin-bottom: 12px;">Dental — Smile Transformation</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #7c3aed; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">📸 WHAT TO SHOOT</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Before/after smile photos (with permission). Clean office shots. Friendly staff. Patient testimonial videos. The dentist explaining procedures in plain English.</div>
+            </div>
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #e67e22; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🎨 VISUAL STYLE</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Clean whites and blues. Trust-building visuals. Show real people, real smiles. Avoid sterile/clinical look — make it warm and welcoming. Big clear offer text.</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; background: #161616; border-radius: 8px; padding: 14px;">
+            <div style="color: #22c55e; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🏆 TOP PERFORMING FORMATS</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">1. Before/after smile carousel (HUGE engagement) → 2. Patient video testimonial → 3. "New patient special $99" single image → 4. Doctor explainer video (builds trust)</div>
+          </div>
+        </div>
+
+        <div class="niche-panel" id="niche-gym">
+          <div style="color: #fff; font-weight: 700; margin-bottom: 12px;">Gym / Fitness — Get In Shape</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #7c3aed; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">📸 WHAT TO SHOOT</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Real members working out (not models). Transformation photos. Community moments (group classes, high fives). Clean facility shots. Trainer explaining exercises.</div>
+            </div>
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #e67e22; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🎨 VISUAL STYLE</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Bold, high energy. Dark backgrounds with bright accent colors. Action shots with motion blur. Strong typography. Show effort AND results. Avoid intimidating vibes for general gyms.</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; background: #161616; border-radius: 8px; padding: 14px;">
+            <div style="color: #22c55e; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🏆 TOP PERFORMING FORMATS</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">1. Transformation video (before/after with story) → 2. Workout clip UGC → 3. "First week free" offer image → 4. Member testimonial carousel</div>
+          </div>
+        </div>
+
+        <div class="niche-panel" id="niche-realtor">
+          <div style="color: #fff; font-weight: 700; margin-bottom: 12px;">Real Estate — Dream Home</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #7c3aed; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">📸 WHAT TO SHOOT</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Property walkthrough videos. Neighborhood highlights. "Just listed" / "Just sold" graphics. Agent on camera giving market tips. Drone shots of the area.</div>
+            </div>
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #e67e22; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🎨 VISUAL STYLE</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Aspirational but attainable. Bright, clean photos. Show the lifestyle, not just the house. Price and location front and center. Professional but not corporate.</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; background: #161616; border-radius: 8px; padding: 14px;">
+            <div style="color: #22c55e; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🏆 TOP PERFORMING FORMATS</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">1. Property walkthrough video (15-30s) → 2. "Just listed" carousel with room photos → 3. Market update single image → 4. "Homes under $X in [area]" lead ad</div>
+          </div>
+        </div>
+
+        <div class="niche-panel" id="niche-cleaning">
+          <div style="color: #fff; font-weight: 700; margin-bottom: 12px;">Home Services — Before/After Gold</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #7c3aed; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">📸 WHAT TO SHOOT</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Before/after transformations (the #1 format). Time-lapse of work being done. Satisfying cleaning/pressure washing videos. Happy homeowner reactions. The truck/team arriving.</div>
+            </div>
+            <div style="background: #161616; border-radius: 8px; padding: 14px;">
+              <div style="color: #e67e22; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🎨 VISUAL STYLE</div>
+              <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">Raw and real beats polished. Phone footage > professional shoots. Split-screen before/after is king. Price + service area in bold. "Before" side should look genuinely messy.</div>
+            </div>
+          </div>
+          <div style="margin-top: 12px; background: #161616; border-radius: 8px; padding: 14px;">
+            <div style="color: #22c55e; font-weight: 700; font-size: 0.78rem; margin-bottom: 6px;">🏆 TOP PERFORMING FORMATS</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.6;">1. Before/after side-by-side (INSANE engagement) → 2. Satisfying time-lapse video → 3. "$99 first clean" offer image → 4. Homeowner reaction UGC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: THE BUILD PROCESS          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 6. The 45-Minute Creative Build</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This is the exact process to go from zero creatives to 15-25 ready-to-upload ads in under an hour:</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Walk through this process live. Build 2-3 creatives in Canva as you explain. Show the Claude prompt for video scripts.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden;">
+        <!-- Step 1 -->
+        <div style="display: flex; gap: 16px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="background: #7c3aed; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">1</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Pull angles from 3.8 <span style="color: #666; font-weight: 400; font-size: 0.8rem;">— 5 min</span></div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 4px;">Open your Aurelius output from lesson 3.8. You already have 12 ad copy variations with different angles. Each angle becomes a creative.</div>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div style="display: flex; gap: 16px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="background: #7c3aed; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">2</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Check your swipe file <span style="color: #666; font-weight: 400; font-size: 0.8rem;">— 5 min</span></div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 4px;">Open your swipe file. Find formats that match this client's niche. A restaurant? Look at food ads you saved. A gym? Pull those transformation formats. Don't reinvent — adapt.</div>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div style="display: flex; gap: 16px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="background: #7c3aed; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">3</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Build 8-10 static creatives in Canva <span style="color: #666; font-weight: 400; font-size: 0.8rem;">— 20 min</span></div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 4px;">Use templates. Swap text to match your copy. Use client's photos or stock. Export both sizes (1080x1080 + 1080x1920). Mix: 4 single images, 2 carousels, 2 before/after.</div>
+          </div>
+        </div>
+        <!-- Step 4 -->
+        <div style="display: flex; gap: 16px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="background: #7c3aed; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">4</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Build 3-5 video creatives <span style="color: #666; font-weight: 400; font-size: 0.8rem;">— 15 min</span></div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 4px;">Ask Claude for 15-second video scripts (hook → body → CTA). Use client footage, stock footage, or screen recordings. Edit in CapCut. Add captions and music. Done.</div>
+          </div>
+        </div>
+        <!-- Step 5 -->
+        <div style="display: flex; gap: 16px; padding: 20px;">
+          <div style="background: #7c3aed; color: #fff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; flex-shrink: 0;">5</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Run through Vortex checklist <span style="color: #666; font-weight: 400; font-size: 0.8rem;">— 5 min</span></div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 4px;">Use the diversity checker below. Make sure you have enough variety in formats, angles, and visual styles. If Vortex says you're short, go back and add more.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px; text-align: center;">
+        <div style="color: #22c55e; font-weight: 800; font-size: 1.1rem;">Total: ~45 minutes → 15-25 ready-to-upload creatives</div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">A design agency would charge $1,000-$2,000 for this. You did it for free with AI + Canva.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: VORTEX DIVERSITY CHECKER   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🌀</span> 7. Vortex Creative Diversity Checker</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Before you launch, run your creatives through Vortex. Enter how many of each format you have:</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(124,58,237,0.25); border-radius: 14px; padding: 24px; overflow: hidden;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+          <img src="../images/agents/vortex.svg" alt="Vortex" style="width: 32px; height: 32px; border-radius: 8px;">
+          <span style="color: #7c3aed; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Vortex Diversity Check</span>
+        </div>
+
+        <div class="dc-row">
+          <div class="dc-label">🖼️ Single Images</div>
+          <input type="number" class="dc-input" id="dc-single" value="0" min="0" oninput="checkDiversity()">
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">📸 Carousels</div>
+          <input type="number" class="dc-input" id="dc-carousel" value="0" min="0" oninput="checkDiversity()">
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">🎬 Videos</div>
+          <input type="number" class="dc-input" id="dc-video" value="0" min="0" oninput="checkDiversity()">
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">🤳 UGC-Style</div>
+          <input type="number" class="dc-input" id="dc-ugc" value="0" min="0" oninput="checkDiversity()">
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">↔️ Before/After</div>
+          <input type="number" class="dc-input" id="dc-ba" value="0" min="0" oninput="checkDiversity()">
+        </div>
+        <div class="dc-row">
+          <div class="dc-label">😂 Meme/Relatable</div>
+          <input type="number" class="dc-input" id="dc-meme" value="0" min="0" oninput="checkDiversity()">
+        </div>
+
+        <div id="dc-result" style="margin-top: 20px; padding: 18px; border-radius: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.06);">
+          <div style="text-align: center; color: #666; font-size: 0.85rem;">Enter your creative counts above</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 8: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 8. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Explain the 2-second rule</strong>
+            <span>If they can't get it in 2 seconds, they scroll. Faces, contrast, one message, numbers.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Name all 6 ad formats</strong>
+            <span>Single image, carousel, video, UGC-style, before/after, meme/relatable.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Know the two dimensions by heart</strong>
+            <span>1080×1080 (feed) + 1080×1920 (stories/reels). Every ad, both sizes. Always.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Build a creative in Canva in under 5 minutes</strong>
+            <span>Pick template, swap text/images, export both sizes. Repetition makes this fast.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Pass the Vortex diversity check (15+ creatives, 4+ formats)</strong>
+            <span>Use the checker above. Green = launch. Red = add more variety.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Pull creative ideas from your swipe file</strong>
+            <span>Your swipe file from 3.8 is where you find formats to adapt. Don't reinvent the wheel.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>vortex</span><span>creatives</span><span>canva</span><span>capcut</span><span>ad-formats</span><span>dimensions</span><span>niche-templates</span><span>diversity-check</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.8-ai-ad-copy-generator.html" class="nav-link">← AI Ad Copy Generator</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.10-ai-audience-finder.html" class="nav-link">AI Audience Finder →</a>
+    </div>
+  </div>
+
+  <script>
+    // === NICHE TABS ===
+    function showNiche(id) {
+      document.querySelectorAll('.niche-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.niche-panel').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('niche-' + id).classList.add('active');
+    }
+
+    // === VORTEX DIVERSITY CHECKER ===
+    function checkDiversity() {
+      const single = parseInt(document.getElementById('dc-single').value) || 0;
+      const carousel = parseInt(document.getElementById('dc-carousel').value) || 0;
+      const video = parseInt(document.getElementById('dc-video').value) || 0;
+      const ugc = parseInt(document.getElementById('dc-ugc').value) || 0;
+      const ba = parseInt(document.getElementById('dc-ba').value) || 0;
+      const meme = parseInt(document.getElementById('dc-meme').value) || 0;
+
+      const total = single + carousel + video + ugc + ba + meme;
+      const formats = [single, carousel, video, ugc, ba, meme].filter(v => v > 0).length;
+
+      const el = document.getElementById('dc-result');
+      let html = '';
+
+      if (total === 0) {
+        html = '<div style="text-align: center; color: #666; font-size: 0.85rem;">Enter your creative counts above</div>';
+      } else {
+        // Total check
+        const totalOk = total >= 15;
+        const totalColor = totalOk ? '#22c55e' : total >= 10 ? '#eab308' : '#ef4444';
+        const totalIcon = totalOk ? '✅' : total >= 10 ? '⚠️' : '🔴';
+
+        // Format check
+        const formatOk = formats >= 4;
+        const formatColor = formatOk ? '#22c55e' : formats >= 3 ? '#eab308' : '#ef4444';
+        const formatIcon = formatOk ? '✅' : formats >= 3 ? '⚠️' : '🔴';
+
+        // Video check
+        const hasVideo = video > 0 || ugc > 0;
+        const videoColor = hasVideo ? '#22c55e' : '#ef4444';
+        const videoIcon = hasVideo ? '✅' : '🔴';
+
+        const allPass = totalOk && formatOk && hasVideo;
+
+        html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center;"><span style="color: #ccc; font-size: 0.88rem;">' + totalIcon + ' Total Creatives</span><span style="color: ' + totalColor + '; font-weight: 800; font-size: 1rem;">' + total + ' / 15 min</span></div>';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center;"><span style="color: #ccc; font-size: 0.88rem;">' + formatIcon + ' Format Types</span><span style="color: ' + formatColor + '; font-weight: 800; font-size: 1rem;">' + formats + ' / 4 min</span></div>';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center;"><span style="color: #ccc; font-size: 0.88rem;">' + videoIcon + ' Has Video/UGC</span><span style="color: ' + videoColor + '; font-weight: 800; font-size: 1rem;">' + (hasVideo ? 'Yes' : 'No') + '</span></div>';
+
+        html += '<div style="margin-top: 10px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center;">';
+        if (allPass) {
+          html += '<div style="color: #22c55e; font-weight: 800; font-size: 1.1rem;">✅ VORTEX APPROVED — Ready to Launch</div>';
+          html += '<div style="color: #888; font-size: 0.78rem; margin-top: 4px;">Your creative mix has enough diversity for the algorithm to optimize.</div>';
+        } else {
+          html += '<div style="color: #ef4444; font-weight: 800; font-size: 1.1rem;">❌ NOT ENOUGH DIVERSITY</div>';
+          let tips = [];
+          if (!totalOk) tips.push('Add ' + (15 - total) + ' more creatives (need 15 minimum)');
+          if (!formatOk) tips.push('Use ' + (4 - formats) + ' more format types (need 4 minimum)');
+          if (!hasVideo) tips.push('Add at least 1 video or UGC creative');
+          html += '<div style="color: #888; font-size: 0.78rem; margin-top: 4px;">' + tips.join(' • ') + '</div>';
+        }
+        html += '</div></div>';
+      }
+
+      el.innerHTML = html;
+    }
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.9-creative-builder-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

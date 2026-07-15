@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.1: Fulfillment Overview — AI Advertiser by Brez Scales</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .timeline { position: relative; padding-left: 40px; margin: 24px 0; }
+    .timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: rgba(59,130,246,0.3); }
+    .timeline-item { position: relative; margin-bottom: 28px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot { position: absolute; left: -33px; top: 4px; width: 12px; height: 12px; background: #3B82F6; border-radius: 50%; border: 2px solid #0A0A0A; }
+    .timeline-day { color: #3B82F6; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .timeline-title { color: #fff; font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+    .timeline-desc { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .onboarding-checklist { background: #161616; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 0; overflow: hidden; }
+    .onboarding-header { background: rgba(59,130,246,0.1); padding: 20px 24px; border-bottom: 1px solid rgba(59,130,246,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .onboarding-header h3 { color: #3B82F6; margin: 0; font-size: 1.1rem; }
+    .onboarding-body { padding: 8px 0; }
+    .phase-label { background: rgba(59,130,246,0.08); padding: 10px 24px; color: #3B82F6; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1.5px; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 8px; }
+    .phase-label:first-child { margin-top: 0; border-top: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.1 — Module 3: Fulfillment</div>
+      <h1><span>Fulfillment Overview</span></h1>
+      <div class="subtitle">
+        <span class="tag">Fulfillment</span>
+        <span class="tag">~5 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">The client just said yes. Now what? This lesson maps the complete pipeline from signed deal to first ad live — and gives you a checklist you'll use for every single client you onboard.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE 7-DAY PIPELINE         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 1. The 7-Day Launch Pipeline</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+        Every new client follows the same path. Seven days from "yes" to live ads. No guesswork, no improvising. You follow the system.
+      </p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-day">Day 0 — Close</div>
+          <div class="timeline-title">Client signs contract + pays first invoice</div>
+          <div class="timeline-desc">Send contract (DocuSign or PandaDoc). Collect first payment via Stripe. Send welcome email with onboarding form.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-day">Day 1 — Onboarding Call</div>
+          <div class="timeline-title">30-min kickoff call + access collection</div>
+          <div class="timeline-desc">Introduce yourself properly. Walk through the onboarding form together. Collect all access (Meta Business Manager, website, Google Analytics). Set expectations: "You'll have ads live within 7 days."</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-day">Day 2 — Research + Setup</div>
+          <div class="timeline-title">Ad account setup + pixel installation + research</div>
+          <div class="timeline-desc">Set up or audit their Meta ad account. Install the pixel on their website. Research their competitors, audience, and local market using the AI agents.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-day">Day 3–4 — Creative Production</div>
+          <div class="timeline-title">AI generates ad copy + creatives + audiences</div>
+          <div class="timeline-desc">Use the AI Ad Copy Agent to generate 10+ variations. Use the AI Creative Agent to build image/video concepts. Use the AI Audience Agent to find targeting. Send the creative list to the client for approval or recording.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-day">Day 5–6 — Campaign Build</div>
+          <div class="timeline-title">Build campaigns in Ads Manager + QA</div>
+          <div class="timeline-desc">Structure campaigns (CBO or ABO depending on budget). Upload all creatives. Set budgets. Double-check targeting, placements, pixel events. Run through QA checklist before launching.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-day">Day 7 — Launch</div>
+          <div class="timeline-title">Ads go live + client notification</div>
+          <div class="timeline-desc">Hit publish. Send the client a message: "Your ads are live. Here's what to expect in the first 48 hours." Set up the AI Optimizer to start monitoring.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: WHY THIS MATTERS           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💰</span> 2. Why Fulfillment Makes or Breaks You</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+        <div class="stat-box"><div class="stat-value">5–10×<br><span style="font-size: 12px; color: #ccc; font-weight: 400;">cheaper to keep a client than find a new one</span></div></div>
+        <div class="stat-box"><div class="stat-value">6–12 mo<br><span style="font-size: 12px; color: #ccc; font-weight: 400;">average lifetime with good fulfillment</span></div></div>
+        <div class="stat-box"><div class="stat-value">1 month<br><span style="font-size: 12px; color: #ccc; font-weight: 400;">average lifetime with bad fulfillment</span></div></div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6;">
+        A client paying $2K/month for 12 months is $24K. That same client churning after month 1 is $2K and a bad review. The difference is fulfillment. Follow the checklist below for every client and you'll keep them for the long haul.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: YOUR ROLE VS AI'S ROLE     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🤝</span> 3. Your Job vs. The Agents' Job</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+        <div class="card">
+          <h3 style="color: #3B82F6;">You Handle</h3>
+          <ul>
+            <li>Client communication + relationship</li>
+            <li>Onboarding call + access collection</li>
+            <li>Approving AI-generated creatives</li>
+            <li>Sending weekly reports</li>
+            <li>Monthly strategy calls</li>
+            <li>Upselling + renewals</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="color: #3B82F6;">AI Agents Handle</h3>
+          <ul>
+            <li>Ad copy generation (10+ variations)</li>
+            <li>Creative concepts by niche</li>
+            <li>Audience research + targeting</li>
+            <li>Campaign uploads + button clicking</li>
+            <li>Performance monitoring</li>
+            <li>Killing underperformers automatically</li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6;">
+        You are the face. The agents are the engine. The client never needs to know how the sausage is made — they just need results and communication.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: NEW CLIENT ONBOARDING      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 4. New Client Onboarding Checklist</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+        Use this checklist for every single new client. Tick off each item as you go. Miss a step and something breaks downstream.
+      </p>
+
+      <!-- PROGRESS -->
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Onboarding Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <div class="onboarding-checklist">
+        <div class="onboarding-header">
+          <h3>🚀 New Client Onboarding — Full Checklist</h3>
+          <button onclick="resetChecklist()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #888; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px;">Reset for new client</button>
+        </div>
+        <div class="onboarding-body">
+
+          <!-- PHASE 1: CLOSE -->
+          <div class="phase-label">Phase 1 — Close the Deal</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c1">
+              <label class="check-content" for="c1">
+                <strong>Send contract via DocuSign or PandaDoc</strong>
+                <span>Use the standard client agreement template. Include scope of work, monthly fee, payment terms, and 30-day cancellation clause.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c2">
+              <label class="check-content" for="c2">
+                <strong>Collect first payment</strong>
+                <span>Stripe invoice or direct bank transfer. Don't start ANY work until payment clears. No exceptions.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c3">
+              <label class="check-content" for="c3">
+                <strong>Send welcome email with onboarding form</strong>
+                <span>Include: what to expect, 7-day timeline, onboarding form link (Google Form or Typeform), calendar link for onboarding call.</span>
+              </label>
+            </li>
+          </ul>
+
+          <!-- PHASE 2: ONBOARDING -->
+          <div class="phase-label">Phase 2 — Onboarding Call (Day 1)</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c4">
+              <label class="check-content" for="c4">
+                <strong>Conduct 30-min onboarding call</strong>
+                <span>Walk through the onboarding form together. Understand their business, target customer, current marketing, and goals. Record the call (with permission) for reference.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c5">
+              <label class="check-content" for="c5">
+                <strong>Collect Meta Business Manager access</strong>
+                <span>Client adds you as Partner in Business Settings → Partners. You need ad account access + page access. If they don't have BM, you'll set it up for them in lesson 3.4.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c6">
+              <label class="check-content" for="c6">
+                <strong>Collect website access for pixel installation</strong>
+                <span>WordPress login, Shopify admin, Wix editor, or Google Tag Manager access. You need this to install the Meta pixel.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c7">
+              <label class="check-content" for="c7">
+                <strong>Collect Google Analytics access (if they have it)</strong>
+                <span>Add your email as Viewer. This helps you understand their current traffic and conversion baseline.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c8">
+              <label class="check-content" for="c8">
+                <strong>Get their brand assets</strong>
+                <span>Logo (high-res PNG), brand colors, existing photos/videos of their business, any past ad creatives. Ask them to dump everything in a shared Google Drive folder.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c9">
+              <label class="check-content" for="c9">
+                <strong>Define the primary offer + CTA</strong>
+                <span>What are we driving people to do? Call, book online, visit the store, fill out a form? What's the offer? Discount, free consultation, free estimate? Get this crystal clear.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c10">
+              <label class="check-content" for="c10">
+                <strong>Set clear expectations</strong>
+                <span>"Ads will be live within 7 days. First real data after 5-7 days of spend. I'll send you a weekly update every Monday. Monthly strategy call on the first of each month."</span>
+              </label>
+            </li>
+          </ul>
+
+          <!-- PHASE 3: SETUP -->
+          <div class="phase-label">Phase 3 — Technical Setup (Day 2)</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c11">
+              <label class="check-content" for="c11">
+                <strong>Set up or audit Meta Business Manager</strong>
+                <span>Create BM if they don't have one. Verify business. Create or claim ad account. Connect Facebook Page + Instagram.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c12">
+              <label class="check-content" for="c12">
+                <strong>Install Meta Pixel on their website</strong>
+                <span>Create pixel in Events Manager. Install base code via GTM or directly. Set up standard events (PageView, Lead, Purchase, etc. depending on their goals).</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c13">
+              <label class="check-content" for="c13">
+                <strong>Verify pixel is firing correctly</strong>
+                <span>Use Meta Pixel Helper Chrome extension. Check Events Manager for incoming events. Test a conversion event yourself.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c14">
+              <label class="check-content" for="c14">
+                <strong>Set up payment method on ad account</strong>
+                <span>Client's credit card or your agency card (if you're fronting spend). Confirm billing threshold and currency.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c15">
+              <label class="check-content" for="c15">
+                <strong>Research competitors in the AI Audience Agent</strong>
+                <span>Feed client's business info into the AI agent. Pull competitor analysis, audience suggestions, and local market insights.</span>
+              </label>
+            </li>
+          </ul>
+
+          <!-- PHASE 4: CREATIVE -->
+          <div class="phase-label">Phase 4 — Creative Production (Days 3–4)</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c16">
+              <label class="check-content" for="c16">
+                <strong>Generate 10+ ad copy variations with AI Ad Copy Agent</strong>
+                <span>Feed business info, offer, and target audience. Generate across PAS, AIDA, BAB frameworks. Pick the top 5-6.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c17">
+              <label class="check-content" for="c17">
+                <strong>Generate creative concepts with AI Creative Agent</strong>
+                <span>Image ads: product shots, testimonial cards, comparison graphics. Video ads: send client a shot list of what to film (keep it simple — phone footage is fine).</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c18">
+              <label class="check-content" for="c18">
+                <strong>Build audiences with AI Audience Agent</strong>
+                <span>Interest targeting, lookalikes (if they have data), location radius, age/demo filters. Create 3-4 audience variations to test.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c19">
+              <label class="check-content" for="c19">
+                <strong>Send creatives to client for approval</strong>
+                <span>Share the ad copy + creative mockups. Get written approval before going live. This protects you if they complain later.</span>
+              </label>
+            </li>
+          </ul>
+
+          <!-- PHASE 5: BUILD -->
+          <div class="phase-label">Phase 5 — Campaign Build + QA (Days 5–6)</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c20">
+              <label class="check-content" for="c20">
+                <strong>Build campaign structure in Ads Manager</strong>
+                <span>CBO for budgets over $50/day, ABO for smaller tests. Name everything clearly: [Client]_[Objective]_[Audience]_[Date].</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c21">
+              <label class="check-content" for="c21">
+                <strong>Upload all creatives as individual ads</strong>
+                <span>No dynamic creative. Individual ads = full control. Upload each variation as its own ad. Turn OFF all Advantage Creative toggles.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c22">
+              <label class="check-content" for="c22">
+                <strong>QA checklist before launch</strong>
+                <span>Check: correct pixel selected, correct conversion event, correct page linked, correct CTA button, no typos in copy, correct URL, correct audiences, correct budget, correct schedule, all Advantage Creative toggles OFF.</span>
+              </label>
+            </li>
+          </ul>
+
+          <!-- PHASE 6: LAUNCH -->
+          <div class="phase-label">Phase 6 — Launch + Monitor (Day 7)</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c23">
+              <label class="check-content" for="c23">
+                <strong>Publish all campaigns</strong>
+                <span>Hit publish. Wait for Meta review (usually 1-24 hours). Check back to make sure nothing got rejected.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c24">
+              <label class="check-content" for="c24">
+                <strong>Send "ads are live" message to client</strong>
+                <span>"Your ads are live! Here's what to expect: first 48 hours is learning phase — Meta is testing who responds best. Real data starts coming in after 3-5 days. I'll send your first update on Monday."</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c25">
+              <label class="check-content" for="c25">
+                <strong>Set up AI Campaign Optimizer monitoring</strong>
+                <span>Connect the AI Optimizer agent to the ad account. Set rules for auto-pausing underperformers. Schedule your daily 15-min check-in.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c26">
+              <label class="check-content" for="c26">
+                <strong>Schedule first weekly report (Monday)</strong>
+                <span>Set a calendar reminder. First report goes out 7 days after launch. Use the weekly report template from lesson 4.2.</span>
+              </label>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>fulfillment</span><span>onboarding</span><span>checklist</span><span>client-management</span><span>7-day-launch</span><span>ai-agents</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <span></span>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.2-how-online-advertising-works.html" class="nav-link">How Online Advertising Works →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-3.1-onboarding-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    function resetChecklist() {
+      if (confirm('Reset all checkboxes for a new client?')) {
+        cbs.forEach(cb => cb.checked = false);
+        localStorage.removeItem(STORAGE_KEY);
+        updateProgress();
+      }
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

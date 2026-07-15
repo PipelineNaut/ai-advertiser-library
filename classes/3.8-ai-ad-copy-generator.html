@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.8: AI Ad Copy Generator — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+
+    /* Prompt builder */
+    .prompt-field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+    .prompt-field label { color: #888; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .prompt-field input, .prompt-field textarea, .prompt-field select {
+      background: #161616; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px;
+      color: #fff; font-size: 0.88rem; font-family: inherit; outline: none; transition: border-color 0.2s;
+    }
+    .prompt-field input:focus, .prompt-field textarea:focus, .prompt-field select:focus { border-color: rgba(230,126,34,0.6); }
+    .prompt-field textarea { resize: vertical; min-height: 60px; }
+    .prompt-field select option { background: #161616; color: #fff; }
+    .prompt-output { background: #0a0a0a; border: 1px solid rgba(230,126,34,0.3); border-radius: 12px; padding: 20px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; line-height: 1.7; color: #ccc; white-space: pre-wrap; position: relative; max-height: 500px; overflow-y: auto; }
+    .copy-btn { position: absolute; top: 10px; right: 10px; background: #e67e22; color: #fff; border: none; border-radius: 6px; padding: 6px 14px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .copy-btn:hover { background: #d35400; }
+    .copy-btn.copied { background: #22c55e; }
+
+    /* Framework tabs */
+    .fw-tabs { display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 0; }
+    .fw-tab { padding: 12px 20px; color: #666; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .fw-tab:hover { color: #999; }
+    .fw-tab.active { color: #e67e22; border-bottom-color: #e67e22; }
+    .fw-panel { display: none; padding: 20px; }
+    .fw-panel.active { display: block; }
+
+    /* Anti-pattern cards */
+    .ap-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+    .ap-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; }
+    .ap-header:hover { background: rgba(255,255,255,0.02); }
+    .ap-badge { font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+    .ap-bad { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .ap-good { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .ap-body { display: none; padding: 0 18px 18px; }
+    .ap-body.show { display: block; }
+
+    /* Angle grid */
+    .angle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    @media (max-width: 768px) { .angle-grid { grid-template-columns: repeat(2, 1fr); } }
+    .angle-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; }
+    .angle-card:hover { border-color: rgba(230,126,34,0.4); background: rgba(230,126,34,0.03); }
+    .angle-card .angle-emoji { font-size: 1.3rem; margin-bottom: 6px; }
+    .angle-card .angle-name { color: #fff; font-weight: 700; font-size: 0.85rem; }
+    .angle-card .angle-desc { color: #888; font-size: 0.75rem; margin-top: 4px; line-height: 1.4; }
+    .angle-card .angle-hook { color: #e67e22; font-size: 0.78rem; margin-top: 8px; font-style: italic; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 8px; }
+
+    /* Example output card */
+    .ad-example { background: #0d0d0d; border-left: 3px solid; border-radius: 0 8px 8px 0; padding: 14px 18px; margin-bottom: 10px; }
+    .ad-example .ad-meta { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; }
+    .ad-example .ad-meta span { font-size: 0.7rem; font-weight: 600; padding: 2px 7px; border-radius: 3px; }
+    .ad-example .ad-text { color: #ccc; font-size: 0.85rem; line-height: 1.6; }
+    .ad-example .ad-text strong { color: #fff; }
+
+    /* Screen link */
+    .screen-link { display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; margin-bottom: 6px; }
+    .screen-link:hover { border-color: rgba(59,130,246,0.4); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.8 — Module 3: Fulfillment</div>
+      <h1>AI Ad Copy Generator — <span>Aurelius in Action</span></h1>
+      <div class="subtitle">
+        <span class="tag">AI Tools</span>
+        <span class="tag">Ad Copy</span>
+        <span class="tag">~20 min</span>
+      </div>
+    </div>
+
+    <!-- Agent badge -->
+    <div style="display: flex; align-items: center; gap: 16px; background: rgba(230,126,34,0.06); border: 1px solid rgba(230,126,34,0.2); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;">
+      <img src="../images/agents/aurelius.svg" alt="Aurelius" style="width: 56px; height: 56px; border-radius: 12px;">
+      <div>
+        <div style="color: #e67e22; font-weight: 800; font-size: 1rem;">AURELIUS — Campaign Launcher</div>
+        <div style="color: #888; font-size: 0.85rem; margin-top: 2px;">In this lesson you'll learn to use Aurelius to generate 12+ ad copy variations in under 5 minutes. By the end, you'll have a copy-paste prompt template you can use for every single client.</div>
+      </div>
+    </div>
+
+    <div class="summary-box">Stop staring at a blank screen. Feed Aurelius your client's info → get 12 high-converting ad variations → pick the best ones → launch. Two minutes of input, twelve ads of output.</div>
+
+    <!-- SCREENS TO OPEN -->
+    <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 0.95rem;">🖥️ Screens to Open</h3>
+      <a href="https://claude.ai/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">1.</span>
+        <span><strong style="color: #fff;">Claude</strong> — Where you'll paste the mega prompt to generate ad copy</span>
+      </a>
+      <a href="https://adlevel.ai/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">2.</span>
+        <span><strong style="color: #fff;">Adlevel.ai</strong> — Show Aurelius generating copy (when available)</span>
+      </a>
+      <a href="https://www.facebook.com/ads/library/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">3.</span>
+        <span><strong style="color: #fff;">Meta Ad Library</strong> — Pull competitor ad copy for research + build your swipe file</span>
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE ONE RULE               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 1. The One Rule That Changes Everything</h2>
+
+      <div style="background: linear-gradient(135deg, rgba(230,126,34,0.08), rgba(230,126,34,0.02)); border: 1px solid rgba(230,126,34,0.3); border-radius: 14px; padding: 28px; text-align: center; margin-bottom: 20px;">
+        <div style="color: #e67e22; font-weight: 800; font-size: 1.3rem; margin-bottom: 8px;">ONE AD = ONE REASON TO BUY</div>
+        <div style="color: #ccc; font-size: 0.92rem; max-width: 500px; margin: 0 auto; line-height: 1.6;">Not variations of the same headline. Each ad targets a completely different motivation. A different fear, desire, or angle.</div>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open a blank doc. Write "Tony's Pizza" at the top. Ask: "How many DIFFERENT reasons would someone order pizza?" List them out live.</span>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6;">Here are 12 completely different reasons someone might order from Tony's Pizza. Each one becomes its own ad:</p>
+
+      <div class="angle-grid">
+        <div class="angle-card">
+          <div class="angle-emoji">😫</div>
+          <div class="angle-name">Too Tired to Cook</div>
+          <div class="angle-desc">Pain: exhaustion after work</div>
+          <div class="angle-hook">"It's 7pm and you just got home. The last thing you want to do is cook..."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">👨‍👩‍👧‍👦</div>
+          <div class="angle-name">Family Friday</div>
+          <div class="angle-desc">Desire: quality time together</div>
+          <div class="angle-hook">"Friday night pizza with the family. 2 large pies + 4 drinks — $19.99"</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">💰</div>
+          <div class="angle-name">Half the Price</div>
+          <div class="angle-desc">Logic: value comparison</div>
+          <div class="angle-hook">"You're paying $35 for delivery pizza? Tony's: better pizza, half the price."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">🇮🇹</div>
+          <div class="angle-name">Real Italian</div>
+          <div class="angle-desc">Quality: authenticity flex</div>
+          <div class="angle-hook">"Hand-tossed dough. Imported Italian flour. San Marzano tomatoes. This isn't Domino's."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">⚡</div>
+          <div class="angle-name">20-Min Delivery</div>
+          <div class="angle-desc">Convenience: speed</div>
+          <div class="angle-hook">"Hot pizza at your door in 20 minutes. Not 45. Not 'on its way.' Twenty."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">⭐</div>
+          <div class="angle-name">400+ 5-Star Reviews</div>
+          <div class="angle-desc">Social proof: trust</div>
+          <div class="angle-hook">"417 five-star reviews on Google. Here's what Curitiba is saying about Tony's..."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">🏠</div>
+          <div class="angle-name">New in the Area</div>
+          <div class="angle-desc">Discovery: local targeting</div>
+          <div class="angle-hook">"Just moved to Centro? Meet your new favorite pizza place. First order: 20% off."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">🎉</div>
+          <div class="angle-name">Party Catering</div>
+          <div class="angle-desc">Occasion: events</div>
+          <div class="angle-hook">"Hosting this weekend? 10 pizzas, delivered hot. We handle the food, you handle the fun."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">🥗</div>
+          <div class="angle-name">Healthy Option</div>
+          <div class="angle-desc">Health: guilt-free</div>
+          <div class="angle-hook">"Whole wheat crust. Fresh veggies. Under 300 cal/slice. Pizza that doesn't wreck your diet."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">📱</div>
+          <div class="angle-name">Easy Ordering</div>
+          <div class="angle-desc">Convenience: simplicity</div>
+          <div class="angle-hook">"3 taps. That's it. Open the app, pick your pizza, done. Easiest dinner of your life."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">🌙</div>
+          <div class="angle-name">Late Night</div>
+          <div class="angle-desc">Timing: night owls</div>
+          <div class="angle-hook">"Open till 2AM. Because hunger doesn't care what time it is."</div>
+        </div>
+        <div class="angle-card">
+          <div class="angle-emoji">🔥</div>
+          <div class="angle-name">Limited Special</div>
+          <div class="angle-desc">Urgency: scarcity</div>
+          <div class="angle-hook">"This week only: Truffle Mushroom pizza. Last time we did this, it sold out in 3 days."</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">12 angles = 12 completely different ads.</strong> Not "Tony's Pizza is great" rewritten 12 ways. Each one targets a different person with a different motivation at a different moment. THAT'S how you feed the algorithm.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE 4 FRAMEWORKS           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏗️</span> 2. The 4 Ad Copy Frameworks</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every ad copy follows one of these 4 structures. Click each tab to see how the same angle ("Too Tired to Cook") looks in each framework:</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Click through each tab live. Read the ad copy out loud. Point out the structure.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden;">
+        <div class="fw-tabs">
+          <div class="fw-tab active" onclick="showFW('pas')">PAS</div>
+          <div class="fw-tab" onclick="showFW('aida')">AIDA</div>
+          <div class="fw-tab" onclick="showFW('bab')">BAB</div>
+          <div class="fw-tab" onclick="showFW('story')">STORY</div>
+        </div>
+
+        <div class="fw-panel active" id="fw-pas">
+          <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+            <div style="background: rgba(239,68,68,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 120px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem;">P — PROBLEM</div>
+              <div style="color: #888; font-size: 0.78rem;">State the pain</div>
+            </div>
+            <div style="background: rgba(234,179,8,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 120px;">
+              <div style="color: #eab308; font-weight: 700; font-size: 0.75rem;">A — AGITATE</div>
+              <div style="color: #888; font-size: 0.78rem;">Twist the knife</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 120px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem;">S — SOLUTION</div>
+              <div style="color: #888; font-size: 0.78rem;">Present the fix</div>
+            </div>
+          </div>
+          <div style="background: #161616; border-radius: 10px; padding: 18px; font-size: 0.88rem; line-height: 1.7; color: #ccc;">
+            <span style="color: #ef4444; font-weight: 600;">It's 7pm. You just walked in the door. The kids are hungry. The fridge is empty.</span><br><br>
+            <span style="color: #eab308; font-weight: 600;">You could spend the next hour at the grocery store, 30 minutes cooking, and 20 minutes cleaning up. Or you could scroll DoorDash for 15 minutes and pay $40 for cold pizza.</span><br><br>
+            <span style="color: #22c55e; font-weight: 600;">Or you could tap one button and have Tony's hot, hand-tossed pizza at your door in 20 minutes. $12.99. Your kids will think you're a hero.</span><br><br>
+            <span style="color: #e67e22;">📲 Order now — link in bio</span>
+          </div>
+          <div style="color: #666; font-size: 0.78rem; margin-top: 10px;"><strong>Best for:</strong> Pain-point heavy audiences. Works great for "problem-aware" people who know they have an issue but haven't found a solution.</div>
+        </div>
+
+        <div class="fw-panel" id="fw-aida">
+          <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+            <div style="background: rgba(59,130,246,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 100px;">
+              <div style="color: #3B82F6; font-weight: 700; font-size: 0.75rem;">A — ATTENTION</div>
+              <div style="color: #888; font-size: 0.78rem;">Stop the scroll</div>
+            </div>
+            <div style="background: rgba(139,92,246,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 100px;">
+              <div style="color: #a78bfa; font-weight: 700; font-size: 0.75rem;">I — INTEREST</div>
+              <div style="color: #888; font-size: 0.78rem;">Keep reading</div>
+            </div>
+            <div style="background: rgba(234,179,8,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 100px;">
+              <div style="color: #eab308; font-weight: 700; font-size: 0.75rem;">D — DESIRE</div>
+              <div style="color: #888; font-size: 0.78rem;">Want it</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 100px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem;">A — ACTION</div>
+              <div style="color: #888; font-size: 0.78rem;">Click now</div>
+            </div>
+          </div>
+          <div style="background: #161616; border-radius: 10px; padding: 18px; font-size: 0.88rem; line-height: 1.7; color: #ccc;">
+            <span style="color: #3B82F6; font-weight: 600;">🍕 The best pizza in Curitiba just dropped a new deal.</span><br><br>
+            <span style="color: #a78bfa; font-weight: 600;">Hand-tossed dough made fresh every morning. Imported San Marzano tomatoes. Mozzarella that actually stretches. Tony's has been doing this for 15 years — there's a reason the line wraps around the block on Saturdays.</span><br><br>
+            <span style="color: #eab308; font-weight: 600;">This week: 2 large pizzas + garlic bread + 4 drinks = $19.99. That's dinner for the whole family, delivered hot to your door.</span><br><br>
+            <span style="color: #22c55e; font-weight: 600;">📲 Tap "Order Now" before Friday. This deal disappears at midnight.</span>
+          </div>
+          <div style="color: #666; font-size: 0.78rem; margin-top: 10px;"><strong>Best for:</strong> Offers, deals, and promotions. Great when you have something specific to promote with a deadline.</div>
+        </div>
+
+        <div class="fw-panel" id="fw-bab">
+          <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+            <div style="background: rgba(239,68,68,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 120px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem;">BEFORE</div>
+              <div style="color: #888; font-size: 0.78rem;">Life now (sucks)</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 120px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem;">AFTER</div>
+              <div style="color: #888; font-size: 0.78rem;">Life with product</div>
+            </div>
+            <div style="background: rgba(230,126,34,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 120px;">
+              <div style="color: #e67e22; font-weight: 700; font-size: 0.75rem;">BRIDGE</div>
+              <div style="color: #888; font-size: 0.78rem;">How to get there</div>
+            </div>
+          </div>
+          <div style="background: #161616; border-radius: 10px; padding: 18px; font-size: 0.88rem; line-height: 1.7; color: #ccc;">
+            <span style="color: #ef4444; font-weight: 600;">Before: It's Tuesday night. You're staring at the fridge. Leftover rice from 3 days ago. Half an onion. Ketchup. The kids are asking "what's for dinner?" for the 4th time.</span><br><br>
+            <span style="color: #22c55e; font-weight: 600;">After: Everyone's sitting around the table. Hot pizza, still steaming. The kids are fighting over the last slice of pepperoni. You didn't cook. You didn't clean. You just... ordered.</span><br><br>
+            <span style="color: #e67e22; font-weight: 600;">Bridge: Tony's Pizza delivers in 20 minutes. Real ingredients. Real crust. $12.99. Tap below and go from "what's for dinner" to "dinner's here" in the time it takes to set the table.</span>
+          </div>
+          <div style="color: #666; font-size: 0.78rem; margin-top: 10px;"><strong>Best for:</strong> Transformation stories. Paint the picture of life before and after. Great for services, fitness, coaching, and lifestyle brands.</div>
+        </div>
+
+        <div class="fw-panel" id="fw-story">
+          <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+            <div style="background: rgba(139,92,246,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 100px;">
+              <div style="color: #a78bfa; font-weight: 700; font-size: 0.75rem;">CHARACTER</div>
+              <div style="color: #888; font-size: 0.78rem;">Relatable person</div>
+            </div>
+            <div style="background: rgba(234,179,8,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 100px;">
+              <div style="color: #eab308; font-weight: 700; font-size: 0.75rem;">CONFLICT</div>
+              <div style="color: #888; font-size: 0.78rem;">The struggle</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.08); border-radius: 6px; padding: 8px 12px; flex: 1; min-width: 100px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem;">RESOLUTION</div>
+              <div style="color: #888; font-size: 0.78rem;">Product saves day</div>
+            </div>
+          </div>
+          <div style="background: #161616; border-radius: 10px; padding: 18px; font-size: 0.88rem; line-height: 1.7; color: #ccc;">
+            <span style="color: #a78bfa; font-weight: 600;">My friend Maria works two jobs. She's got 3 kids, a mortgage, and zero time.</span><br><br>
+            <span style="color: #eab308; font-weight: 600;">Last week she called me almost crying. "I forgot to go to the store again. The kids had cereal for dinner. I feel like the worst mom." I told her — stop. You're not a bad mom. You're a busy mom. There's a difference.</span><br><br>
+            <span style="color: #22c55e; font-weight: 600;">I sent her Tony's. She ordered from her phone while walking to her car. By the time she got home, hot pizza was at the door. Her 7-year-old said "Mom you're the best." $12.99 well spent.</span><br><br>
+            <span style="color: #e67e22;">Busy moms — Tony's has your back. Order in 30 seconds. 📲</span>
+          </div>
+          <div style="color: #666; font-size: 0.78rem; margin-top: 10px;"><strong>Best for:</strong> Emotional connection. UGC-style ads. When you want people to see themselves in the story. Highest engagement on Facebook/Instagram.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: MEGA PROMPT BUILDER        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 3. The Mega Prompt Builder</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">Fill in your client's info → get a ready-to-paste prompt for Claude. This is what Aurelius runs under the hood.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Fill this out live with "Tony's Pizza" as the example. Then copy and paste into Claude. Show the output.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(230,126,34,0.2); border-radius: 14px; padding: 24px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+          <img src="../images/agents/aurelius.svg" alt="Aurelius" style="width: 32px; height: 32px; border-radius: 8px;">
+          <span style="color: #e67e22; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Aurelius Prompt Builder</span>
+        </div>
+
+        <div class="prompt-field">
+          <label>Business Name</label>
+          <input type="text" id="p-biz" placeholder="Tony's Pizza" oninput="buildPrompt()">
+        </div>
+        <div class="prompt-field">
+          <label>What they sell / do</label>
+          <input type="text" id="p-what" placeholder="Hand-tossed pizza delivery in Curitiba" oninput="buildPrompt()">
+        </div>
+        <div class="prompt-field">
+          <label>Target Customer</label>
+          <textarea id="p-target" placeholder="Families in Curitiba Centro, 25-45, busy parents who don't have time to cook" oninput="buildPrompt()"></textarea>
+        </div>
+        <div class="prompt-field">
+          <label>What makes them different (USP)</label>
+          <input type="text" id="p-usp" placeholder="Imported Italian ingredients, 20-min delivery, 15 years in business" oninput="buildPrompt()">
+        </div>
+        <div class="prompt-field">
+          <label>Current Offer / Promotion</label>
+          <input type="text" id="p-offer" placeholder="2 large pizzas + 4 drinks for $19.99" oninput="buildPrompt()">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="prompt-field">
+            <label>Tone / Voice</label>
+            <select id="p-tone" onchange="buildPrompt()">
+              <option value="Casual and friendly">Casual & Friendly</option>
+              <option value="Professional">Professional</option>
+              <option value="Urgent and direct">Urgent & Direct</option>
+              <option value="Luxury and premium">Luxury & Premium</option>
+              <option value="Fun and playful">Fun & Playful</option>
+              <option value="Local and community-focused">Local & Community</option>
+            </select>
+          </div>
+          <div class="prompt-field">
+            <label>Platform</label>
+            <select id="p-platform" onchange="buildPrompt()">
+              <option value="Facebook and Instagram ads">FB + IG Ads</option>
+              <option value="Google Ads">Google Ads</option>
+              <option value="TikTok ads">TikTok Ads</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="color: #666; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Generated Prompt</span>
+            <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">COPY</button>
+          </div>
+          <div class="prompt-output" id="promptOutput"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: EXAMPLE OUTPUT             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📝</span> 4. What the Output Looks Like</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Here's what Aurelius generates when you feed it Tony's Pizza info. 12 ads, 4 frameworks, 3 lengths — all in under 2 minutes:</p>
+
+      <!-- Real Claude screenshot -->
+      <div style="border: 1px solid rgba(230,126,34,0.25); border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
+        <div style="background: rgba(230,126,34,0.08); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 8px;">
+          <img src="../images/agents/aurelius.svg" alt="Aurelius" style="width: 20px; height: 20px; border-radius: 4px;">
+          <span style="color: #e67e22; font-weight: 700; font-size: 0.78rem;">REAL OUTPUT — Claude generating 12 ads for Tony's Pizza</span>
+        </div>
+        <img src="../images/claude-ad-copy-output.jpg" alt="Claude AI generating 12 ad copy variations for Tony's Pizza — showing the prompt on the left and the output document on the right with Ad 1 (PAS, Short), Ad 2 (PAS, Medium), and Ad 3 (PAS, Long)" style="width: 100%; display: block;">
+      </div>
+
+      <p style="color: #888; font-size: 0.82rem; line-height: 1.6; margin-bottom: 16px;">Left side: the prompt you paste in. Right side: Claude generates a full document with all 12 ads, labeled by framework, angle, length, and word count. Copy the whole thing and start editing.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Scroll through the Claude output. Read 2-3 of the best ones out loud. Point out which framework each uses.</span>
+      </div>
+
+      <!-- Short ads -->
+      <div style="color: #888; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">🟢 Short Copy (under 50 words) — Feed & Story ads</div>
+
+      <div class="ad-example" style="border-color: #22c55e;">
+        <div class="ad-meta">
+          <span style="background: rgba(239,68,68,0.15); color: #ef4444;">PAS</span>
+          <span style="background: rgba(255,255,255,0.06); color: #888;">Pain angle</span>
+          <span style="background: rgba(255,255,255,0.06); color: #666;">38 words</span>
+        </div>
+        <div class="ad-text"><strong>Staring at an empty fridge again?</strong> Skip the grocery run. Tony's hand-tossed pizza — delivered hot in 20 minutes. Real Italian dough. Real ingredients. $12.99. Tap below 👇</div>
+      </div>
+
+      <div class="ad-example" style="border-color: #22c55e;">
+        <div class="ad-meta">
+          <span style="background: rgba(34,197,94,0.15); color: #22c55e;">BAB</span>
+          <span style="background: rgba(255,255,255,0.06); color: #888;">Value angle</span>
+          <span style="background: rgba(255,255,255,0.06); color: #666;">32 words</span>
+        </div>
+        <div class="ad-text"><strong>Before: $40 delivery pizza that arrives cold.</strong> After: $12.99 hand-tossed pizza at your door in 20 min, still steaming. Tony's Pizza. The upgrade your Tuesday needs.</div>
+      </div>
+
+      <div class="ad-example" style="border-color: #22c55e;">
+        <div class="ad-meta">
+          <span style="background: rgba(59,130,246,0.15); color: #3B82F6;">AIDA</span>
+          <span style="background: rgba(255,255,255,0.06); color: #888;">Social proof</span>
+          <span style="background: rgba(255,255,255,0.06); color: #666;">29 words</span>
+        </div>
+        <div class="ad-text"><strong>417 five-star reviews.</strong> Curitiba's favorite pizza since 2011. This week: 2 large + 4 drinks = $19.99. First-timers get free garlic bread. Order now 📲</div>
+      </div>
+
+      <!-- Medium ads -->
+      <div style="color: #888; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 8px;">🟡 Medium Copy (50-100 words) — Feed ads with "See More"</div>
+
+      <div class="ad-example" style="border-color: #eab308;">
+        <div class="ad-meta">
+          <span style="background: rgba(239,68,68,0.15); color: #ef4444;">PAS</span>
+          <span style="background: rgba(255,255,255,0.06); color: #888;">Family angle</span>
+          <span style="background: rgba(255,255,255,0.06); color: #666;">78 words</span>
+        </div>
+        <div class="ad-text"><strong>Friday night. Kids are screaming. You promised pizza.</strong><br><br>You could fight traffic to the store, wait 45 minutes for delivery from that chain place, or microwave last night's leftovers (again).<br><br>Or... you could have Tony's at your door in 20 minutes. Hand-tossed dough, imported ingredients, the kind of pizza that makes your 7-year-old say "mom you're the best."<br><br>This week: 2 large pies + 4 drinks = $19.99. Tap below 👇</div>
+      </div>
+
+      <div class="ad-example" style="border-color: #eab308;">
+        <div class="ad-meta">
+          <span style="background: rgba(139,92,246,0.15); color: #a78bfa;">STORY</span>
+          <span style="background: rgba(255,255,255,0.06); color: #888;">UGC style</span>
+          <span style="background: rgba(255,255,255,0.06); color: #666;">85 words</span>
+        </div>
+        <div class="ad-text"><strong>I was the guy who thought all delivery pizza was the same.</strong><br><br>$35 for a large that arrives lukewarm and tastes like cardboard? Sure. That's just how it is, right?<br><br>Then my neighbor told me about Tony's. I ordered it thinking whatever. The pizza showed up in 18 minutes. Still bubbling. I took one bite and literally said out loud — "this is $12.99?"<br><br>I've ordered 6 times since. My wife thinks I have a problem. She might be right.<br><br>Try it 📲</div>
+      </div>
+
+      <!-- Long ads -->
+      <div style="color: #888; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 8px;">🔴 Long Copy (100+ words) — High-intent, storytelling</div>
+
+      <div class="ad-example" style="border-color: #ef4444;">
+        <div class="ad-meta">
+          <span style="background: rgba(139,92,246,0.15); color: #a78bfa;">STORY</span>
+          <span style="background: rgba(255,255,255,0.06); color: #888;">Origin story</span>
+          <span style="background: rgba(255,255,255,0.06); color: #666;">124 words</span>
+        </div>
+        <div class="ad-text"><strong>In 2011, Tony opened a 12-seat pizza shop on Rua XV with $3,000 and a recipe from his grandmother in Napoli.</strong><br><br>No investors. No marketing budget. Just great pizza.<br><br>He couldn't afford imported cheese, so he drove to São Paulo every week to buy it wholesale. He mixed dough at 5am before his kids woke up. His wife handled the register while studying for her nursing degree.<br><br>15 years later, Tony's has served over 500,000 pizzas. The cheese is still imported. The dough is still made at 5am. The only thing that changed? Now we deliver in 20 minutes.<br><br>First time ordering? Use code TONY20 for 20% off. We think you'll be back.<br><br>📲 Order now</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: AI ANTI-PATTERN DETECTOR   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚨</span> 5. Spot the AI — Anti-Pattern Detector</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">AI writes patterns that human brains detect instantly. Your job: catch them and fix them before the ad goes live. Click each pattern to see the before/after:</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Click through each anti-pattern. Read the BAD version, then the FIXED version. Ask students: "Which one sounds like a person wrote it?"</span>
+      </div>
+
+      <div class="ap-card" onclick="toggleAP('ap1')">
+        <div class="ap-header">
+          <div><strong style="color: #fff; font-size: 0.9rem;">1. The "Not X — It's Y" Contrast</strong><br><span style="color: #666; font-size: 0.78rem;">AI loves dramatic contrasts with em dashes</span></div>
+          <span class="ap-badge ap-bad">COMMON</span>
+        </div>
+        <div class="ap-body" id="ap1">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">❌ AI VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"This isn't just pizza — it's an experience. It's not delivery — it's a revolution in your kitchen."</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">✅ HUMAN VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"Real Italian dough. 20-minute delivery. $12.99. Tony's Pizza — order now."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ap-card" onclick="toggleAP('ap2')">
+        <div class="ap-header">
+          <div><strong style="color: #fff; font-size: 0.9rem;">2. The Triple Structure</strong><br><span style="color: #666; font-size: 0.78rem;">"X. Y. And Z." — three parallel items in a row</span></div>
+          <span class="ap-badge ap-bad">COMMON</span>
+        </div>
+        <div class="ap-body" id="ap2">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">❌ AI VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"Fresh ingredients. Fast delivery. Unbeatable prices. That's the Tony's difference."</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">✅ HUMAN VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"Our dough is made at 5am with imported Italian flour. Your pizza's at the door in 20 minutes. Oh and it's $12.99."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ap-card" onclick="toggleAP('ap3')">
+        <div class="ap-header">
+          <div><strong style="color: #fff; font-size: 0.9rem;">3. The "Imagine This" Opener</strong><br><span style="color: #666; font-size: 0.78rem;">"Imagine...", "Picture this...", "What if..."</span></div>
+          <span class="ap-badge ap-bad">VERY COMMON</span>
+        </div>
+        <div class="ap-body" id="ap3">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">❌ AI VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"Imagine biting into a slice of perfectly crispy, hand-tossed pizza that melts in your mouth..."</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">✅ HUMAN VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"I took one bite and said out loud — 'this is $12.99?'"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ap-card" onclick="toggleAP('ap4')">
+        <div class="ap-header">
+          <div><strong style="color: #fff; font-size: 0.9rem;">4. Filler Power Words</strong><br><span style="color: #666; font-size: 0.78rem;">"Elevate", "Transform", "Unlock", "Game-changer", "Seamless"</span></div>
+          <span class="ap-badge ap-bad">INSTANT TELL</span>
+        </div>
+        <div class="ap-body" id="ap4">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">❌ AI VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"Elevate your dinner experience with our game-changing pizza that transforms ordinary nights into extraordinary moments."</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">✅ HUMAN VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"My kids stopped fighting for 10 whole minutes. All it took was a Tony's pepperoni pizza."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ap-card" onclick="toggleAP('ap5')">
+        <div class="ap-header">
+          <div><strong style="color: #fff; font-size: 0.9rem;">5. The Question-Then-Answer</strong><br><span style="color: #666; font-size: 0.78rem;">"Tired of X? We've got the solution."</span></div>
+          <span class="ap-badge ap-bad">OVERUSED</span>
+        </div>
+        <div class="ap-body" id="ap5">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">❌ AI VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"Tired of cold delivery pizza? Looking for something better? Want real Italian quality without the restaurant price? Tony's Pizza has the answer."</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">✅ HUMAN VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"I used to think $35 for delivery pizza was normal. Then I found Tony's. $12.99 and it's actually better. I'm mad nobody told me sooner."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ap-card" onclick="toggleAP('ap6')">
+        <div class="ap-header">
+          <div><strong style="color: #fff; font-size: 0.9rem;">6. The Perfect Grammar Robot</strong><br><span style="color: #666; font-size: 0.78rem;">Every sentence perfectly structured, no contractions, no slang</span></div>
+          <span class="ap-badge ap-bad">SUBTLE</span>
+        </div>
+        <div class="ap-body" id="ap6">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">❌ AI VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"We are proud to offer Curitiba's finest artisanal pizza, crafted with imported ingredients and delivered to your doorstep within 20 minutes of your order."</div>
+            </div>
+            <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px;">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem; margin-bottom: 6px;">✅ HUMAN VERSION</div>
+              <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">"We've been making pizza in Curitiba for 15 years. Imported Italian flour, San Marzano tomatoes, mozzarella that actually stretches. At your door in 20 min. Just order already."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #ef4444;">The rule:</strong> Read every AI-generated ad out loud. If you'd cringe hearing a real person say it in conversation, rewrite it. If it sounds like a brochure, rewrite it. If it sounds like every other ad you've ever seen, rewrite it.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: SWIPE FILE                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📂</span> 6. Build Your Swipe File (This Never Stops)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">A swipe file is a collection of ads, hooks, formats, and creative ideas you save from the real world. The best media buyers never start from zero — they pull from a library of proven stuff they've been collecting for months.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open your swipe file folder (Google Drive, Notion, or just a phone folder). Show how you save ads. Open Meta Ad Library and save 2-3 competitor ads live.</span>
+      </div>
+
+      <div style="background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(139,92,246,0.06)); border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 24px; margin-bottom: 16px;">
+        <div style="color: #3B82F6; font-weight: 800; font-size: 1rem; margin-bottom: 12px;">🗂️ What Goes in Your Swipe File</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 14px;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">📸 Ad Formats</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5;">Screenshots of ads that stopped YOUR scroll. Single images, carousels, videos, UGC-style, before/afters, memes, testimonials. Save the format, not just the copy.</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 14px;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">🎣 Hooks That Worked</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5;">First lines that grabbed you. Screenshot them. Save the pattern, not the exact words. "I was skeptical until..." is a pattern. "I tried X so you don't have to" is a pattern.</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 14px;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">🏆 Competitor Ads (60+ days)</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5;">From Meta Ad Library — any ad running 60+ days is a proven winner. Save the messaging angle, the visual style, and the CTA. Study WHY it works.</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border-radius: 8px; padding: 14px;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;">🎬 Video Styles</div>
+            <div style="color: #888; font-size: 0.82rem; line-height: 1.5;">TikToks, Reels, YouTube ads that made you watch past 3 seconds. Save the structure: talking head, text overlay, POV, unboxing, demo, reaction, story time.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real swipe file screenshot -->
+      <div style="border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; overflow: hidden; margin-bottom: 16px;">
+        <div style="background: rgba(59,130,246,0.08); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <span style="color: #3B82F6; font-weight: 700; font-size: 0.78rem;">REAL EXAMPLE — Swipe File on Google Drive (12 categories)</span>
+        </div>
+        <img src="../images/swipe-file-example.jpg" alt="Google Drive swipe file organized into 12 folders: VSL, Ads, Event Videos, Documentaries, Email, Forms, Pages, Cinema, Trailers, YouTube Videos, Webinars" style="width: 100%; display: block;">
+      </div>
+      <p style="color: #888; font-size: 0.82rem; line-height: 1.6; margin-bottom: 16px;">12 folders. Every time you see something good — an ad, a VSL, a landing page, an email — screenshot it and drop it in the right folder. Six months from now this is your creative goldmine.</p>
+
+      <!-- Real Ad Library screenshot -->
+      <div style="border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; overflow: hidden; margin-bottom: 16px;">
+        <div style="background: rgba(59,130,246,0.08); padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <span style="color: #3B82F6; font-weight: 700; font-size: 0.78rem;">REAL EXAMPLE — Meta Ad Library search for "Pizza Miami"</span>
+        </div>
+        <img src="../images/meta-ad-library-pizza.jpg" alt="Meta Ad Library showing active pizza ads in Miami — Fradiavolo running since Sep 3 2025, Wyn Pizza running since Sep 29 2025, with video ads on Facebook and Instagram" style="width: 100%; display: block;">
+      </div>
+      <p style="color: #888; font-size: 0.82rem; line-height: 1.6; margin-bottom: 16px;">See those "Started running on" dates? Fradiavolo's ad has been live since <strong style="color: #fff;">September 2025</strong> — that's 5+ months. They wouldn't keep spending if it wasn't working. That's a proven winner. Study the angle, the format, the copy. Save it to your swipe file.</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px;">
+        <div style="color: #e67e22; font-weight: 800; font-size: 0.85rem; margin-bottom: 12px;">📱 WHERE TO COLLECT</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+          <div style="text-align: center; padding: 14px;">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">📱</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.82rem;">Your Instagram Feed</div>
+            <div style="color: #666; font-size: 0.72rem; margin-top: 4px;">Screenshot every ad that stops your scroll. Save to a "Swipe File" album on your phone.</div>
+          </div>
+          <div style="text-align: center; padding: 14px;">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">🔍</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.82rem;">Meta Ad Library</div>
+            <div style="color: #666; font-size: 0.72rem; margin-top: 4px;">Search your client's niche weekly. Filter by "longest running." Screenshot winners.</div>
+          </div>
+          <div style="text-align: center; padding: 14px;">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">🎵</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.82rem;">TikTok / YouTube</div>
+            <div style="color: #666; font-size: 0.72rem; margin-top: 4px;">Save video ads that hold your attention. Study the hook, the pacing, the format.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">Start today. Never stop.</strong> The bigger your swipe file, the faster you can create ads. When a client says "I need 20 new ads," you don't start from scratch — you open your swipe file and adapt proven formats. Six months from now, you'll have hundreds of ideas ready to go. This is your unfair advantage over every media buyer who tries to reinvent the wheel every time.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: THE EDITING PROCESS        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✂️</span> 7. The 60-Second Edit Process</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Aurelius gives you 12 ads. You need to clean them up before launch. Here's the exact process — takes about 60 seconds per ad:</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden;">
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0;">
+          <div style="padding: 18px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+            <div style="color: #e67e22; font-weight: 800; font-size: 1.3rem;">1</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.78rem; margin-top: 4px;">Read Aloud</div>
+            <div style="color: #666; font-size: 0.7rem; margin-top: 4px;">Would you say this to a friend?</div>
+          </div>
+          <div style="padding: 18px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+            <div style="color: #e67e22; font-weight: 800; font-size: 1.3rem;">2</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.78rem; margin-top: 4px;">Check Hook</div>
+            <div style="color: #666; font-size: 0.7rem; margin-top: 4px;">First line = scroll stopper?</div>
+          </div>
+          <div style="padding: 18px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+            <div style="color: #e67e22; font-weight: 800; font-size: 1.3rem;">3</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.78rem; margin-top: 4px;">Kill AI Words</div>
+            <div style="color: #666; font-size: 0.7rem; margin-top: 4px;">Elevate, transform, seamless → delete</div>
+          </div>
+          <div style="padding: 18px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+            <div style="color: #e67e22; font-weight: 800; font-size: 1.3rem;">4</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.78rem; margin-top: 4px;">Add Specifics</div>
+            <div style="color: #666; font-size: 0.7rem; margin-top: 4px;">"$12.99" beats "affordable"</div>
+          </div>
+          <div style="padding: 18px; text-align: center;">
+            <div style="color: #e67e22; font-weight: 800; font-size: 1.3rem;">5</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.78rem; margin-top: 4px;">Match Voice</div>
+            <div style="color: #666; font-size: 0.7rem; margin-top: 4px;">Sound like the brand, not AI</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">12 ads × 60 seconds = 12 minutes total editing time.</strong> That's it. You now have 12 unique, human-sounding ads ready for upload. A traditional copywriter would charge $50-100 per ad. You just did it for free in under 15 minutes total.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 8. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Explain "one ad = one reason to buy"</strong>
+            <span>12 different motivations, not 12 rewrites of the same headline.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Name and describe the 4 frameworks</strong>
+            <span>PAS (pain → agitate → solve), AIDA (attention → interest → desire → action), BAB (before → after → bridge), Story (character → conflict → resolution).</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Use the mega prompt builder to generate 12 ads</strong>
+            <span>Fill in client info, copy prompt, paste in Claude, get 12 variations.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Spot at least 4 AI anti-patterns</strong>
+            <span>"Not X — It's Y", triple structures, "Imagine this", filler power words, question-then-answer, perfect grammar robot.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Edit an AI ad in 60 seconds</strong>
+            <span>Read aloud → check hook → kill AI words → add specifics → match voice.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Start your swipe file</strong>
+            <span>Create a folder (phone album, Google Drive, Notion). Save 10 ads from your feed + 5 from Ad Library today. Never stop collecting.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Generate ads for a real or practice client</strong>
+            <span>Use the prompt builder with a real business. Generate 12. Edit. Save your top 5.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>aurelius</span><span>ad-copy</span><span>mega-prompt</span><span>PAS</span><span>AIDA</span><span>BAB</span><span>story</span><span>anti-patterns</span><span>frameworks</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.7-ai-arbitrage-system.html" class="nav-link">← AI Arbitrage System</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.9-ai-creative-builder.html" class="nav-link">AI Creative Builder →</a>
+    </div>
+  </div>
+
+  <script>
+    // === FRAMEWORK TABS ===
+    function showFW(id) {
+      document.querySelectorAll('.fw-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.fw-panel').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('fw-' + id).classList.add('active');
+    }
+
+    // === ANTI-PATTERN TOGGLE ===
+    function toggleAP(id) {
+      const el = document.getElementById(id);
+      const isOpen = el.classList.contains('show');
+      document.querySelectorAll('.ap-body').forEach(e => e.classList.remove('show'));
+      if (!isOpen) el.classList.add('show');
+    }
+
+    // === MEGA PROMPT BUILDER ===
+    function buildPrompt() {
+      const biz = document.getElementById('p-biz').value || '[BUSINESS NAME]';
+      const what = document.getElementById('p-what').value || '[WHAT THEY SELL]';
+      const target = document.getElementById('p-target').value || '[TARGET CUSTOMER]';
+      const usp = document.getElementById('p-usp').value || '[UNIQUE SELLING PROPOSITION]';
+      const offer = document.getElementById('p-offer').value || '[CURRENT OFFER]';
+      const tone = document.getElementById('p-tone').value;
+      const platform = document.getElementById('p-platform').value;
+
+      const prompt = `You are a world-class direct response copywriter. Write 12 ad copy variations for ${platform}.
+
+BUSINESS: ${biz}
+WHAT THEY SELL: ${what}
+TARGET CUSTOMER: ${target}
+USP: ${usp}
+CURRENT OFFER: ${offer}
+TONE: ${tone}
+
+RULES:
+1. ONE AD = ONE REASON TO BUY. Each ad must target a completely different motivation (different fear, desire, or angle). NOT variations of the same headline.
+2. Use these frameworks (3 ads each):
+   - PAS (Problem → Agitate → Solution)
+   - AIDA (Attention → Interest → Desire → Action)
+   - BAB (Before → After → Bridge)
+   - STORY (Character → Conflict → Resolution)
+3. Mix lengths:
+   - 3 short (under 50 words) — for Stories/Reels
+   - 6 medium (50-100 words) — for Feed ads
+   - 3 long (100-150 words) — for high-intent audiences
+4. ANTI-PATTERNS TO AVOID:
+   - No "Not X — It's Y" dramatic contrasts
+   - No triple parallel structures ("X. Y. And Z.")
+   - No "Imagine this" or "Picture this" openers
+   - No filler words: elevate, transform, unlock, game-changer, seamless, revolutionize
+   - No perfect grammar — use contractions, fragments, slang where natural
+   - No question-then-answer cadence ("Tired of X? We have the solution.")
+5. Write like a human texting a friend, not a copywriter writing a brochure
+6. Include specific numbers, prices, and details — NOT generic claims
+7. Every ad ends with a clear CTA
+
+Label each ad with: [Framework] [Angle] [Length] [Word count]
+
+GO.`;
+
+      document.getElementById('promptOutput').textContent = prompt;
+    }
+
+    function copyPrompt() {
+      const text = document.getElementById('promptOutput').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = 'COPIED ✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    // Init prompt on load
+    buildPrompt();
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.8-ad-copy-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

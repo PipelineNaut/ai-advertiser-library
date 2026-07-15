@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.3: The Ad Platforms — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .platform-card { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; margin-bottom: 20px; transition: border-color 0.2s; }
+    .platform-card:hover { border-color: rgba(59,130,246,0.4); }
+    .platform-header { padding: 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .platform-icon { font-size: 2.5rem; }
+    .platform-name { color: #fff; font-size: 1.2rem; font-weight: 800; }
+    .platform-subtitle { color: #888; font-size: 0.85rem; margin-top: 2px; }
+    .platform-body { padding: 24px; }
+    .platform-body p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 16px 0; }
+    .platform-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .platform-tags .ptag { font-size: 0.78rem; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+    .ptag-green { background: rgba(34,197,94,0.1); color: #22c55e; }
+    .ptag-yellow { background: rgba(234,179,8,0.1); color: #eab308; }
+    .ptag-red { background: rgba(239,68,68,0.1); color: #ef4444; }
+    .ptag-blue { background: rgba(59,130,246,0.1); color: #3B82F6; }
+    .platform-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .platform-stat { text-align: center; background: rgba(255,255,255,0.02); border-radius: 8px; padding: 12px 8px; }
+    .platform-stat .val { color: #3B82F6; font-weight: 800; font-size: 1rem; }
+    .platform-stat .lbl { color: #666; font-size: 0.75rem; margin-top: 2px; }
+    .niche-picker { background: #161616; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; overflow: hidden; }
+    .niche-picker-header { background: rgba(59,130,246,0.1); padding: 20px 24px; border-bottom: 1px solid rgba(59,130,246,0.2); }
+    .niche-picker-header h3 { color: #3B82F6; margin: 0; font-size: 1.1rem; }
+    .niche-picker-body { padding: 24px; }
+    .niche-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #ccc; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: inherit; transition: all 0.2s; margin: 4px; }
+    .niche-btn:hover, .niche-btn.active { background: rgba(59,130,246,0.15); border-color: #3B82F6; color: #3B82F6; }
+    .niche-result { margin-top: 20px; padding: 20px; background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; display: none; }
+    .niche-result.show { display: block; }
+    .niche-result h4 { color: #3B82F6; margin: 0 0 8px 0; }
+    .niche-result p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0; }
+    .vs-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    .vs-table th { background: rgba(59,130,246,0.1); color: #3B82F6; padding: 12px 16px; text-align: left; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; }
+    .vs-table td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #ccc; }
+    .vs-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .meter { display: inline-flex; gap: 3px; }
+    .meter-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+    .meter-dot.filled { background: #3B82F6; }
+    .meter-dot.filled.green { background: #22c55e; }
+    .meter-dot.filled.yellow { background: #eab308; }
+    .meter-dot.filled.red { background: #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.3 — Module 3: Fulfillment</div>
+      <h1>The Ad Platforms — <span>Where Ads Run</span></h1>
+      <div class="subtitle">
+        <span class="tag">Platforms</span>
+        <span class="tag">Beginner</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">There are four major ad platforms. You only need to master one to start: Meta. This lesson explains each platform like you're choosing a weapon in a video game — what it's good at, what it's bad at, and when to unlock the next one.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE VIDEO GAME ANALOGY     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎮</span> 1. Think of Platforms Like Weapons</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px;">
+        In a video game, you don't pick up every weapon at once. You master one, then unlock the next. Ad platforms work the same way. Meta is your starter weapon — it works for everything and it's the easiest to learn. You only add Google, TikTok, or YouTube when you've got Meta dialed in and the client has budget for more.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <div style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.8rem;">⚔️</div>
+          <div style="color: #3B82F6; font-weight: 700; font-size: 0.9rem; margin-top: 4px;">Meta</div>
+          <div style="color: #888; font-size: 0.78rem;">Starter weapon</div>
+          <div style="color: #22c55e; font-size: 0.78rem; font-weight: 600;">UNLOCK: Day 1</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.8rem;">🔫</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem; margin-top: 4px;">Google</div>
+          <div style="color: #888; font-size: 0.78rem;">Precision sniper</div>
+          <div style="color: #eab308; font-size: 0.78rem; font-weight: 600;">UNLOCK: Client #3+</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.8rem;">🎵</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem; margin-top: 4px;">TikTok</div>
+          <div style="color: #888; font-size: 0.78rem;">Viral grenade</div>
+          <div style="color: #eab308; font-size: 0.78rem; font-weight: 600;">UNLOCK: Right niche only</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.8rem;">📺</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem; margin-top: 4px;">YouTube</div>
+          <div style="color: #888; font-size: 0.78rem;">Long-range cannon</div>
+          <div style="color: #ef4444; font-size: 0.78rem; font-weight: 600;">UNLOCK: Advanced only</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE FOUR PLATFORMS          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📱</span> 2. The Four Platforms Explained</h2>
+
+      <!-- META -->
+      <div class="platform-card" style="border-color: rgba(59,130,246,0.3);">
+        <div class="platform-header">
+          <div class="platform-icon">📘</div>
+          <div>
+            <div class="platform-name">Meta (Facebook + Instagram)</div>
+            <div class="platform-subtitle">Your #1 platform. Start here. Stay here for most clients.</div>
+          </div>
+        </div>
+        <div class="platform-body">
+          <div class="platform-tags">
+            <span class="ptag ptag-green">Easiest to learn</span>
+            <span class="ptag ptag-green">Lowest cost to start</span>
+            <span class="ptag ptag-green">Works for every niche</span>
+            <span class="ptag ptag-blue">Best for local business</span>
+          </div>
+          <p><strong style="color: #fff;">How it works:</strong> You create an ad with an image or video, pick who sees it (location, age, interests), and Meta shows it to those people in their Facebook and Instagram feeds. People see it while scrolling, tap on it, and take an action (call, book, fill out a form).</p>
+          <p><strong style="color: #fff;">Why it's the best starter platform:</strong> You can start with $10/day. You don't need the client to have a website (Meta Lead Forms work on their own). The AI optimization (Advantage+) is the best in the industry. And 3 billion people use it — your client's customers are on there, guaranteed.</p>
+          <p><strong style="color: #fff;">The pizza shop version:</strong> Tony doesn't need a website. You create a "Family Pizza Deal" ad with a mouthwatering photo, target everyone within 5 miles who likes pizza, and they tap a button to call Tony directly. Tony gets the phone ringing. Done.</p>
+          <div class="platform-stats">
+            <div class="platform-stat"><div class="val">$5–$15</div><div class="lbl">CPL (local)</div></div>
+            <div class="platform-stat"><div class="val">$10/day</div><div class="lbl">Min budget</div></div>
+            <div class="platform-stat"><div class="val">3B+</div><div class="lbl">Monthly users</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GOOGLE -->
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-icon">🔍</div>
+          <div>
+            <div class="platform-name">Google Ads (Search + Maps)</div>
+            <div class="platform-subtitle">The sniper. Catches people who are already searching for what your client sells.</div>
+          </div>
+        </div>
+        <div class="platform-body">
+          <div class="platform-tags">
+            <span class="ptag ptag-green">Highest intent leads</span>
+            <span class="ptag ptag-yellow">Harder to learn</span>
+            <span class="ptag ptag-yellow">Higher cost per click</span>
+            <span class="ptag ptag-blue">Best for service businesses</span>
+          </div>
+          <p><strong style="color: #fff;">How it works:</strong> Someone types "plumber near me" or "best pizza Tampa" into Google. Your client's ad shows up at the top of the results. They click it and call or visit the website. These people are actively looking for what your client sells — that's why the leads are so good.</p>
+          <p><strong style="color: #fff;">Why it's the second platform to add:</strong> Google leads are higher quality because the person is already searching. A plumber lead from Google is someone whose pipe just burst — they NEED a plumber right now. A plumber lead from Meta is someone who saw an ad and thought "maybe I should get my pipes checked." Different urgency, different close rate.</p>
+          <p><strong style="color: #fff;">When to add it:</strong> After your client is profitable on Meta and has budget for both. Google is more expensive per click but the leads close at 2-3x the rate. Good for plumbers, dentists, lawyers, roofers, HVAC — anything people search for when they have an urgent need.</p>
+          <div class="platform-stats">
+            <div class="platform-stat"><div class="val">$15–$50</div><div class="lbl">CPL (local)</div></div>
+            <div class="platform-stat"><div class="val">$20/day</div><div class="lbl">Min budget</div></div>
+            <div class="platform-stat"><div class="val">8.5B</div><div class="lbl">Daily searches</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIKTOK -->
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-icon">🎵</div>
+          <div>
+            <div class="platform-name">TikTok Ads</div>
+            <div class="platform-subtitle">The viral grenade. Massive reach for cheap, but only works for the right niches.</div>
+          </div>
+        </div>
+        <div class="platform-body">
+          <div class="platform-tags">
+            <span class="ptag ptag-green">Cheapest reach</span>
+            <span class="ptag ptag-green">Viral potential</span>
+            <span class="ptag ptag-yellow">Younger audience (18-34)</span>
+            <span class="ptag ptag-red">Needs strong video creative</span>
+          </div>
+          <p><strong style="color: #fff;">How it works:</strong> Short video ads that look like regular TikTok content. If the video is good, it gets massive reach for cheap. The ad needs to feel native — overly polished ads get scrolled past. Phone-recorded, authentic-looking content wins.</p>
+          <p><strong style="color: #fff;">Best niches:</strong> Restaurants, bars, beauty salons, fitness studios, med spas, ecommerce brands. Basically anything visual where the audience is under 40. Not great for plumbers, lawyers, or B2B.</p>
+          <p><strong style="color: #fff;">When to add it:</strong> Only when the niche fits AND the client can produce video content regularly. TikTok eats creative fast — you need new videos every 1-2 weeks. If the client can't or won't make videos, skip it.</p>
+          <div class="platform-stats">
+            <div class="platform-stat"><div class="val">$3–$12</div><div class="lbl">CPL</div></div>
+            <div class="platform-stat"><div class="val">$20/day</div><div class="lbl">Min budget</div></div>
+            <div class="platform-stat"><div class="val">1.5B+</div><div class="lbl">Monthly users</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- YOUTUBE -->
+      <div class="platform-card">
+        <div class="platform-header">
+          <div class="platform-icon">📺</div>
+          <div>
+            <div class="platform-name">YouTube Ads</div>
+            <div class="platform-subtitle">The long-range cannon. Great for retargeting and longer sales cycles.</div>
+          </div>
+        </div>
+        <div class="platform-body">
+          <div class="platform-tags">
+            <span class="ptag ptag-green">Massive reach</span>
+            <span class="ptag ptag-green">Great for retargeting</span>
+            <span class="ptag ptag-red">Needs video production</span>
+            <span class="ptag ptag-red">Slower results</span>
+          </div>
+          <p><strong style="color: #fff;">How it works:</strong> Those ads you see before YouTube videos. Can be 6-second bumper ads (unskippable) or 15-30 second skippable ads. You pick who sees them based on what they're watching, searching, or what websites they've visited.</p>
+          <p><strong style="color: #fff;">Best use case:</strong> Retargeting. Someone visited your client's website from a Meta ad but didn't book. Now they see a YouTube ad reminding them. This is powerful but it's an advanced move — you need enough website traffic first (at least 1,000 visitors/month).</p>
+          <p><strong style="color: #fff;">When to add it:</strong> Only after Meta is running well AND the client has video content AND there's enough pixel data for retargeting. This is Module 5 territory. Don't touch it until you've got 3+ clients stable on Meta.</p>
+          <div class="platform-stats">
+            <div class="platform-stat"><div class="val">$0.10–$0.30</div><div class="lbl">Per view</div></div>
+            <div class="platform-stat"><div class="val">$15/day</div><div class="lbl">Min budget</div></div>
+            <div class="platform-stat"><div class="val">2.5B+</div><div class="lbl">Monthly users</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: COMPARISON TABLE            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> 3. Side-by-Side Comparison</h2>
+
+      <div style="overflow-x: auto;">
+        <table class="vs-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Meta</th>
+              <th>Google</th>
+              <th>TikTok</th>
+              <th>YouTube</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color: #fff; font-weight: 600;">Ease of learning</td>
+              <td><span class="meter"><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled yellow"></span><span class="meter-dot filled yellow"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled yellow"></span><span class="meter-dot filled yellow"></span><span class="meter-dot filled yellow"></span><span class="meter-dot"></span><span class="meter-dot"></span></span></td>
+            </tr>
+            <tr>
+              <td style="color: #fff; font-weight: 600;">Cost to start</td>
+              <td style="color: #22c55e;">$10/day</td>
+              <td style="color: #eab308;">$20/day</td>
+              <td style="color: #eab308;">$20/day</td>
+              <td style="color: #eab308;">$15/day</td>
+            </tr>
+            <tr>
+              <td style="color: #fff; font-weight: 600;">Lead quality</td>
+              <td><span class="meter"><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot"></span><span class="meter-dot"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled yellow"></span><span class="meter-dot filled yellow"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot"></span></span></td>
+            </tr>
+            <tr>
+              <td style="color: #fff; font-weight: 600;">Lead volume</td>
+              <td><span class="meter"><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled yellow"></span><span class="meter-dot filled yellow"></span><span class="meter-dot filled yellow"></span><span class="meter-dot"></span><span class="meter-dot"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot filled green"></span><span class="meter-dot"></span></span></td>
+              <td><span class="meter"><span class="meter-dot filled yellow"></span><span class="meter-dot filled yellow"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></span></td>
+            </tr>
+            <tr>
+              <td style="color: #fff; font-weight: 600;">Creative effort</td>
+              <td style="color: #22c55e;">Image or video</td>
+              <td style="color: #22c55e;">Text only (search)</td>
+              <td style="color: #ef4444;">Video required (lots)</td>
+              <td style="color: #ef4444;">Video required</td>
+            </tr>
+            <tr>
+              <td style="color: #fff; font-weight: 600;">Best for</td>
+              <td>All local businesses</td>
+              <td>Service businesses</td>
+              <td>Visual / young demos</td>
+              <td>Retargeting</td>
+            </tr>
+            <tr>
+              <td style="color: #fff; font-weight: 600;">When to add</td>
+              <td style="color: #22c55e;">Day 1</td>
+              <td style="color: #eab308;">Client #3+</td>
+              <td style="color: #eab308;">Right niche only</td>
+              <td style="color: #ef4444;">Advanced</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: NICHE → PLATFORM PICKER    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 4. Pick Your Client's Niche — See the Best Platform</h2>
+
+      <div class="niche-picker">
+        <div class="niche-picker-header">
+          <h3>🏪 What type of business is your client?</h3>
+        </div>
+        <div class="niche-picker-body">
+          <div id="nicheButtons">
+            <button class="niche-btn" onclick="showNiche('restaurant')">🍕 Restaurant</button>
+            <button class="niche-btn" onclick="showNiche('plumber')">🔧 Plumber / HVAC</button>
+            <button class="niche-btn" onclick="showNiche('dentist')">🦷 Dentist</button>
+            <button class="niche-btn" onclick="showNiche('realestate')">🏠 Real Estate Agent</button>
+            <button class="niche-btn" onclick="showNiche('medspa')">💉 Med Spa / Beauty</button>
+            <button class="niche-btn" onclick="showNiche('gym')">🏋️ Gym / Fitness</button>
+            <button class="niche-btn" onclick="showNiche('lawyer')">⚖️ Lawyer</button>
+            <button class="niche-btn" onclick="showNiche('ecommerce')">🛒 Ecommerce</button>
+            <button class="niche-btn" onclick="showNiche('roofing')">🏗️ Roofing / Contractor</button>
+          </div>
+
+          <div class="niche-result" id="niche-restaurant">
+            <h4>🍕 Restaurant</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta</strong> — Target within 5-10 mile radius, food lovers, delivery apps users. Use mouthwatering food photos. Lead form or "Call Now" button. $8-15 CPL typical.<br><br>
+            <strong style="color: #eab308;">Secondary: TikTok</strong> — If the restaurant makes good video content (cooking, behind the scenes, food prep). Younger crowd. Can go viral for free.<br><br>
+            <strong style="color: #888;">Skip: Google</strong> — Too expensive for restaurants. People search "pizza near me" and pick from Google Maps for free. Not worth paying $3-5 per click when Meta gets you leads for $8.<br><br>
+            <strong>Budget: $10-20/day on Meta is enough to fill a restaurant.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-plumber">
+            <h4>🔧 Plumber / HVAC</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta</strong> — Start here. Target homeowners within 15-20 miles. Seasonal offers work great ("AC tune-up before summer — $49"). $12-25 CPL.<br><br>
+            <strong style="color: #22c55e;">Secondary: Google</strong> — Add this ASAP. "Emergency plumber near me" is pure gold. These people need help NOW. Higher CPL ($25-60) but they close at 40-60%. Worth every penny.<br><br>
+            <strong style="color: #888;">Skip: TikTok</strong> — Nobody's going on TikTok to find a plumber. The audience doesn't match.<br><br>
+            <strong>Budget: $15/day Meta + $20/day Google = $1,050/month. Client charges $200-500 per job. Math is easy.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-dentist">
+            <h4>🦷 Dentist</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta</strong> — Target families within 10 miles. Offers like "New patient special: cleaning + exam $79" crush. Before/after photos for cosmetic work. $15-30 CPL.<br><br>
+            <strong style="color: #22c55e;">Secondary: Google</strong> — "Dentist near me" and "teeth whitening [city]" are high-intent searches. Expensive ($30-70 CPL) but lifetime patient value is $2,000+. Add once Meta is stable.<br><br>
+            <strong style="color: #888;">Skip: TikTok</strong> — Unless they do cosmetic/veneer work with dramatic before-afters. Then it can work for awareness.<br><br>
+            <strong>Budget: $15-25/day Meta. Dental patient LTV makes almost any CPL profitable.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-realestate">
+            <h4>🏠 Real Estate Agent</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta</strong> — Property listing ads with carousel photos. Target by location + income + life events (recently engaged, new job). Lead magnets like "Free home valuation" work great. $10-25 CPL.<br><br>
+            <strong style="color: #eab308;">Secondary: Google</strong> — "Homes for sale in [city]" is competitive and expensive. Only add with bigger budgets ($50+/day).<br><br>
+            <strong style="color: #eab308;">Optional: YouTube</strong> — Virtual tour ads retargeting people who viewed listings. Advanced but effective for luxury market.<br><br>
+            <strong>Budget: $20-30/day Meta. One closed deal ($5-15K commission) pays for a year of ads.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-medspa">
+            <h4>💉 Med Spa / Beauty</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta (Instagram-heavy)</strong> — Before/after photos are king. Target women 25-55, interested in beauty, skincare, wellness. Offers like "Botox $9/unit this month" drive volume. $12-25 CPL.<br><br>
+            <strong style="color: #22c55e;">Secondary: TikTok</strong> — Treatment videos go viral. "Watch this lip filler transformation" content format. Huge for awareness and younger clients.<br><br>
+            <strong style="color: #888;">Skip: Google</strong> — Too expensive for most med spas. Meta + TikTok handles it.<br><br>
+            <strong>Budget: $15-25/day Meta + $10-15/day TikTok. Average treatment is $300-800. Insane margins.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-gym">
+            <h4>🏋️ Gym / Fitness Studio</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta</strong> — Target within 5-8 miles (people won't drive far to a gym). Offers like "7-day free trial" or "$1 first month." Transformation photos work. $8-18 CPL.<br><br>
+            <strong style="color: #22c55e;">Secondary: TikTok</strong> — Workout clips, member transformations, gym culture content. Great for CrossFit boxes, yoga studios, boutique fitness.<br><br>
+            <strong style="color: #888;">Skip: Google</strong> — "Gym near me" just shows Google Maps results. Organic presence matters more than paid here.<br><br>
+            <strong>Budget: $10-20/day Meta. Member LTV of $600-1,200/year makes the math very forgiving.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-lawyer">
+            <h4>⚖️ Lawyer</h4>
+            <p><strong style="color: #22c55e;">Primary: Google</strong> — This is the one niche where Google beats Meta as the starter. "Personal injury lawyer near me" or "DUI attorney [city]" are extremely high-intent. CPL is expensive ($50-150) but one case is worth $5K-50K+.<br><br>
+            <strong style="color: #22c55e;">Secondary: Meta</strong> — Good for retargeting and brand awareness. "Were you injured in an accident?" style ads. Lower CPL but lower quality leads.<br><br>
+            <strong style="color: #888;">Skip: TikTok</strong> — Nobody hires a lawyer from TikTok.<br><br>
+            <strong>Budget: $30-50/day Google minimum. Legal is expensive but the case values justify it.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-ecommerce">
+            <h4>🛒 Ecommerce</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta</strong> — Product catalog ads, dynamic retargeting, Advantage+ Shopping campaigns. Meta was literally built for ecommerce. $10-30 CPA depending on product price.<br><br>
+            <strong style="color: #22c55e;">Secondary: TikTok</strong> — TikTok Shop is exploding. Product demos, unboxings, "TikTok made me buy it" style. Massive for products under $50.<br><br>
+            <strong style="color: #eab308;">Third: Google Shopping</strong> — Product listing ads when people search for the specific product. Add once Meta/TikTok are profitable.<br><br>
+            <strong>Budget: $20-50/day Meta. Scale to $100+/day when you find a winner. Ecommerce is a volume game.</strong></p>
+          </div>
+
+          <div class="niche-result" id="niche-roofing">
+            <h4>🏗️ Roofing / Contractor</h4>
+            <p><strong style="color: #22c55e;">Primary: Meta</strong> — Target homeowners within 20-30 miles. Seasonal angles ("Storm damage? Free roof inspection"). Before/after project photos. $20-40 CPL.<br><br>
+            <strong style="color: #22c55e;">Secondary: Google</strong> — "Roof repair near me" is pure gold. Emergency roof leaks = instant close. $30-80 CPL but job value is $5K-15K.<br><br>
+            <strong style="color: #888;">Skip: TikTok + YouTube</strong> — Unless the contractor creates cool time-lapse content. But that's gravy, not the main play.<br><br>
+            <strong>Budget: $15-25/day Meta + $25/day Google. One roofing job pays for 6 months of ads.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: THE RULE                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 5. The One Rule</h2>
+
+      <blockquote>
+        "Master Meta first. Get your client results on Meta. Make them profitable on Meta. THEN talk about adding Google or TikTok. If you try to run 3 platforms for your first client, you'll do all of them badly. One platform, done well, is worth more than three platforms done poorly."
+      </blockquote>
+
+      <p style="color: #888; font-size: 0.88rem; margin-top: 12px;">
+        Everything from lesson 3.4 onwards focuses on Meta. You'll learn Google and TikTok in Module 5 (Advanced). For now, Meta is your world.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 6. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Know what each platform is best at in one sentence</strong>
+            <span>Meta = all local businesses. Google = people searching right now. TikTok = visual niches + young audience. YouTube = retargeting.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Use the niche picker for your first client's niche</strong>
+            <span>Click their niche above. Read the recommendation. Save it for your sales call so you can explain why you're starting with Meta.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Understand the unlock order: Meta → Google → TikTok → YouTube</strong>
+            <span>Don't skip ahead. Master one before adding another. Your first 3 clients should be Meta only.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Know the one niche where Google beats Meta as the starter</strong>
+            <span>Lawyers. High-intent searches + massive case values = Google first. Everything else = Meta first.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Explain to a client WHY you're starting with Meta</strong>
+            <span>Practice: "We start with Meta because it's the fastest way to get you leads at the lowest cost. Your customers are already on Facebook and Instagram. Once we're profitable there, we can add Google for even higher quality leads."</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>platforms</span><span>meta</span><span>google</span><span>tiktok</span><span>youtube</span><span>niche-selection</span><span>beginner</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.2-how-online-advertising-works.html" class="nav-link">← How Advertising Works</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.4-meta-business-manager.html" class="nav-link">Setting Up Meta Business Manager →</a>
+    </div>
+  </div>
+
+  <script>
+    // === NICHE PICKER ===
+    function showNiche(niche) {
+      document.querySelectorAll('.niche-result').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.niche-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('niche-' + niche).classList.add('show');
+      event.target.classList.add('active');
+    }
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.3-platforms-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

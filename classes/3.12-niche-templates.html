@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.12: Niche Templates — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .screen-link { display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; margin-bottom: 6px; }
+    .screen-link:hover { border-color: rgba(59,130,246,0.4); }
+
+    /* Niche tabs */
+    .niche-tabs { display: flex; gap: 4px; margin-bottom: 0; flex-wrap: wrap; }
+    .niche-tab { padding: 10px 16px; border-radius: 10px 10px 0 0; background: #161616; border: 1px solid rgba(255,255,255,0.06); border-bottom: none; color: #888; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+    .niche-tab:hover { color: #ccc; }
+    .niche-tab.active { background: #1a1a1a; color: #fff; border-color: rgba(59,130,246,0.3); }
+    .niche-content { background: #1a1a1a; border: 1px solid rgba(59,130,246,0.15); border-radius: 0 12px 12px 12px; padding: 24px; display: none; }
+    .niche-content.active { display: block; }
+
+    /* Spec row */
+    .spec-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+    .spec-item { background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px; text-align: center; }
+    .spec-item .spec-label { color: #888; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .spec-item .spec-val { color: #3B82F6; font-weight: 800; font-size: 1rem; margin-top: 4px; }
+
+    /* Ad angle cards */
+    .angle-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .angle-card { background: #111; border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 12px; }
+    .angle-card .ac-num { color: #3B82F6; font-weight: 800; font-size: 0.72rem; }
+    .angle-card .ac-title { color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 2px; }
+    .angle-card .ac-desc { color: #666; font-size: 0.72rem; margin-top: 4px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.12 — Module 3: Fulfillment</div>
+      <h1>Niche Templates — <span>Plug and Play</span></h1>
+      <div class="subtitle">
+        <span class="tag">Templates</span>
+        <span class="tag">Niches</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">These are copy-paste campaign blueprints for the 7 most common niches we see (5 local services + roofing + clothing/DTC). Each template gives you: budget, radius, ad angles, creative types, copy examples, and a launch checklist. Pick the niche, customize for the client, launch in under an hour.</div>
+
+    <!-- SCREENS TO OPEN -->
+    <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 0.95rem;">🖥️ Screens to Open</h3>
+      <a href="https://adsmanager.facebook.com/adsmanager/manage/campaigns" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">1.</span>
+        <span><strong style="color: #fff;">Ads Manager</strong> — Walk through one template from doc → live campaign</span>
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: HOW TO USE TEMPLATES       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📖</span> 1. How Templates Work</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every niche has patterns. Pizza shops, dentists, gyms — they all have similar audiences, similar budgets, similar angles that work. Instead of starting from scratch every time, you start from a template and customize.</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px;">
+        <div style="display: flex; align-items: center; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <div style="text-align: center; background: #161616; border-radius: 8px; padding: 14px 20px;">
+            <div style="font-size: 1.5rem;">📋</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">Pick Template</div>
+            <div style="color: #666; font-size: 0.68rem;">Match to client niche</div>
+          </div>
+          <div style="color: #444; font-size: 1.2rem;">→</div>
+          <div style="text-align: center; background: #161616; border-radius: 8px; padding: 14px 20px;">
+            <div style="font-size: 1.5rem;">✏️</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">Customize</div>
+            <div style="color: #666; font-size: 0.68rem;">Name, location, offer</div>
+          </div>
+          <div style="color: #444; font-size: 1.2rem;">→</div>
+          <div style="text-align: center; background: #161616; border-radius: 8px; padding: 14px 20px;">
+            <div style="font-size: 1.5rem;">🎨</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">Create Ads</div>
+            <div style="color: #666; font-size: 0.68rem;">Use the angles + formats</div>
+          </div>
+          <div style="color: #444; font-size: 1.2rem;">→</div>
+          <div style="text-align: center; background: #161616; border-radius: 8px; padding: 14px 20px;">
+            <div style="font-size: 1.5rem;">🚀</div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">Launch</div>
+            <div style="color: #666; font-size: 0.68rem;">Under 1 hour</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #ef4444;">Templates are starting points, not copy-paste.</strong> Every client is different. A pizza shop in Miami is not the same as one in rural Ohio. Use the template structure but customize the copy, creatives, and offer for each specific business.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE 5 TEMPLATES            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📦</span> 2. The 7 Niche Templates</h2>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Click through each tab. For the Restaurant template, walk through the entire thing — budget, radius, angles, copy examples — then show how you'd build it in Ads Manager.</span>
+      </div>
+
+      <div class="niche-tabs">
+        <div class="niche-tab active" onclick="switchNiche(0)">🍕 Restaurant</div>
+        <div class="niche-tab" onclick="switchNiche(1)">🏠 Real Estate</div>
+        <div class="niche-tab" onclick="switchNiche(2)">🧹 Home Services</div>
+        <div class="niche-tab" onclick="switchNiche(3)">💆 Med Spa</div>
+        <div class="niche-tab" onclick="switchNiche(4)">💪 Gym / Studio</div>
+        <div class="niche-tab" onclick="switchNiche(5)">🪜 Roofing</div>
+        <div class="niche-tab" onclick="switchNiche(6)">👕 Clothing</div>
+      </div>
+
+      <!-- ===== RESTAURANT ===== -->
+      <div class="niche-content active" id="niche-0">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span style="font-size: 2rem;">🍕</span>
+          <div>
+            <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Restaurant / Café / Bar</div>
+            <div style="color: #888; font-size: 0.82rem;">Pizza shops, coffee shops, brunch spots, bars, fast casual</div>
+          </div>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-item"><div class="spec-label">Daily Budget</div><div class="spec-val">$15-30</div></div>
+          <div class="spec-item"><div class="spec-label">Radius</div><div class="spec-val">5-10 mi</div></div>
+          <div class="spec-item"><div class="spec-label">Target CPL</div><div class="spec-val">$3-8</div></div>
+          <div class="spec-item"><div class="spec-label">Objective</div><div class="spec-val">Traffic / Leads</div></div>
+        </div>
+
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">🎯 6 Ad Angles That Work</div>
+        <div class="angle-grid">
+          <div class="angle-card"><div class="ac-num">#1</div><div class="ac-title">The Hero Shot</div><div class="ac-desc">Close-up of best-selling dish. Steam, cheese pull, drip. Food porn that stops the scroll.</div></div>
+          <div class="angle-card"><div class="ac-num">#2</div><div class="ac-title">The Deal</div><div class="ac-desc">"2 large pizzas for $24.99 this week only." Urgency + value. Works every time.</div></div>
+          <div class="angle-card"><div class="ac-num">#3</div><div class="ac-title">The Review</div><div class="ac-desc">Screenshot of a 5-star Google review with the food in background. Social proof + visual.</div></div>
+          <div class="angle-card"><div class="ac-num">#4</div><div class="ac-title">Behind the Kitchen</div><div class="ac-desc">30-sec video of chef making food. The process. Raw, unedited. People love watching food being made.</div></div>
+          <div class="angle-card"><div class="ac-num">#5</div><div class="ac-title">The "Did You Know"</div><div class="ac-desc">"Did you know there's a pizza shop 5 min from you that hand-makes every pie?" Location awareness.</div></div>
+          <div class="angle-card"><div class="ac-num">#6</div><div class="ac-title">The Event/Season</div><div class="ac-desc">"Game day special" / "Valentine's dinner" / "Late night menu until 2am." Moment-based triggers.</div></div>
+        </div>
+
+        <div style="margin-top: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">📝 Copy Example (The Deal)</div>
+          <div style="background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: #ccc; font-style: italic;">
+            🍕 2 Large Pizzas. $24.99. This Week Only.<br><br>
+            Hand-tossed dough. Fresh mozzarella. 30+ toppings to choose from.<br><br>
+            Tony's Pizza — [Address]<br>
+            Open until midnight. Order online or walk in.<br><br>
+            Tap "Get Directions" 👇
+          </div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 8px;">CTA: Get Directions | Format: Single image (food close-up) or carousel (3 dishes)</div>
+        </div>
+
+        <div style="margin-top: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 14px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem; margin-bottom: 6px;">🏆 What Wins for Restaurants</div>
+          <div style="color: #ccc; font-size: 0.82rem; line-height: 1.6;">Video of food being made > static photos. Close-ups > wide shots. Deals with deadlines > generic menus. "Get Directions" CTA > "Learn More." Keep radius tight — nobody drives 20 miles for pizza.</div>
+        </div>
+      </div>
+
+      <!-- ===== REAL ESTATE ===== -->
+      <div class="niche-content" id="niche-1">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span style="font-size: 2rem;">🏠</span>
+          <div>
+            <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Real Estate</div>
+            <div style="color: #888; font-size: 0.82rem;">Realtors, brokerages, property management</div>
+          </div>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-item"><div class="spec-label">Daily Budget</div><div class="spec-val">$20-50</div></div>
+          <div class="spec-item"><div class="spec-label">Radius</div><div class="spec-val">15-25 mi</div></div>
+          <div class="spec-item"><div class="spec-label">Target CPL</div><div class="spec-val">$10-25</div></div>
+          <div class="spec-item"><div class="spec-label">Objective</div><div class="spec-val">Leads</div></div>
+        </div>
+
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">🎯 6 Ad Angles That Work</div>
+        <div class="angle-grid">
+          <div class="angle-card"><div class="ac-num">#1</div><div class="ac-title">Just Listed</div><div class="ac-desc">Beautiful property photos. Price. Beds/baths. "See it before it's gone." Urgency + aspiration.</div></div>
+          <div class="angle-card"><div class="ac-num">#2</div><div class="ac-title">Home Valuation</div><div class="ac-desc">"What's your home worth in 2026? Get a free valuation." Lead magnet for sellers. High intent.</div></div>
+          <div class="angle-card"><div class="ac-num">#3</div><div class="ac-title">Market Update</div><div class="ac-desc">"Homes in [city] are selling 12% faster this month." Position agent as the expert.</div></div>
+          <div class="angle-card"><div class="ac-num">#4</div><div class="ac-title">Video Walkthrough</div><div class="ac-desc">60-sec property tour. Phone footage is fine. Show the kitchen, backyard, neighborhood.</div></div>
+          <div class="angle-card"><div class="ac-num">#5</div><div class="ac-title">First-Time Buyer</div><div class="ac-desc">"Think you can't afford a home? Homes in [city] start at $X." Break the barrier.</div></div>
+          <div class="angle-card"><div class="ac-num">#6</div><div class="ac-title">Sold Testimonial</div><div class="ac-desc">"Sold in 5 days, $15K over asking." Client photo + quote. Proof the agent delivers.</div></div>
+        </div>
+
+        <div style="margin-top: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">📝 Copy Example (Home Valuation)</div>
+          <div style="background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: #ccc; font-style: italic;">
+            🏠 How Much Is Your Home Worth Right Now?<br><br>
+            The [City] market moved fast in 2025. Some homeowners are sitting on $50-100K+ in equity and don't even know it.<br><br>
+            Get your free home valuation — takes 30 seconds.<br><br>
+            No obligation. No pressure. Just data. 👇
+          </div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 8px;">CTA: Get Quote / Sign Up | Format: Lead Form (name, email, address, timeframe) | Image: Aerial neighborhood shot or property</div>
+        </div>
+
+        <div style="margin-top: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 14px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem; margin-bottom: 6px;">🏆 What Wins for Real Estate</div>
+          <div style="color: #ccc; font-size: 0.82rem; line-height: 1.6;">Lead forms > landing pages (less friction). Home valuation = best lead magnet. Carousel of properties > single image. Video walkthroughs get 3x engagement. Always include price — mystery kills clicks.</div>
+        </div>
+      </div>
+
+      <!-- ===== HOME SERVICES ===== -->
+      <div class="niche-content" id="niche-2">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span style="font-size: 2rem;">🧹</span>
+          <div>
+            <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Home Services</div>
+            <div style="color: #888; font-size: 0.82rem;">Plumbing, HVAC, cleaning, landscaping, painting, pressure washing</div>
+          </div>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-item"><div class="spec-label">Daily Budget</div><div class="spec-val">$20-40</div></div>
+          <div class="spec-item"><div class="spec-label">Radius</div><div class="spec-val">10-20 mi</div></div>
+          <div class="spec-item"><div class="spec-label">Target CPL</div><div class="spec-val">$15-35</div></div>
+          <div class="spec-item"><div class="spec-label">Objective</div><div class="spec-val">Leads</div></div>
+        </div>
+
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">🎯 6 Ad Angles That Work</div>
+        <div class="angle-grid">
+          <div class="angle-card"><div class="ac-num">#1</div><div class="ac-title">Before / After</div><div class="ac-desc">Side-by-side transformation. Dirty → clean. Broken → fixed. Most powerful format for services.</div></div>
+          <div class="angle-card"><div class="ac-num">#2</div><div class="ac-title">Seasonal Urgency</div><div class="ac-desc">"AC tune-up before summer hits — $79." / "Gutter cleaning before the fall rain." Timing = action.</div></div>
+          <div class="angle-card"><div class="ac-num">#3</div><div class="ac-title">The Review Stack</div><div class="ac-desc">"4.9 stars, 200+ reviews." Screenshot of Google reviews. Trust is everything for home services.</div></div>
+          <div class="angle-card"><div class="ac-num">#4</div><div class="ac-title">The Problem</div><div class="ac-desc">"Weird noise from your AC? Could be a $50 fix or a $3,000 replacement." Fear of the unknown → call now.</div></div>
+          <div class="angle-card"><div class="ac-num">#5</div><div class="ac-title">The Crew</div><div class="ac-desc">Photo/video of the team in uniform, at a job site. Real people = trust. Shows professionalism.</div></div>
+          <div class="angle-card"><div class="ac-num">#6</div><div class="ac-title">Free Estimate</div><div class="ac-desc">"Free estimate in 24 hours. No hidden fees. Licensed & insured." Remove every objection in one ad.</div></div>
+        </div>
+
+        <div style="margin-top: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">📝 Copy Example (Before/After)</div>
+          <div style="background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: #ccc; font-style: italic;">
+            This driveway hadn't been pressure washed in 8 years. 😬<br><br>
+            2 hours later → looks brand new.<br><br>
+            We serve [City] and surrounding areas.<br>
+            ✅ Licensed & insured<br>
+            ✅ Free estimates<br>
+            ✅ Same-week scheduling<br><br>
+            Tap below for a free quote 👇
+          </div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 8px;">CTA: Get Quote | Format: Carousel (before → after → after → team photo) | Lead Form: name, phone, service needed, address</div>
+        </div>
+
+        <div style="margin-top: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 14px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem; margin-bottom: 6px;">🏆 What Wins for Home Services</div>
+          <div style="color: #ccc; font-size: 0.82rem; line-height: 1.6;">Before/after carousels crush everything else. Lead forms with phone number field (these leads want a call). Seasonal angles get 2x CTR. Always mention "licensed & insured" — it's the #1 trust factor.</div>
+        </div>
+      </div>
+
+      <!-- ===== MED SPA ===== -->
+      <div class="niche-content" id="niche-3">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span style="font-size: 2rem;">💆</span>
+          <div>
+            <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Med Spa / Beauty</div>
+            <div style="color: #888; font-size: 0.82rem;">Botox, fillers, facials, laser, body sculpting, lash extensions</div>
+          </div>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-item"><div class="spec-label">Daily Budget</div><div class="spec-val">$25-50</div></div>
+          <div class="spec-item"><div class="spec-label">Radius</div><div class="spec-val">10-15 mi</div></div>
+          <div class="spec-item"><div class="spec-label">Target CPL</div><div class="spec-val">$15-40</div></div>
+          <div class="spec-item"><div class="spec-label">Objective</div><div class="spec-val">Leads</div></div>
+        </div>
+
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">🎯 6 Ad Angles That Work</div>
+        <div class="angle-grid">
+          <div class="angle-card"><div class="ac-num">#1</div><div class="ac-title">Transformation</div><div class="ac-desc">Before/after photos (with permission). Nothing sells beauty services like visible results.</div></div>
+          <div class="angle-card"><div class="ac-num">#2</div><div class="ac-title">First-Time Offer</div><div class="ac-desc">"First facial — $49 (reg $120)." Low barrier to get them in the door. Upsell in person.</div></div>
+          <div class="angle-card"><div class="ac-num">#3</div><div class="ac-title">The Process Video</div><div class="ac-desc">15-30sec of the treatment being done. Satisfying, ASMR-like. People can't stop watching.</div></div>
+          <div class="angle-card"><div class="ac-num">#4</div><div class="ac-title">The Myth Buster</div><div class="ac-desc">"Botox doesn't freeze your face." / "Laser isn't as painful as you think." Kill the fear.</div></div>
+          <div class="angle-card"><div class="ac-num">#5</div><div class="ac-title">Social Proof</div><div class="ac-desc">Client testimonial video. 15 seconds. "I've been coming here for 2 years and my skin has never looked better."</div></div>
+          <div class="angle-card"><div class="ac-num">#6</div><div class="ac-title">Event/Season</div><div class="ac-desc">"Get wedding-ready" / "Summer glow package" / "New Year, new skin." Moment-based urgency.</div></div>
+        </div>
+
+        <div style="margin-top: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">📝 Copy Example (First-Time Offer)</div>
+          <div style="background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: #ccc; font-style: italic;">
+            ✨ Your First HydraFacial — Just $49 (Usually $120)<br><br>
+            Deep cleanse. Exfoliation. Hydration. 30 minutes. Zero downtime. Walk out glowing.<br><br>
+            [Spa Name] — [City]'s top-rated med spa.<br>
+            ⭐ 4.9 stars | 300+ 5-star reviews<br><br>
+            Limited spots this week. Book now 👇
+          </div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 8px;">CTA: Book Now | Format: Video (treatment process) or carousel (before/after/clinic) | Lead Form: name, phone, service interest</div>
+        </div>
+
+        <div style="margin-top: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 14px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem; margin-bottom: 6px;">🏆 What Wins for Med Spas</div>
+          <div style="color: #ccc; font-size: 0.82rem; line-height: 1.6;">Process videos are addictive — highest engagement in this niche. Before/after = highest conversion. First-time offers get people through the door. Always show the clinic (clean, modern, professional). Age targeting 25-55 is usually enough.</div>
+        </div>
+      </div>
+
+      <!-- ===== GYM ===== -->
+      <div class="niche-content" id="niche-4">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span style="font-size: 2rem;">💪</span>
+          <div>
+            <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Gym / Fitness Studio</div>
+            <div style="color: #888; font-size: 0.82rem;">CrossFit, yoga, boxing, personal training, group fitness</div>
+          </div>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-item"><div class="spec-label">Daily Budget</div><div class="spec-val">$15-35</div></div>
+          <div class="spec-item"><div class="spec-label">Radius</div><div class="spec-val">5-8 mi</div></div>
+          <div class="spec-item"><div class="spec-label">Target CPL</div><div class="spec-val">$8-20</div></div>
+          <div class="spec-item"><div class="spec-label">Objective</div><div class="spec-val">Leads</div></div>
+        </div>
+
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">🎯 6 Ad Angles That Work</div>
+        <div class="angle-grid">
+          <div class="angle-card"><div class="ac-num">#1</div><div class="ac-title">Free Trial Class</div><div class="ac-desc">"First class free. No commitment. Just show up." Lowest barrier to entry. Get them through the door.</div></div>
+          <div class="angle-card"><div class="ac-num">#2</div><div class="ac-title">Transformation Story</div><div class="ac-desc">Member before/after + testimonial. "I lost 30 lbs in 4 months at [gym]." Real people, real results.</div></div>
+          <div class="angle-card"><div class="ac-num">#3</div><div class="ac-title">Community Vibe</div><div class="ac-desc">Video of a class in action. High fives. Music. Energy. Sell the experience, not the equipment.</div></div>
+          <div class="angle-card"><div class="ac-num">#4</div><div class="ac-title">The "No Gym" Person</div><div class="ac-desc">"Hate the gym? Us too. That's why we built something different." Speak to the objection.</div></div>
+          <div class="angle-card"><div class="ac-num">#5</div><div class="ac-title">New Year / Season</div><div class="ac-desc">"January special: $0 enrollment + first month 50% off." Time-sensitive. Rides seasonal motivation.</div></div>
+          <div class="angle-card"><div class="ac-num">#6</div><div class="ac-title">Coach/Trainer Intro</div><div class="ac-desc">30-sec video of the head coach talking to camera. Personal. "I'm [name], here's what we do differently."</div></div>
+        </div>
+
+        <div style="margin-top: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">📝 Copy Example (Free Trial)</div>
+          <div style="background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: #ccc; font-style: italic;">
+            💪 Your First Class Is Free. Seriously.<br><br>
+            No contract. No pressure. No judgment.<br>
+            Just show up, work hard for 45 minutes, and see if it's for you.<br><br>
+            [Gym Name] — [Address]<br>
+            Classes at 6am, 12pm, and 6pm daily.<br><br>
+            Book your free class 👇
+          </div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 8px;">CTA: Sign Up / Book Now | Format: Video (class energy) or carousel (facility + class + members) | Lead Form: name, phone, preferred class time</div>
+        </div>
+
+        <div style="margin-top: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 14px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem; margin-bottom: 6px;">🏆 What Wins for Gyms</div>
+          <div style="color: #ccc; font-size: 0.82rem; line-height: 1.6;">Class energy videos > equipment photos. Free trial = highest converting offer. Tight radius (5-8 mi) — gym must be on their commute. Transformation stories with real members crush stock photos. Sell community, not features.</div>
+        </div>
+      </div>
+
+      <!-- ===== ROOFING ===== -->
+      <div class="niche-content" id="niche-5">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span style="font-size: 2rem;">🪜</span>
+          <div>
+            <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Roofing</div>
+            <div style="color: #888; font-size: 0.82rem;">Residential roofing, storm repair, insurance claims, gutters, siding</div>
+          </div>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-item"><div class="spec-label">Daily Budget</div><div class="spec-val">$30-75</div></div>
+          <div class="spec-item"><div class="spec-label">Radius</div><div class="spec-val">15-30 mi</div></div>
+          <div class="spec-item"><div class="spec-label">Target CPL</div><div class="spec-val">$25-75</div></div>
+          <div class="spec-item"><div class="spec-label">Objective</div><div class="spec-val">Leads</div></div>
+        </div>
+
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">🎯 6 Ad Angles That Work</div>
+        <div class="angle-grid">
+          <div class="angle-card"><div class="ac-num">#1</div><div class="ac-title">Storm Damage</div><div class="ac-desc">"Recent storms hit [city] — hidden roof damage is common. Free inspection this week only." Localize the actual weather event.</div></div>
+          <div class="angle-card"><div class="ac-num">#2</div><div class="ac-title">Insurance Replacement</div><div class="ac-desc">"Your insurance may pay for a whole new roof. We handle the claim paperwork — you pay $0." Highest-converting offer in this niche.</div></div>
+          <div class="angle-card"><div class="ac-num">#3</div><div class="ac-title">Free Drone Inspection</div><div class="ac-desc">Drone footage of a roof + close-up of damage. "We spot what you can't see from the ground." Tech = trust.</div></div>
+          <div class="angle-card"><div class="ac-num">#4</div><div class="ac-title">Before / After</div><div class="ac-desc">Old, sagging, leaky roof → new, sharp, durable. Curb-appeal angle for non-emergency homeowners.</div></div>
+          <div class="angle-card"><div class="ac-num">#5</div><div class="ac-title">Lifetime Warranty</div><div class="ac-desc">"Roofs built to last 50+ years. Lifetime warranty included. Lock in 2026 pricing before material costs rise."</div></div>
+          <div class="angle-card"><div class="ac-num">#6</div><div class="ac-title">Local Crew</div><div class="ac-desc">"500+ roofs done in [city] this year. Licensed, bonded, insured. Local crew — no out-of-state storm chasers."</div></div>
+        </div>
+
+        <div style="margin-top: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">📝 Copy Example (Insurance Replacement)</div>
+          <div style="background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: #ccc; font-style: italic;">
+            🚨 Your Insurance May Pay For a Brand New Roof.<br><br>
+            Storms hit [City] this year — and most homeowners have damage they don't even know about. If yours qualifies, your insurance covers the full replacement and you pay $0 out of pocket.<br><br>
+            We file the claim. We meet the adjuster. We do the work.<br><br>
+            ✅ Free drone inspection<br>
+            ✅ Licensed, bonded & insured<br>
+            ✅ Lifetime warranty<br>
+            ✅ 500+ roofs done locally<br><br>
+            Tap below to book your free inspection 👇
+          </div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 8px;">CTA: Get Quote / Book Inspection | Format: Drone video of roof + damage close-up, OR carousel (drone shot → damage → new roof → crew) | Lead Form: name, PHONE (required), address, age of roof</div>
+        </div>
+
+        <div style="margin-top: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 14px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem; margin-bottom: 6px;">🏆 What Wins for Roofing</div>
+          <div style="color: #ccc; font-size: 0.82rem; line-height: 1.6;">Insurance angles ("$0 out of pocket") crush everything else. Drone inspection videos = highest CTR — visual, novel, build trust. Phone field MANDATORY in lead form — these leads expect a call within an hour. Localize hard: name the city and recent storms by date. Stack trust signals (licensed, insured, BBB, warranty years) prominently. Target homeowners 30-65; layer "interested in home improvement" if available.</div>
+        </div>
+      </div>
+
+      <!-- ===== CLOTHING ===== -->
+      <div class="niche-content" id="niche-6">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span style="font-size: 2rem;">👕</span>
+          <div>
+            <div style="color: #fff; font-weight: 800; font-size: 1.1rem;">Clothing / Apparel Brand</div>
+            <div style="color: #888; font-size: 0.82rem;">DTC fashion, boutique, streetwear, athleisure, accessories</div>
+          </div>
+        </div>
+
+        <div class="spec-row">
+          <div class="spec-item"><div class="spec-label">Daily Budget</div><div class="spec-val">$30-100</div></div>
+          <div class="spec-item"><div class="spec-label">Radius</div><div class="spec-val">Nationwide</div></div>
+          <div class="spec-item"><div class="spec-label">Target CPA</div><div class="spec-val">$25-50</div></div>
+          <div class="spec-item"><div class="spec-label">Objective</div><div class="spec-val">Sales</div></div>
+        </div>
+
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 10px;">🎯 6 Ad Angles That Work</div>
+        <div class="angle-grid">
+          <div class="angle-card"><div class="ac-num">#1</div><div class="ac-title">Hero Product</div><div class="ac-desc">Best-seller styled on a real person, lifestyle setting. Not flat-lay. "This is the piece we're known for."</div></div>
+          <div class="angle-card"><div class="ac-num">#2</div><div class="ac-title">First-Order Discount</div><div class="ac-desc">"20% off your first order — code WELCOME20." Highest converter for new customer acquisition, every time.</div></div>
+          <div class="angle-card"><div class="ac-num">#3</div><div class="ac-title">UGC Try-On</div><div class="ac-desc">Customer or micro-influencer wearing it, talking to camera. Raw, unedited. Beats studio shoots 9 times out of 10.</div></div>
+          <div class="angle-card"><div class="ac-num">#4</div><div class="ac-title">Founder Story</div><div class="ac-desc">30-60sec video. "I started this brand because…" Authenticity sells clothing better than polish.</div></div>
+          <div class="angle-card"><div class="ac-num">#5</div><div class="ac-title">Restock / Sold Out</div><div class="ac-desc">"Back in stock — last drop sold out in 48 hours." Scarcity drives action on proven winners.</div></div>
+          <div class="angle-card"><div class="ac-num">#6</div><div class="ac-title">Drop / Collection</div><div class="ac-desc">"New summer drop — Friday at 9am. Get notified." Event-style urgency. Builds anticipation + email list.</div></div>
+        </div>
+
+        <div style="margin-top: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-bottom: 8px;">📝 Copy Example (First-Order Discount)</div>
+          <div style="background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.85rem; line-height: 1.6; color: #ccc; font-style: italic;">
+            ✨ 20% Off Your First Order<br><br>
+            [Brand Name] — handcrafted [category] designed in [city].<br>
+            Built to last. Made to be worn every day.<br><br>
+            Free shipping over $75. Free returns, always.<br>
+            ⭐ 4.9 stars | 10,000+ happy customers<br><br>
+            Code: WELCOME20 — auto-applied at checkout.<br><br>
+            Shop the collection 👇
+          </div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 8px;">CTA: Shop Now | Format: Carousel (3-5 hero products on real people) OR short UGC try-on video | Pixel: Purchase event tracked. Audience: lookalike of top 10% customers + interest stacks (related brands, lifestyle interests). Run a separate retargeting campaign for cart abandoners + product viewers.</div>
+        </div>
+
+        <div style="margin-top: 16px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 14px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem; margin-bottom: 6px;">🏆 What Wins for Clothing</div>
+          <div style="color: #ccc; font-size: 0.82rem; line-height: 1.6;">UGC crushes studio shoots — feels native, costs less, converts better. Video try-ons beat statics every time. First-order discounts = highest converter for cold traffic. ALWAYS run a separate retargeting campaign for cart abandoners and product viewers (often the most profitable spend in the account). Mobile-first creatives — 90%+ of clothing purchases happen on phones. Free shipping threshold ($50-75) lifts AOV. For boutique/local: tighten radius to 5-15 mi and lean into in-store events.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: QUICK REFERENCE            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> 3. Quick Reference Table</h2>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse; background: #0d0d0d; border-radius: 12px; overflow: hidden;">
+          <thead>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+              <th style="text-align: left; padding: 12px; color: #3B82F6; font-weight: 700;">Niche</th>
+              <th style="text-align: center; padding: 12px; color: #3B82F6; font-weight: 700;">Budget/Day</th>
+              <th style="text-align: center; padding: 12px; color: #3B82F6; font-weight: 700;">Radius</th>
+              <th style="text-align: center; padding: 12px; color: #3B82F6; font-weight: 700;">Target CPL</th>
+              <th style="text-align: center; padding: 12px; color: #3B82F6; font-weight: 700;">#1 Format</th>
+              <th style="text-align: center; padding: 12px; color: #3B82F6; font-weight: 700;">#1 Angle</th>
+              <th style="text-align: center; padding: 12px; color: #3B82F6; font-weight: 700;">Best CTA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <td style="padding: 10px 12px; color: #fff; font-weight: 600;">🍕 Restaurant</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">$15-30</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">5-10 mi</td>
+              <td style="padding: 10px 12px; text-align: center; color: #22c55e; font-weight: 700;">$3-8</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Food video</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Hero shot / Deal</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Get Directions</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <td style="padding: 10px 12px; color: #fff; font-weight: 600;">🏠 Real Estate</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">$20-50</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">15-25 mi</td>
+              <td style="padding: 10px 12px; text-align: center; color: #22c55e; font-weight: 700;">$10-25</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Lead Form</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Home Valuation</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Get Quote</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <td style="padding: 10px 12px; color: #fff; font-weight: 600;">🧹 Home Services</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">$20-40</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">10-20 mi</td>
+              <td style="padding: 10px 12px; text-align: center; color: #22c55e; font-weight: 700;">$15-35</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Before/After</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Transformation</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Get Quote</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <td style="padding: 10px 12px; color: #fff; font-weight: 600;">💆 Med Spa</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">$25-50</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">10-15 mi</td>
+              <td style="padding: 10px 12px; text-align: center; color: #22c55e; font-weight: 700;">$15-40</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Process video</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">First-time offer</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Book Now</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <td style="padding: 10px 12px; color: #fff; font-weight: 600;">💪 Gym</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">$15-35</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">5-8 mi</td>
+              <td style="padding: 10px 12px; text-align: center; color: #22c55e; font-weight: 700;">$8-20</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Class video</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Free trial</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Sign Up</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+              <td style="padding: 10px 12px; color: #fff; font-weight: 600;">🪜 Roofing</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">$30-75</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">15-30 mi</td>
+              <td style="padding: 10px 12px; text-align: center; color: #22c55e; font-weight: 700;">$25-75</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Drone video</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Insurance replacement</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Book Inspection</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 12px; color: #fff; font-weight: 600;">👕 Clothing</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">$30-100</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Nationwide</td>
+              <td style="padding: 10px 12px; text-align: center; color: #22c55e; font-weight: 700;">$25-50 CPA</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">UGC try-on</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">First-order discount</td>
+              <td style="padding: 10px 12px; text-align: center; color: #ccc;">Shop Now</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 4. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Pick a niche and study its template</strong>
+            <span>Know the budget, radius, target CPL, top angles, and best format for at least one niche by heart.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Write 3 ad variations using the angle cards</strong>
+            <span>Pick 3 different angles from a template. Write the copy using what you learned in Lesson 3.8.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Build a mock campaign in Ads Manager using a template</strong>
+            <span>Set the budget, radius, and objective from the template specs. Don't publish — just build it.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Identify what to customize vs. what to keep</strong>
+            <span>Structure stays. Copy, creatives, offer, and location get customized for each specific business.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>templates</span><span>niches</span><span>restaurant</span><span>real-estate</span><span>home-services</span><span>med-spa</span><span>gym</span><span>roofing</span><span>clothing</span><span>plug-and-play</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.11-ai-campaign-optimizer.html" class="nav-link">← Campaign Optimization</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.13-client-onboarding-sop.html" class="nav-link">Client Onboarding SOP →</a>
+    </div>
+  </div>
+
+  <script>
+    // === NICHE TABS ===
+    function switchNiche(i) {
+      document.querySelectorAll('.niche-tab').forEach((t,j) => t.classList.toggle('active', j===i));
+      document.querySelectorAll('.niche-content').forEach((c,j) => c.classList.toggle('active', j===i));
+    }
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.12-templates-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

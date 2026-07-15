@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <defs>
+    <linearGradient id="au-bg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#e67e22"/>
+      <stop offset="100%" stop-color="#d35400"/>
+    </linearGradient>
+    <linearGradient id="au-glow" x1="40" y1="0" x2="40" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f39c12" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#e67e22" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="80" height="80" rx="16" fill="#0d0d0d"/>
+  <rect width="80" height="80" rx="16" fill="url(#au-glow)"/>
+  <rect x="2" y="2" width="76" height="76" rx="14" fill="none" stroke="url(#au-bg)" stroke-width="2" opacity="0.6"/>
+  <!-- Helmet/Crown - Roman commander -->
+  <path d="M40 14 L28 28 L24 50 L32 46 L40 58 L48 46 L56 50 L52 28 Z" fill="url(#au-bg)" opacity="0.9"/>
+  <!-- Helmet crest -->
+  <path d="M40 10 L40 24" stroke="#f39c12" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="40" cy="10" r="3" fill="#f39c12"/>
+  <!-- Face plate -->
+  <path d="M32 32 L32 42 L40 48 L48 42 L48 32" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.7"/>
+  <!-- Eyes -->
+  <circle cx="36" cy="37" r="2" fill="#f39c12"/>
+  <circle cx="44" cy="37" r="2" fill="#f39c12"/>
+  <!-- Sword beneath -->
+  <line x1="40" y1="56" x2="40" y2="70" stroke="#e67e22" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="34" y1="60" x2="46" y2="60" stroke="#e67e22" stroke-width="2" stroke-linecap="round"/>
+</svg>

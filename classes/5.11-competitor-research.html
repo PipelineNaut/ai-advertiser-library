@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.11: AI Competitor Research — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .screenshot-placeholder { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px 20px; margin: 16px 0; text-align: center; }
+    .screenshot-placeholder p { color: #555; font-size: 0.8rem; margin: 0; }
+    .screenshot-placeholder .label { color: #888; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+    .flow-visual { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; justify-content: center; }
+    .flow-step { background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 16px 20px; text-align: center; min-width: 140px; }
+    .flow-step .flow-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .flow-step .flow-label { color: #fff; font-weight: 700; font-size: 0.85rem; }
+    .flow-step .flow-desc { color: #888; font-size: 0.75rem; margin-top: 4px; }
+    .flow-arrow { color: #3B82F6; font-size: 1.4rem; padding: 0 8px; font-weight: 800; }
+    .look-for-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+    .look-for-card h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 0.95rem; }
+    .look-for-card p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .pro-card { background: #161616; border-left: 4px solid #3B82F6; border-radius: 0 12px 12px 0; padding: 16px 20px; margin-bottom: 12px; }
+    .pro-card h4 { color: #fff; margin: 0 0 6px 0; font-size: 0.95rem; }
+    .pro-card p { color: #888; font-size: 0.85rem; line-height: 1.5; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.11 — Module 5: AI Integration</div>
+      <h1>AI Competitor <span>Research</span></h1>
+      <div class="subtitle">
+        <span class="tag">competitor-research</span>
+        <span class="tag">meta-ad-library</span>
+        <span class="tag">claude-code</span>
+        <span class="tag">strategy</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Before you write a single ad for a client, you should know what their competitors are running. What hooks. What offers. What visuals. The Meta Ad Library shows you everything — for free. Pair it with Claude Code and you can tear apart a competitor's entire ad strategy in 5 minutes.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- VISUAL FLOW                            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> The Workflow</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px;">Four steps. Five minutes. Complete competitive intelligence.</p>
+
+      <div class="flow-visual">
+        <div class="flow-step">
+          <div class="flow-icon">🔍</div>
+          <div class="flow-label">Find Competitors</div>
+          <div class="flow-desc">Ad Library search</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon">📸</div>
+          <div class="flow-label">Screenshot Ads</div>
+          <div class="flow-desc">5-10 active ads</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon">🤖</div>
+          <div class="flow-label">Feed to Claude</div>
+          <div class="flow-desc">Analysis prompt</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon">💡</div>
+          <div class="flow-label">Get Intel</div>
+          <div class="flow-desc">Patterns, gaps, angles</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 1: FIND COMPETITORS               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔍</span> Step 1: Find Competitors in the Ad Library</h2>
+
+      <a href="https://www.facebook.com/ads/library" target="_blank" style="display: block; background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 16px; text-decoration: none; margin-bottom: 16px;">
+        <div style="color: #3B82F6; font-weight: 700; font-size: 0.95rem;">📚 Meta Ad Library</div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">facebook.com/ads/library — See every active ad any business is running. Free. No login needed.</div>
+      </a>
+
+      <div class="click-step" data-step="1">
+        <h4>Open the Ad Library</h4>
+        <p>Go to <strong style="color:#fff;">facebook.com/ads/library</strong>. Set the country (usually United States) and category to "All ads."</p>
+      </div>
+
+      <div class="click-step" data-step="2">
+        <h4>Search for Competitors</h4>
+        <p>Search by competitor name. If you don't know who they are, ask your client for their top 3-5. Or search the niche + city — "Dentist Tampa" shows every dental practice running ads in Tampa.</p>
+      </div>
+
+      <div class="click-step" data-step="3">
+        <h4>Grab 5-10 Ads</h4>
+        <p>Mix of different competitors. Screenshot them, copy the text, or save the shareable link from the library. Get a variety — images, videos, carousels.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Meta Ad Library search results</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Pro tip:</strong> Ads running for 3+ months are probably profitable. Nobody keeps spending money on ads that don't work. Study those the closest.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 2: WHAT TO LOOK FOR               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">👀</span> Step 2: What to Look For</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">When reviewing competitor ads, pay attention to these six things:</p>
+
+      <div class="look-for-card">
+        <h4>⏱️ How Long Has It Been Running?</h4>
+        <p>60+ days = probably working. Just started = they're testing. Long-running ads are the ones to study.</p>
+      </div>
+      <div class="look-for-card">
+        <h4>🪝 What's the Hook?</h4>
+        <p>The first line of text or first second of video. What are they leading with?</p>
+      </div>
+      <div class="look-for-card">
+        <h4>🎁 What's the Offer?</h4>
+        <p>Free consultation? Discount? Free trial? Limited time? What's the carrot?</p>
+      </div>
+      <div class="look-for-card">
+        <h4>🖼️ What Format?</h4>
+        <p>Image, video, carousel? What's the visual showing? Professional photos or UGC?</p>
+      </div>
+      <div class="look-for-card">
+        <h4>📍 What's the CTA?</h4>
+        <p>Book now, learn more, call now, shop now? Where are they sending people?</p>
+      </div>
+      <div class="look-for-card">
+        <h4>🔗 What's the Landing Page?</h4>
+        <p>Click through if you can. See where they're sending traffic. Form? Calendar? Phone number?</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 3: ANALYSIS PROMPT                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Step 3: Feed Them to Claude</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Drop your screenshots or paste the ad copy into Claude Code and use this prompt:</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>i'm analyzing competitor ads for a [NICHE] client in [CITY]. here are 
+[X] ads from their competitors. analyze each one and give me:
+
+1. what hook they're using and why it might work
+2. what offer they're making
+3. who they're probably targeting
+4. what emotional trigger they're using (fear, desire, social proof, urgency, curiosity)
+5. what's weak about this ad
+6. what angle they're NOT covering that we could use
+
+then at the end, give me:
+- the top 3 patterns you see across all these ads
+- 3 gaps that none of them are covering
+- 5 ad angles we should test that would stand out from all of these</pre>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-top: 12px;">Paste the ad copy below the prompt. Or reference the screenshots if you dropped them in your project folder.</p>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Claude Code analyzing competitor ads</div>
+        <p>Screenshot will be added here</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT CLAUDE GIVES YOU                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> What Claude Gives You Back</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Here's the kind of output you'll get:</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+        <p style="color: #3B82F6; font-weight: 700; font-size: 0.9rem; margin: 0 0 10px 0;">Competitor A — SmileBright Dental</p>
+        <p style="color: #ccc; font-size: 0.85rem; line-height: 1.6; margin: 0 0 12px 0;">Leading with a fear hook — "Don't let dental problems get worse." Offering free exam + X-ray for new patients. Targeting adults 25-55 who've been avoiding the dentist. Using a stock photo of a smiling woman. <strong style="color:#eab308;">Weak point:</strong> the hook is generic, the image looks like every other dental ad, and they bury the offer in paragraph 3.</p>
+        <p style="color: #22c55e; font-weight: 700; font-size: 0.85rem; margin: 0 0 6px 0;">Gap Found:</p>
+        <p style="color: #ccc; font-size: 0.85rem; line-height: 1.6; margin: 0 0 12px 0;">None of these competitors are showing the actual experience of visiting the practice. No behind-the-scenes, no doctor introductions, no "here's what your first visit actually looks like" content.</p>
+        <p style="color: #3B82F6; font-weight: 700; font-size: 0.85rem; margin: 0 0 6px 0;">Recommended Angles:</p>
+        <p style="color: #ccc; font-size: 0.85rem; line-height: 1.6; margin: 0;">1. "First visit" walkthrough that removes fear<br>2. Staff intro / personality-driven content<br>3. Price transparency ("here's what a cleaning actually costs")</p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">You now have a competitive strategy in 5 minutes. Use the gaps and angles to write your client's ads.</p>
+
+      <div class="tip-box">
+        <p><strong>💡 Save it.</strong> Store the analysis in <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.82rem;">clients/[client]/competitor-analysis.md</code> so you can reference it when building campaigns and track changes over time.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MONTHLY CHECK                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Monthly Competitor Check</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Don't do this once and forget about it. Competitors change their ads, new ones show up, old ones disappear. Run this prompt once a month:</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>i'm doing a monthly competitor check for [CLIENT NAME]. 
+
+check the meta ad library for these competitors: [LIST NAMES]
+
+compare what they're running now vs what we saw last month 
+(see clients/[client]/competitor-analysis.md for the previous analysis).
+
+tell me:
+- what's new
+- what they stopped running (probably wasn't working)
+- any new angles or offers we should be aware of
+- anything we should adjust in our own strategy based on this</pre>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Set a calendar reminder.</strong> First Monday of every month. "Competitor check for [client]." If you're not monitoring, you're flying blind while competitors evolve around you.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE FULL WORKFLOW                      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🗺️</span> The Full Workflow (End to End)</h2>
+
+      <div class="click-step" data-step="1">
+        <h4>Get Competitor Names</h4>
+        <p>Ask your client for their top 3-5 competitors. Or search the niche + city in the Ad Library.</p>
+      </div>
+      <div class="click-step" data-step="2">
+        <h4>Pull Their Ads</h4>
+        <p>Screenshot or copy 5-10 active ads from the Meta Ad Library. Mix of competitors and formats.</p>
+      </div>
+      <div class="click-step" data-step="3">
+        <h4>Run the Analysis Prompt</h4>
+        <p>Drop everything into Claude Code with the analysis prompt above. Get patterns, gaps, and angles.</p>
+      </div>
+      <div class="click-step" data-step="4">
+        <h4>Build Your Strategy</h4>
+        <p>Use the gaps and recommended angles to write your client's ads. You're not copying — you're finding what's missing.</p>
+      </div>
+      <div class="click-step" data-step="5">
+        <h4>Save & Revisit</h4>
+        <p>Store in <code style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.82rem;">clients/[client]/competitor-analysis.md</code>. Re-run monthly.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PRO MOVES                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚀</span> Pro Moves</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Once you've got the basics down, level up with these:</p>
+
+      <div class="pro-card">
+        <h4>🌎 Check Competitors in Other Cities</h4>
+        <p>Your client's local competitors might all run the same boring ads. But a dentist in Miami might have a killer angle nobody in Tampa has seen. Steal ideas from other markets before they spread.</p>
+      </div>
+      <div class="pro-card">
+        <h4>🏢 Look at the Big Players</h4>
+        <p>National brands spend millions on testing. Search the big names in your client's niche. If a national chain has been running the same ad for 6 months, that angle works. Adapt it locally.</p>
+      </div>
+      <div class="pro-card">
+        <h4>📈 Track Ad Longevity</h4>
+        <p>Start a simple spreadsheet: competitor name, ad start date, still running yes/no. After a few months you'll see exactly which ad styles have staying power in your niche. That data is gold.</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Combine with Lead Scraping.</strong> Use the prospecting data from Lesson 5.9 to identify which competitors are running ads, then analyze those ads here. The two workflows feed each other.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT NOT TO DO                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚫</span> What NOT to Do</h2>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't copy competitor ads.</strong> You're looking for patterns and gaps, not copy-paste material. If you run the same ad as a competitor, you're just adding noise. The whole point is to find what they're NOT doing.</p>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't skip the analysis.</strong> Screenshotting 10 ads and never looking at them again is a waste of time. The value is in the Claude analysis — patterns, gaps, angles.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't only look at your city.</strong> Local competitors often copy each other. Look at 2-3 other cities in the same niche for fresh angles that haven't saturated your market.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHECKLIST                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> Homework Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Research Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="prospectChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Search the Ad Library for your client's niche + city</strong>
+            <span>Open facebook.com/ads/library and find who's running ads</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Find 5-10 competitor ads to analyze</strong>
+            <span>Mix of different competitors, formats, and ad ages</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Screenshot or copy the ad text</strong>
+            <span>Get the primary text, headline, description, and creative</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Run the analysis prompt in Claude Code</strong>
+            <span>Feed all the ads in and get back patterns, gaps, and angles</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Save the analysis in your client's folder</strong>
+            <span>clients/[client]/competitor-analysis.md for future reference</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Use the gaps to inform your ad strategy</strong>
+            <span>Build angles around what competitors are NOT doing</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Check competitors in at least one other city</strong>
+            <span>Find fresh angles from markets outside your client's area</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c8">
+          <label class="check-content" for="c8">
+            <strong>Set a monthly reminder to re-run the competitor check</strong>
+            <span>First Monday of every month. Stay on top of changes.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>competitor-research</span><span>meta-ad-library</span><span>claude-code</span><span>strategy</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.10-automated-lead-scraping.html" class="nav-link">← Automated Lead Scraping</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.12-selling-automations.html" class="nav-link">Selling Automations →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.11-competitor-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

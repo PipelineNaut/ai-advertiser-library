@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonus: Behind My MEGA BRAIN — How I Run an Agency on AI — AI Advertiser by Brez Scales</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .talk-box {
+      background: rgba(59,130,246,0.04);
+      border-left: 3px solid #3B82F6;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 22px;
+      margin: 18px 0;
+      color: #ccc;
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+    .talk-box em { color: #fff; font-style: normal; font-weight: 600; }
+
+    .download-card {
+      background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(34,197,94,0.04));
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin: 18px 0;
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    .download-card:hover {
+      border-color: rgba(59,130,246,0.5);
+      transform: translateY(-2px);
+    }
+    .download-card .dl-icon {
+      font-size: 38px;
+      flex-shrink: 0;
+      width: 60px;
+      text-align: center;
+    }
+    .download-card .dl-body { flex: 1; }
+    .download-card .dl-title {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .download-card .dl-desc {
+      color: #aaa;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .download-card .dl-size {
+      color: #666;
+      font-size: 0.74rem;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+    .download-card a {
+      flex-shrink: 0;
+      background: #3B82F6;
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .download-card a:hover { background: #2563eb; }
+
+    .agent-card {
+      background: #0f1218;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+    }
+    .agent-card .agent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .agent-card .agent-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+      width: 44px;
+      text-align: center;
+    }
+    .agent-card .agent-name {
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+    }
+    .agent-card .agent-tagline {
+      color: #888;
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .agent-card .agent-desc {
+      color: #ccc;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .phase-box {
+      background: #111;
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 12px;
+      padding: 22px 26px;
+      margin-bottom: 14px;
+    }
+    .phase-box .phase-num {
+      display: inline-block;
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+    .phase-box h4 {
+      color: #fff;
+      font-size: 1.1rem;
+      margin: 0 0 10px;
+    }
+    .phase-box p {
+      color: #aaa;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      margin: 0 0 8px;
+    }
+
+    .warning-box {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      display: flex;
+      gap: 12px;
+    }
+    .warning-box .icon { font-size: 1.2rem; flex-shrink: 0; }
+    .warning-box .text { color: #d4a441; font-size: 0.9rem; line-height: 1.6; }
+
+    .struct-box {
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'Menlo', 'Monaco', monospace;
+      font-size: 0.85rem;
+      color: #c9d1d9;
+      line-height: 1.7;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Bonus SOP — Live Class Edition</div>
+      <h1><span>Behind My MEGA BRAIN: How I Run an Agency on AI</span></h1>
+      <div class="subtitle">
+        <span class="tag">AI Infrastructure</span>
+        <span class="tag">Agent Team</span>
+        <span class="tag">Knowledge Base</span>
+        <span class="tag">~75 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      Most people use AI like a search engine. I use it like a team. This class shows you the inside of my MEGA BRAIN, the system that lets me run a performance marketing agency mostly on autopilot. You get the agent team, the knowledge base structure, the digestive system that turns courses into permanent knowledge, and the skills that do the heavy lifting. Every section comes with a downloadable starter pack you can install today.
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 1. THE BIG IDEA                          -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> 1. The Big Idea</h2>
+
+      <div class="talk-box">
+        most people use AI like google. they ask one question, get one answer, then forget about it. that's a waste.
+        <br><br>
+        what i do is different. i built a system where my AI has memory, has a team, has a brain full of knowledge, and gets smarter every day i feed it. when i ask a question, it pulls from 14,000+ chunks of structured knowledge, routes the question to the right specialized agent, and gives me an answer that's better than what most consultants would give me.
+        <br><br>
+        <em>that's not science fiction. that's a folder of markdown files and 6 agent definitions.</em> you can build the same thing today.
+        <br><br>
+        the goal of this class isn't to make you a programmer. it's to show you the architecture so you understand what's possible. then i'm giving you a starter pack with all of it. you customize for your business and you have your own brain in 30 minutes.
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 2. THE ARCHITECTURE                      -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏛️</span> 2. The Architecture</h2>
+
+      <div class="talk-box">
+        before we go into each part, here's how the pieces fit together.
+      </div>
+
+      <div class="struct-box">your-agency/
+├── CLAUDE.md                  ← master config (the "brain bootloader")
+├── .claude/
+│   ├── agents/                ← your AI team
+│   │   ├── ceo.md
+│   │   ├── cmo.md
+│   │   ├── coo.md
+│   │   ├── cso.md
+│   │   ├── cfo.md
+│   │   └── jarvis.md          ← the orchestrator
+│   └── skills/                ← reusable workflows
+│       ├── mega-digestive-lite/
+│       ├── firecrawl-research-lite/
+│       └── copywriter-lite/
+└── .brain/                    ← your knowledge base
+    ├── _INDEX.md
+    ├── domains/               ← chunks by category
+    │   ├── marketing/
+    │   ├── operations/
+    │   ├── sales/
+    │   └── finance/
+    └── dna/                   ← expert personas (Halbert, Schwartz, etc.)</div>
+
+      <div class="talk-box">
+        4 things working together. <em>config tells AI who you are.</em> <em>agents are your team.</em> <em>skills are reusable workflows.</em> <em>brain is your knowledge.</em>
+        <br><br>
+        you don't need to build all of this on day 1. you start with the CLAUDE.md, you add agents as you need them, you grow the brain over time. this class shows you what each piece does and gives you a starter version.
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 3. CLAUDE.MD                             -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 3. CLAUDE.md — Your Brain's Operating System</h2>
+
+      <div class="talk-box">
+        this is the file your AI reads first, every single session. it tells it who you are, what your business is, what your voice sounds like, what rules to follow.
+        <br><br>
+        without this file, your AI is a generic assistant. with it, your AI is YOUR assistant. think of it as the difference between hiring a temp from kelly services and hiring someone who has worked for you for 6 months.
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">📄</div>
+        <div class="dl-body">
+          <div class="dl-title">CLAUDE.md Starter Template</div>
+          <div class="dl-desc">A pre-structured CLAUDE.md you fill in with your agency's name, niches, voice, and goals. 15 minutes to customize, lasts forever.</div>
+          <div class="dl-size">~2 KB · markdown file</div>
+        </div>
+        <a href="../downloads/claude-md-template.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 4. THE AGENT TEAM                        -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">👥</span> 4. The Agent Team — Your AI C-Suite</h2>
+
+      <div class="talk-box">
+        agents are AI specialists. each one has its own personality, its own focus, its own decision framework. when i ask my CEO agent about a strategic decision, it thinks like a CEO. when i ask my CMO about an ad campaign, it thinks like a CMO. they're not the same agent with different prompts. they're built differently.
+        <br><br>
+        here are the 6 i ship in the starter pack.
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">👔</div>
+          <div>
+            <div class="agent-name">CEO</div>
+            <div class="agent-tagline">Strategy, prioritization, GO/NO-GO calls</div>
+            <div class="agent-desc">Your strategic thinking partner. Cuts what doesn't work, scales what does. Use when you're stuck on a big decision and need someone to think 90 days out instead of 90 minutes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">📈</div>
+          <div>
+            <div class="agent-name">CMO</div>
+            <div class="agent-tagline">Funnels, ads, creative, ROAS</div>
+            <div class="agent-desc">The agent you'll use the most. Diagnoses campaigns, writes ad copy, picks angles, makes scale decisions. Built for the Andromeda era of Meta.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">⚙️</div>
+          <div>
+            <div class="agent-name">COO</div>
+            <div class="agent-tagline">Operations, SOPs, delivery</div>
+            <div class="agent-desc">Turns every recurring task into a process. Use it to write client onboarding flows, delivery checklists, and SOPs that make your agency run without you.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">💼</div>
+          <div>
+            <div class="agent-name">CSO</div>
+            <div class="agent-tagline">Sales, scripts, objections, pipeline</div>
+            <div class="agent-desc">Writes discovery scripts, handles objections, builds proposals, optimizes your pipeline. Use before every sales call.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">💰</div>
+          <div>
+            <div class="agent-name">CFO</div>
+            <div class="agent-tagline">P&L, margins, unit economics</div>
+            <div class="agent-desc">Sees the agency through numbers. Tells you which clients are profitable, which are bleeding, and what to charge for max margin.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">🤖</div>
+          <div>
+            <div class="agent-name">JARVIS</div>
+            <div class="agent-tagline">The orchestrator</div>
+            <div class="agent-desc">The agent that picks which other agent should handle a question. You ask Jarvis. Jarvis routes to CEO, CMO, COO, etc., synthesizes their answers, and returns one decision-ready response.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">👥</div>
+        <div class="dl-body">
+          <div class="dl-title">Agent Team Starter Pack</div>
+          <div class="dl-desc">All 6 agents (CEO, CMO, COO, CSO, CFO, JARVIS) plus the CLAUDE.md template. Sanitized templates you customize for your agency.</div>
+          <div class="dl-size">~10 KB · 7 markdown files</div>
+        </div>
+        <a href="../downloads/agent-team-starter.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 5. MEGA DIGESTIVE                        -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🌀</span> 5. MEGA DIGESTIVE — Turn Courses Into Permanent Knowledge</h2>
+
+      <div class="talk-box">
+        this is the system that makes your brain compound. you bought a course. you watched a webinar. you read a book. most of that knowledge evaporates within a week. the digestive system turns it into permanent, searchable knowledge that your agents use forever.
+        <br><br>
+        the full version i use has 10 phases. way too complex for day 1. so i built you a 3-phase lite version that does 80% of the work.
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PHASE 1</span>
+        <h4>INGEST</h4>
+        <p>drop raw content (transcripts, PDFs, books, transcribed videos) into a folder. give them a clean filename like <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">2026-05-08_haynes_challenge-funnel.md</code>. that's it.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PHASE 2</span>
+        <h4>CHUNK</h4>
+        <p>tell your AI to break each file into 4KB knowledge chunks with structured frontmatter (id, title, tags, source, related). each chunk covers ONE complete idea. now your knowledge is searchable forever.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PHASE 3</span>
+        <h4>SYNTHESIZE</h4>
+        <p>turn chunks into actionable artifacts. you get topic dossiers (a 2-page master doc on a topic), expert DNA personas (how Halbert thinks, ready to use), or decision trees (if X then Y rules). your agents now know what these experts know.</p>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">🔥</div>
+        <div class="text"><strong>This is the real flex.</strong> Most people consume content. You'll digest it. After a year of doing this, your AI brain will know more about your niche than any single human alive. That's not exaggeration. That's compounding knowledge.</div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">🌀</div>
+        <div class="dl-body">
+          <div class="dl-title">MEGA DIGESTIVE Lite</div>
+          <div class="dl-desc">The 3-phase pipeline as an installable skill. Drop content in, get structured chunks out. Includes domain codes, chunk format, and example outputs.</div>
+          <div class="dl-size">~3 KB · 1 skill file</div>
+        </div>
+        <a href="../downloads/mega-digestive-lite.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 6. KNOWLEDGE BASE                        -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📚</span> 6. The Knowledge Base — Your .brain/</h2>
+
+      <div class="talk-box">
+        this is where everything lives. organized by domain. each piece of knowledge is a markdown file with structured frontmatter. each file links to related files. it's basically obsidian for your agency.
+        <br><br>
+        the starter pack ships with example chunks (an Andromeda creative volume rule, a 7-day onboarding SOP, a Halbert DNA persona) so you have something to copy from when you write your first chunks.
+      </div>
+
+      <div class="struct-box">.brain/
+├── _INDEX.md              ← table of contents
+├── domains/
+│   ├── marketing/         ← MKT-ADS-001.md, MKT-CHF-001.md, etc.
+│   ├── operations/        ← OPS-ONB-001.md, OPS-SOP-001.md
+│   ├── sales/             ← SAL-DIS-001.md
+│   └── finance/           ← FIN-PRI-001.md
+└── dna/
+    ├── halbert.md         ← Gary Halbert persona
+    └── [your-experts].md  ← add yours as you digest them</div>
+
+      <div class="download-card">
+        <div class="dl-icon">📚</div>
+        <div class="dl-body">
+          <div class="dl-title">Knowledge Base Starter</div>
+          <div class="dl-desc">The .brain/ folder structure with index, example chunks (marketing + operations), and a Halbert DNA persona to copy from.</div>
+          <div class="dl-size">~5 KB · scaffolding + 3 example files</div>
+        </div>
+        <a href="../downloads/brain-knowledge-base-starter.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 7. THE SKILLS                            -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> 7. The Skills — Your Reusable Workflows</h2>
+
+      <div class="talk-box">
+        skills are reusable workflows. think of them as plays in a playbook. when you trigger one, your AI runs through a specific process every time, the same way.
+        <br><br>
+        i'm shipping 3 of the most useful ones for an agency.
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">🔍</div>
+          <div>
+            <div class="agent-name">Firecrawl Research Lite</div>
+            <div class="agent-tagline">Voice-of-customer mining</div>
+            <div class="agent-desc">Pull real customer language from Reddit, Amazon reviews, YouTube comments, competitor sites. Outputs pain language, dream outcomes, objections, all in real customer words. The work that separates good copy from AI-flavored copy.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">✍️</div>
+          <div>
+            <div class="agent-name">Copywriter Lite</div>
+            <div class="agent-tagline">4-master direct response system</div>
+            <div class="agent-desc">A 4-step process combining Schwartz (awareness levels), Georgi (RMBC research), Halbert (hook craft), and Bencivenga (validation). Includes the master prompt to paste into Claude.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">🌀</div>
+          <div>
+            <div class="agent-name">MEGA Digestive Lite</div>
+            <div class="agent-tagline">Knowledge digestion (covered above)</div>
+            <div class="agent-desc">Already in section 5. Turns raw content into structured knowledge chunks.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">🛠️</div>
+        <div class="dl-body">
+          <div class="dl-title">Skills Starter Pack (all 3)</div>
+          <div class="dl-desc">Firecrawl Research, Copywriter, and MEGA Digestive Lite as installable skill files. Drop into <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">.claude/skills/</code> and they're ready to use.</div>
+          <div class="dl-size">~8 KB · 3 skill folders</div>
+        </div>
+        <a href="../downloads/skills-starter-pack.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 8. MEMORY SYSTEM                         -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧬</span> 8. Memory System — Your AI Stops Forgetting</h2>
+
+      <div class="talk-box">
+        ok so by default, claude has goldfish memory. you open a new chat tomorrow, it forgets everything you said today. that's useless for an agency where you're juggling 5+ clients, dozens of decisions, and ongoing campaigns.
+        <br><br>
+        claude-mem fixes this. it's a memory system that uses a vector database (chroma) to save important things from your sessions. next time you open claude, it pulls the relevant memories automatically. you ask "what's the deal with the med spa client we onboarded in march" and it pulls the memory and answers like it remembers. because it does.
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">WHAT IT REMEMBERS</span>
+        <h4>Four memory types, organized properly</h4>
+        <p><strong style="color:#fff;">User</strong> — who you are, your role, your preferences. Saved once, applies forever.</p>
+        <p><strong style="color:#fff;">Feedback</strong> — corrections you gave claude. "Don't use em dashes." "Stop suggesting refunds." Saves you from re-correcting the same thing every session.</p>
+        <p><strong style="color:#fff;">Project</strong> — current state of work. Which client launched when, which campaign is winning, what the next decision is.</p>
+        <p><strong style="color:#fff;">Reference</strong> — pointers to where info lives in external systems. "Client billing is in stripe." "Performance reports are in google drive."</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">WHY AGENCIES NEED IT</span>
+        <h4>Without memory vs. with memory</h4>
+        <p><strong style="color:#fff;">Without:</strong> you re-explain your business every session. Claude forgets what worked for client A. Every onboarding starts from zero. Knowledge stays in your head, not the system.</p>
+        <p><strong style="color:#fff;">With:</strong> claude remembers every client. Decisions compound. New team members get up to speed faster because the memory teaches them. Your agency gets smarter every week, not just every quarter.</p>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">🔑</div>
+        <div class="text"><strong>The unlock:</strong> Memory + Knowledge Base + Agents = your AI gets smarter every single day you use it. After 6 months it knows your business better than your last hire did. That's not exaggeration. That's compounding.</div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">🧬</div>
+        <div class="dl-body">
+          <div class="dl-title">Memory System Setup (claude-mem)</div>
+          <div class="dl-desc">Install guide, the global CLAUDE.md memory rules to drop into <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">~/.claude/CLAUDE.md</code>, and the search patterns that actually work (vs the ones that error out).</div>
+          <div class="dl-size">~4 KB · 2 markdown files</div>
+        </div>
+        <a href="../downloads/memory-system-setup.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 9. MCP STACK                             -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔌</span> 9. MCP Stack — The Tools That Make Claude Actually Useful</h2>
+
+      <div class="talk-box">
+        an MCP is basically a USB port for your AI. every MCP plugs in a new capability. without them, claude can think but can't DO anything outside the chat. with them, claude can run ads, scrape websites, automate browsers, pull real data on demand.
+        <br><br>
+        there are 3 MCPs every agency needs. install these 3 and you'll do work in 10 minutes that used to take days.
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">📊</div>
+          <div>
+            <div class="agent-name">Meta Ads MCP (the official one)</div>
+            <div class="agent-tagline">Run, audit, optimize Meta campaigns from claude</div>
+            <div class="agent-desc"><strong style="color:#fff;">What it does:</strong> claude can pull ad performance data, audit campaigns, suggest optimizations, even build new campaigns. All without you opening Ads Manager.<br><br><strong style="color:#fff;">Why agencies need it:</strong> the difference between claude saying "check your CPA" and claude saying "your CPA on campaign X is $42, target is $30, here's what to kill and what to scale." Real data, real decisions.<br><br><strong style="color:#fff;">The big news:</strong> Meta launched the official MCP on April 29, 2026. 29 tools, OAuth-based (no Dev App headaches), works in Claude Desktop and Claude Code.<br><br><strong style="color:#fff;">After install you can ask:</strong> "audit my account for the last 30 days" / "which campaigns have CPA above target this week?" / "show me my top 5 ads by ROAS in the [client] account."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">🔍</div>
+          <div>
+            <div class="agent-name">Firecrawl MCP</div>
+            <div class="agent-tagline">Web scraping at scale</div>
+            <div class="agent-desc"><strong style="color:#fff;">What it does:</strong> claude scrapes any website. one URL, multiple URLs, entire sites. Returns clean markdown ready to feed into research, copy, or competitive analysis.<br><br><strong style="color:#fff;">Why agencies need it:</strong> voice-of-customer research used to take days. With Firecrawl, you scrape Reddit, Amazon, and competitor sites in minutes. Your ad copy stops sounding AI because you're feeding it real customer language.<br><br><strong style="color:#fff;">After install you can ask:</strong> "scrape r/[subreddit] top of all time and pull pain language" / "scrape these 5 competitor landing pages and tell me what hooks they use" / "scrape Amazon reviews on [product URL] and categorize objections."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agent-card">
+        <div class="agent-row">
+          <div class="agent-icon">🎭</div>
+          <div>
+            <div class="agent-name">Playwright MCP</div>
+            <div class="agent-tagline">Browser automation, real clicks</div>
+            <div class="agent-desc"><strong style="color:#fff;">What it does:</strong> claude controls a real browser. Click buttons, fill forms, take screenshots, navigate sites that block scrapers.<br><br><strong style="color:#fff;">Why agencies need it:</strong> some things you can't do with HTTP scraping. Logging into Meta Ads Library and exporting data. Auto-creating Framer pages from Figma designs. Taking screenshot proof for client reports. Playwright handles all of it.<br><br><strong style="color:#fff;">After install you can ask:</strong> "open meta ad library, search [brand], take screenshots of top 10 active ads" / "go to my Framer site, log in, create a new page from this design" / "test the checkout flow on [client site] and screenshot any errors."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">🔥</div>
+        <div class="text"><strong>The combo move:</strong> Meta Ads + Firecrawl + Playwright running together = "find competitor brands ranking for [keyword] in Meta Ad Library, pull their top 5 ads, scrape their landing pages, screenshot their checkout flow, compare to our client's setup." That's a $5K research project. Done in 10 minutes. By claude. While you do something else.</div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">🔌</div>
+        <div class="dl-body">
+          <div class="dl-title">MCP Stack Config</div>
+          <div class="dl-desc">Install commands for all 3 MCPs, the <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">settings.json</code> template that wires them all up at once, and example prompts to test each one after install.</div>
+          <div class="dl-size">~4 KB · 1 install guide + 1 settings.json</div>
+        </div>
+        <a href="../downloads/mcp-stack-config.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 10. HOOKS                                -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🪝</span> 10. Hooks — Auto-Magic In The Background</h2>
+
+      <div class="talk-box">
+        hooks are scripts that fire automatically when claude does certain things. think of them as your AI's reflexes. they run without you asking. they keep your brain organized, validated, and synced.
+        <br><br>
+        without hooks, you have to remember to link new chunks, validate frontmatter, save important learnings to memory, commit changes to git so nothing gets lost. you'll forget. every time.
+        <br><br>
+        with hooks, all of that happens automatically. <em>the brain stays organized. knowledge compounds without your discipline.</em>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">HOOK 1</span>
+        <h4>Auto-Link Chunks</h4>
+        <p><strong style="color:#fff;">Triggers when:</strong> you create a new file in <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">.brain/domains/</code></p>
+        <p><strong style="color:#fff;">What it does:</strong> scans the new chunk, finds related chunks already in the brain, auto-suggests them for the <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">related:</code> field.</p>
+        <p><strong style="color:#fff;">Why it matters:</strong> every chunk needs at least 1 link. Without this hook, you'll create orphan chunks that the brain can't find later.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">HOOK 2</span>
+        <h4>Validate Chunk Frontmatter</h4>
+        <p><strong style="color:#fff;">Triggers when:</strong> any <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">.md</code> file in <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">.brain/</code> is saved</p>
+        <p><strong style="color:#fff;">What it does:</strong> checks the file has all required fields (id, title, tags, date, related). If anything's missing, blocks the save and tells you what to fix.</p>
+        <p><strong style="color:#fff;">Why it matters:</strong> garbage in, garbage out. This hook keeps your knowledge base clean from day 1.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">HOOK 3</span>
+        <h4>Auto-Save Learnings</h4>
+        <p><strong style="color:#fff;">Triggers when:</strong> the session ends</p>
+        <p><strong style="color:#fff;">What it does:</strong> scans recent messages for keywords like "lesson", "pattern", "key insight" and dumps them to your memory inbox for review.</p>
+        <p><strong style="color:#fff;">Why it matters:</strong> claude often discovers patterns mid-session. Without this hook, those patterns die when the session ends.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">HOOK 4</span>
+        <h4>Auto-Commit</h4>
+        <p><strong style="color:#fff;">Triggers when:</strong> claude finishes editing files and the session ends</p>
+        <p><strong style="color:#fff;">What it does:</strong> runs <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">git add . && git commit -m "auto-sync"</code> so your brain always has version history.</p>
+        <p><strong style="color:#fff;">Why it matters:</strong> if you ever need to roll back, you can. If your laptop dies, you don't lose 6 months of brain work.</p>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">⚡</div>
+        <div class="text"><strong>The shift:</strong> once these hooks are running, your brain maintains itself. You write knowledge. The system organizes it. You commit nothing manually. The system commits for you. You forget to link chunks. The system reminds you. <em>That's the difference between a knowledge base and a self-improving brain.</em></div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">🪝</div>
+        <div class="dl-body">
+          <div class="dl-title">Hooks Pack (4 hooks ready to install)</div>
+          <div class="dl-desc">All 4 hook scripts (validate-chunk, auto-link, auto-commit, auto-save-learnings) plus the <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">settings.json</code> snippet to wire them up. <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">chmod +x</code> them, drop the config, restart claude. Done.</div>
+          <div class="dl-size">~5 KB · 4 shell scripts + install guide</div>
+        </div>
+        <a href="../downloads/hooks-pack.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 11. COMPOUND ENGINEERING                 -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏗️</span> 11. Compound Engineering — The 4-Phase Framework</h2>
+
+      <div class="talk-box">
+        most agency owners skip planning, jump to execution, then pay for it on the back end. compound engineering is a workflow for any task bigger than a day that forces you to invest where the leverage actually is.
+        <br><br>
+        the rule is simple. for any non-trivial task, allocate your time like this:
+      </div>
+
+      <div class="struct-box">PLAN     ████████████████ 40%
+WORK     ████████ 20%
+REVIEW   ████████ 20%
+DOCUMENT ████████ 20%</div>
+
+      <div class="phase-box">
+        <span class="phase-num">PHASE 1 — 40%</span>
+        <h4>PLAN</h4>
+        <p>most people give planning 5%. they get the mission wrong, the scope wrong, the order wrong. then they spend 3x longer fixing it during work. when you put 40% into planning, you understand the actual problem before lifting a finger. you catch dead ends in advance. you write the success criteria so you know when you're done.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PHASE 2 — 20%</span>
+        <h4>WORK</h4>
+        <p>once the plan is right, work is fast. you're executing a clear path. no decisions to make mid-flight. no second-guessing. 20% feels short. it is. that's the point. if work takes longer than 20%, your plan was incomplete.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PHASE 3 — 20%</span>
+        <h4>REVIEW</h4>
+        <p>you almost never get it right on the first pass. review is where you catch what work missed. read your output cold. pretend you didn't write it. find the holes. fix them. don't skip this. don't speed-run it.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PHASE 4 — 20%</span>
+        <h4>DOCUMENT</h4>
+        <p>this is the part everyone skips. <em>big mistake.</em> documenting is where the work compounds. you write down what you learned, what worked, what didn't. next time you face a similar task, you read your own notes and skip 70% of the planning phase. skip documenting and you'll redo this same work in 3 months.</p>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">🎯</div>
+        <div class="text"><strong>When to use it:</strong> new client onboarding, launching a new ad funnel, building a new SOP, hiring decisions, pricing changes. Any project longer than 1 day. <strong>When NOT to use it:</strong> replying to an email, quick fixes, 30-min tasks. Match the framework to the size of the task.</div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">🏗️</div>
+        <div class="dl-body">
+          <div class="dl-title">Compound Engineering Card</div>
+          <div class="dl-desc">The 4-phase framework as a printable reference. Includes the exact prompts to give claude in each phase, anti-patterns to avoid, and a real onboarding example showing the framework in action.</div>
+          <div class="dl-size">~3 KB · 1 reference card</div>
+        </div>
+        <a href="../downloads/compound-engineering.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 12. RALPH WIGGUM                         -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 12. Ralph Wiggum — The 8-Pass Copy Loop</h2>
+
+      <div class="talk-box">
+        most AI copy is 6/10 quality. good enough to look like work, not good enough to convert. the ralph wiggum technique forces the same copy through 8 framework passes. after each pass, the copy gets stronger. by pass 8, it's 9.5+.
+        <br><br>
+        it's named after ralph wiggum from the simpsons, who repeats things until they stick. same energy.
+        <br><br>
+        you wrote a sales email. it looks fine. you ship it. it does 1.2% conversion. you should have run it through ralph. <em>same email, after ralph: 3.8% conversion.</em> that's the difference between "good enough" copy and copy that actually pays you.
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 1</span>
+        <h4>Schwartz Awareness Check</h4>
+        <p>Is this written for the right awareness level? Are we leading with the problem (unaware) or the offer (most-aware)? Mismatch kills conversion.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 2</span>
+        <h4>Hook Strength Check</h4>
+        <p>Does the first line stop the scroll? Would you keep reading if you didn't have to?</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 3</span>
+        <h4>Specificity Check</h4>
+        <p>Replace every vague word. "Many" → "73%". "Soon" → "by Friday". "Growth" → "+$8K MRR".</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 4</span>
+        <h4>Proof Check</h4>
+        <p>Every claim needs a number, name, or example next to it. If you can't add proof, cut the claim.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 5</span>
+        <h4>Voice Check</h4>
+        <p>Does this sound like a human or like AI? Em dashes. Triple structures. Corporate words like "leverage", "robust", "seamless". Kill all of it.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 6</span>
+        <h4>Pace Check</h4>
+        <p>Mix sentence length. Use fragments. Use line breaks. White space is a weapon.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 7</span>
+        <h4>Cut Check</h4>
+        <p>Cut 20% without losing meaning. Adjectives, qualifiers, throat-clearing intros, redundant transitions. All filler.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">PASS 8</span>
+        <h4>Cold Read Test</h4>
+        <p>Read it fresh. Does it flow? Does it land? Does it close? If anything feels off, loop back to whichever pass missed.</p>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">⚡</div>
+        <div class="text"><strong>The cost:</strong> 8-25 minutes per piece. Most people won't do this. They'll write copy in 5 minutes and ship it. That's why most copy is mediocre. <em>You'll do it. Your copy will hit. Your campaigns will print.</em></div>
+      </div>
+
+      <div class="download-card">
+        <div class="dl-icon">🎯</div>
+        <div class="dl-body">
+          <div class="dl-title">Ralph Wiggum Lite Skill</div>
+          <div class="dl-desc">The full 8-pass loop as an installable skill file. Includes the master prompt to paste into claude, the voice rules to enforce, and the quality bar to hit before shipping.</div>
+          <div class="dl-size">~3 KB · 1 skill file</div>
+        </div>
+        <a href="../downloads/ralph-wiggum-lite.zip" download>↓ Download</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 13. THE FULL PACK                        -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📦</span> 13. The Whole Thing — One Download</h2>
+
+      <div class="talk-box">
+        if you don't want to download each piece separately, just grab the full starter pack. everything you saw in this class is in there. CLAUDE.md, all 6 agents, all 3 skills, the .brain/ structure with example chunks, the install guide. one zip, one install, you're running.
+      </div>
+
+      <div class="download-card" style="background:linear-gradient(135deg, rgba(245,158,11,0.1), rgba(34,197,94,0.06));border-color:rgba(245,158,11,0.4);">
+        <div class="dl-icon">🚀</div>
+        <div class="dl-body">
+          <div class="dl-title" style="color:#f59e0b;">MEGA BRAIN Starter — Ultimate Pack</div>
+          <div class="dl-desc">The whole thing. CLAUDE.md + 6 agents + 4 skills (incl. Ralph Wiggum) + .brain/ scaffolding + Memory System setup + MCP Stack config + 4 Hooks + Compound Engineering card + INSTALL.md. Everything you saw in this class. One zip.</div>
+          <div class="dl-size">~45 KB · 25+ files</div>
+        </div>
+        <a href="../downloads/mega-brain-starter.zip" download style="background:#f59e0b;">↓ Download All</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 9. INSTALL                               -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚙️</span> 14. Install in 30 Minutes</h2>
+
+      <div class="phase-box">
+        <span class="phase-num">STEP 1</span>
+        <h4>Unzip and rename</h4>
+        <p>unzip <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">mega-brain-starter.zip</code>. rename the folder to your agency name.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">STEP 2</span>
+        <h4>Customize CLAUDE.md</h4>
+        <p>open <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">CLAUDE.md</code> and replace every <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">[BRACKET]</code> with your real info. agency name, niches, voice, goals.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">STEP 3</span>
+        <h4>Customize the agents</h4>
+        <p>open each agent file in <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">.claude/agents/</code>. replace <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">[YOUR_AGENCY_NAME]</code> with your real name. tweak missions to match your business.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">STEP 4</span>
+        <h4>Add your first chunk</h4>
+        <p>read the example chunks in <code style="background:#000;padding:2px 6px;border-radius:4px;color:#7dd3fc;">.brain/domains/</code>. write ONE chunk of real knowledge from your business. that's your first compound.</p>
+      </div>
+
+      <div class="phase-box">
+        <span class="phase-num">STEP 5</span>
+        <h4>Test it</h4>
+        <p>open claude code in your project folder. ask: "<em>read CLAUDE.md and tell me what you understand about my business</em>." if it captures your business correctly, you're set.</p>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 10. THE COMPOUND                         -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🌱</span> 15. The Compound</h2>
+
+      <div class="talk-box">
+        once this is running, the rule is simple. <em>add one chunk per day to your brain.</em>
+        <br><br>
+        in 30 days you have 30 pieces of permanent knowledge. in 90 days you have 90. in a year you have 365. each one makes every future answer better. each one makes your agents smarter. each one makes your business more defensible.
+        <br><br>
+        most agency owners don't have this. they have notion docs they never reread. they have webinars they watched once. their knowledge leaks every week.
+        <br><br>
+        <em>you stop the leak. you compound.</em>
+        <br><br>
+        — brez
+      </div>
+    </div>
+
+    <!-- BACK TO COURSE -->
+    <div class="section" style="text-align:center;margin-top:40px;">
+      <a href="../index.html" style="color:#3B82F6;text-decoration:none;font-weight:600;">← Back to all classes</a>
+    </div>
+  </div>
+</body>
+</html>

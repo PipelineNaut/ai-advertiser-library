@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.6: Campaign Structure — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .analogy-box { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08)); border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 24px; margin: 16px 0; }
+    .analogy-box h4 { color: #3B82F6; margin: 0 0 10px 0; }
+    .analogy-box p { color: #ccc; font-size: 0.92rem; line-height: 1.7; margin: 0; }
+    .hierarchy { position: relative; padding: 0; margin: 20px 0; }
+    .h-level { border-radius: 12px; padding: 20px 24px; margin-bottom: 0; position: relative; }
+    .h-level-1 { background: rgba(59,130,246,0.1); border: 2px solid rgba(59,130,246,0.4); }
+    .h-level-2 { background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.3); margin: 12px 0 0 32px; }
+    .h-level-3 { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.25); margin: 12px 0 0 64px; }
+    .h-label { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .h-label-1 { color: #3B82F6; }
+    .h-label-2 { color: #a78bfa; }
+    .h-label-3 { color: #22c55e; }
+    .h-title { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .h-desc { color: #888; font-size: 0.85rem; line-height: 1.5; }
+    .vs-card { background: #161616; border-radius: 12px; padding: 24px; border: 1px solid rgba(255,255,255,0.08); }
+    .vs-card h4 { margin: 0 0 12px 0; font-size: 1.1rem; }
+    .vs-card ul { color: #ccc; font-size: 0.88rem; line-height: 1.7; padding-left: 18px; margin: 0; }
+    .vs-card li { margin-bottom: 6px; }
+    .budget-sim { background: #161616; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; overflow: hidden; }
+    .budget-sim-header { background: rgba(59,130,246,0.1); padding: 20px 24px; border-bottom: 1px solid rgba(59,130,246,0.2); }
+    .budget-sim-header h3 { color: #3B82F6; margin: 0; font-size: 1.1rem; }
+    .budget-sim-body { padding: 24px; }
+    .slider-group { margin-bottom: 20px; }
+    .slider-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .slider-label span { color: #888; font-size: 0.85rem; }
+    .slider-label strong { color: #3B82F6; font-size: 0.95rem; }
+    input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; background: #222; border-radius: 3px; outline: none; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #3B82F6; border-radius: 50%; cursor: pointer; }
+    .sim-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+    .sim-result { text-align: center; background: rgba(255,255,255,0.02); border-radius: 8px; padding: 16px; }
+    .sim-result .sv { color: #3B82F6; font-weight: 800; font-size: 1.2rem; }
+    .sim-result .sl { color: #666; font-size: 0.78rem; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.6 — Module 3: Fulfillment</div>
+      <h1>Campaign Structure — <span>How Ads Are Organized</span></h1>
+      <div class="subtitle">
+        <span class="tag">Campaign Strategy</span>
+        <span class="tag">Beginner</span>
+        <span class="tag">~12 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Before you create your first ad, you need to understand how Meta organizes everything. It's three levels: Campaign → Ad Set → Ad. Get this wrong and your ads underperform from day one. Get it right and everything else becomes easier.</div>
+
+    <!-- SCREEN SHARE LINKS -->
+    <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 0.95rem;">🖥️ Screens to Open (Have These Ready)</h3>
+      <div style="display: grid; gap: 8px;">
+        <a href="https://adsmanager.facebook.com/adsmanager/manage/campaigns" target="_blank" style="display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.88rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+          <span style="color: #3B82F6; font-weight: 700; min-width: 20px;">1.</span>
+          <span><strong style="color: #fff;">Ads Manager — Campaigns Tab</strong> — Show the 3-level structure (campaigns → ad sets → ads)</span>
+        </a>
+        <a href="https://adsmanager.facebook.com/adsmanager/manage/campaigns?act=&tool=CAMPAIGN_CREATE" target="_blank" style="display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.88rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+          <span style="color: #3B82F6; font-weight: 700; min-width: 20px;">2.</span>
+          <span><strong style="color: #fff;">Campaign Creation Flow</strong> — Show objective selection (pick "Leads"), CBO toggle, naming</span>
+        </a>
+        <a href="https://adsmanager.facebook.com/adsmanager/manage/adsets" target="_blank" style="display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.88rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+          <span style="color: #3B82F6; font-weight: 700; min-width: 20px;">3.</span>
+          <span><strong style="color: #fff;">Ad Set Level</strong> — Show audience targeting, location radius, age, daily budget field</span>
+        </a>
+        <a href="https://adsmanager.facebook.com/adsmanager/manage/ads" target="_blank" style="display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.88rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='rgba(59,130,246,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+          <span style="color: #3B82F6; font-weight: 700; min-width: 20px;">4.</span>
+          <span><strong style="color: #fff;">Ad Level</strong> — Show creative upload, primary text, headline, CTA button dropdown</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE THREE LEVELS           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏗️</span> 1. The Three Levels</h2>
+
+      <div class="analogy-box">
+        <h4>🍕 The Pizza Shop Version</h4>
+        <p>Think of it like running Tony's restaurant:<br><br>
+        <strong style="color: #3B82F6;">Campaign</strong> = the overall goal. "I want more customers this month."<br>
+        <strong style="color: #a78bfa;">Ad Set</strong> = WHO you're targeting and HOW MUCH you're spending. "Families within 5 miles, $15/day."<br>
+        <strong style="color: #22c55e;">Ad</strong> = what people actually see. "A photo of a pepperoni pizza with the headline 'Family Deal: 2 Large Pizzas $19.99'."<br><br>
+        One campaign can have multiple ad sets (different audiences). Each ad set can have multiple ads (different creatives). Meta tests them all and pushes budget toward what works best.</p>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open Ads Manager → Campaigns tab. Click into any campaign to show the 3 levels: Campaigns → Ad Sets → Ads tabs at the top. Point to each tab as you explain.</span>
+      </div>
+
+      <div class="hierarchy">
+        <div class="h-level h-level-1">
+          <div class="h-label h-label-1">📁 Campaign</div>
+          <div class="h-title">The Goal</div>
+          <div class="h-desc">What do you want? Leads? Traffic? Sales? You pick ONE objective per campaign. This tells Meta's AI what to optimize for. For local businesses, you'll almost always pick <strong style="color: #fff;">"Leads"</strong>.</div>
+        </div>
+        <div class="h-level h-level-2">
+          <div class="h-label h-label-2">📂 Ad Set</div>
+          <div class="h-title">The Targeting + Budget</div>
+          <div class="h-desc">WHO sees the ad (location, age, interests) and HOW MUCH you spend. Think of each ad set as a different "audience experiment." You might test: Ad Set 1 = pizza lovers within 5 miles, Ad Set 2 = families within 10 miles.</div>
+        </div>
+        <div class="h-level h-level-3">
+          <div class="h-label h-label-3">📄 Ad</div>
+          <div class="h-title">The Creative</div>
+          <div class="h-desc">WHAT people see — the image or video, the text, the headline, the call-to-action button. This is the only part your client's customers interact with. Everything else is behind the scenes.</div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 The hierarchy matters.</strong> You can't create an ad without an ad set. You can't create an ad set without a campaign. Always build top-down: Campaign first → Ad Set → Ad.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: CBO vs ABO                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💰</span> 2. Where Does the Budget Go? (CBO vs ABO)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Budget can live at the campaign level or the ad set level. This is one of the most confusing things for beginners, but it's actually simple:
+      </p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Click "+ Create" → pick "Leads" objective → scroll to "Campaign Budget Optimization" toggle. Show it ON (CBO) and OFF (ABO). Point out where the daily budget field moves depending on which is selected.</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="vs-card" style="border-color: rgba(59,130,246,0.3);">
+          <h4 style="color: #3B82F6;">CBO — Campaign Budget Optimization</h4>
+          <p style="color: #ccc; font-size: 0.88rem; margin-bottom: 12px;">You set ONE budget at the campaign level. Meta decides how to split it across your ad sets.</p>
+          <ul>
+            <li><strong style="color: #fff;">How it works:</strong> You say "$30/day." Meta gives $20 to the ad set that's performing best and $10 to the other.</li>
+            <li><strong style="color: #22c55e;">Good for:</strong> When you have proven audiences and want Meta to optimize automatically.</li>
+            <li><strong style="color: #eab308;">Bad for:</strong> Testing, because Meta might starve a new ad set before giving it a fair chance.</li>
+          </ul>
+        </div>
+        <div class="vs-card" style="border-color: rgba(139,92,246,0.3);">
+          <h4 style="color: #a78bfa;">ABO — Ad Set Budget Optimization</h4>
+          <p style="color: #ccc; font-size: 0.88rem; margin-bottom: 12px;">You set a budget for EACH ad set individually. You're in full control.</p>
+          <ul>
+            <li><strong style="color: #fff;">How it works:</strong> You say "$15/day for Ad Set 1" and "$15/day for Ad Set 2." Each gets exactly what you assigned.</li>
+            <li><strong style="color: #22c55e;">Good for:</strong> Testing new audiences and creatives. Each test gets equal spend.</li>
+            <li><strong style="color: #eab308;">Bad for:</strong> Scaling, because you're manually managing every ad set's budget.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 20px; margin-top: 16px; text-align: center;">
+        <div style="color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 8px;">The Simple Rule</div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <div style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 8px; padding: 12px 20px;">
+            <div style="color: #a78bfa; font-weight: 700;">🧪 Testing?</div>
+            <div style="color: #ccc; font-size: 0.85rem;">Use ABO</div>
+          </div>
+          <div style="color: #666; font-size: 1.5rem;">→</div>
+          <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); border-radius: 8px; padding: 12px 20px;">
+            <div style="color: #3B82F6; font-weight: 700;">🚀 Scaling?</div>
+            <div style="color: #ccc; font-size: 0.85rem;">Use CBO</div>
+          </div>
+        </div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 12px;">Start every client on ABO. Move winning ad sets into a CBO campaign once you know what works.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: NAMING CONVENTIONS         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> 3. Naming Your Campaigns (Stay Organized)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        When you have 5 clients with 3 campaigns each, things get messy fast. Use a consistent naming system from day one:
+      </p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Show your Ads Manager with a real or example campaign. Point to how you've named the campaign, ad sets, and ads. Show how easy it is to find things when they're named properly vs "Ad Set 1, Ad Set 2, Ad Set 3."</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 20px; margin-bottom: 16px; font-family: 'SF Mono', monospace; font-size: 0.85rem; line-height: 2;">
+        <div><span style="color: #3B82F6;">Campaign:</span> <span style="color: #fff;">[Client] - [Goal] - [Type]</span></div>
+        <div style="color: #888;">Example: Tony's Pizza - Leads - ABO Testing</div>
+        <div style="color: #888;">Example: Tony's Pizza - Leads - CBO Scale</div>
+        <div style="margin-top: 12px;"><span style="color: #a78bfa;">Ad Set:</span> <span style="color: #fff;">[Audience] - [Location] - [Age]</span></div>
+        <div style="color: #888;">Example: Pizza Lovers - Tampa 5mi - 25-55</div>
+        <div style="color: #888;">Example: Families - Tampa 10mi - 30-50</div>
+        <div style="margin-top: 12px;"><span style="color: #22c55e;">Ad:</span> <span style="color: #fff;">[Format] - [Hook/Angle] - [Version]</span></div>
+        <div style="color: #888;">Example: Image - Family Deal $19.99 - V1</div>
+        <div style="color: #888;">Example: Video - Behind the Kitchen - V2</div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Future you will thank present you.</strong> At 2am when a client texts "why did my ad stop?" you need to find the right campaign in 5 seconds. Good naming makes that possible.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: BUDGET SIMULATOR           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧮</span> 4. Budget Simulator</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Drag the sliders to see how different budgets and costs affect your client's results:
+      </p>
+
+      <div class="budget-sim">
+        <div class="budget-sim-header">
+          <h3>📊 See Your Client's Numbers</h3>
+        </div>
+        <div class="budget-sim-body">
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Daily Budget</span>
+              <strong id="budgetVal">$15</strong>
+            </div>
+            <input type="range" id="budgetSlider" min="5" max="100" value="15" step="5" oninput="updateSim()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Cost Per Lead</span>
+              <strong id="cplVal">$12</strong>
+            </div>
+            <input type="range" id="cplSlider" min="3" max="60" value="12" step="1" oninput="updateSim()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Close Rate</span>
+              <strong id="closeVal">20%</strong>
+            </div>
+            <input type="range" id="closeSlider" min="5" max="50" value="20" step="5" oninput="updateSim()">
+          </div>
+          <div class="slider-group">
+            <div class="slider-label">
+              <span>Average Job Value</span>
+              <strong id="jobVal">$300</strong>
+            </div>
+            <input type="range" id="jobSlider" min="50" max="5000" value="300" step="50" oninput="updateSim()">
+          </div>
+
+          <div class="sim-results">
+            <div class="sim-result">
+              <div class="sv" id="simLeads">37</div>
+              <div class="sl">Leads / Month</div>
+            </div>
+            <div class="sim-result">
+              <div class="sv" id="simCustomers">7</div>
+              <div class="sl">New Customers</div>
+            </div>
+            <div class="sim-result">
+              <div class="sv" id="simRevenue">$2,100</div>
+              <div class="sl">Revenue Generated</div>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+            <div class="sim-result">
+              <div class="sv" id="simSpend">$450</div>
+              <div class="sl">Monthly Ad Spend</div>
+            </div>
+            <div class="sim-result">
+              <div class="sv" id="simROI" style="color: #22c55e;">4.7x</div>
+              <div class="sl">Return on Ad Spend</div>
+            </div>
+          </div>
+          <div style="color: #888; font-size: 0.78rem; text-align: center; margin-top: 16px;">
+            Use this on sales calls to show clients the math. Plug in their numbers and watch their eyes light up.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: TESTING FRAMEWORK          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧪</span> 5. The Testing Framework</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Running ads isn't "set it and forget it." It's a process of testing, learning, and optimizing. Here's the framework:
+      </p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open an active campaign with multiple ads. Show the "Delivery" column (Active, Learning, Learning Limited). Show the "Cost per result" column. Point to which ads are winning and which you'd kill. Show how to turn an ad off (toggle switch).</span>
+      </div>
+
+      <div style="display: grid; gap: 12px;">
+        <div style="background: #161616; border-left: 4px solid #3B82F6; border-radius: 0 10px 10px 0; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;">
+          <div style="background: rgba(59,130,246,0.15); color: #3B82F6; font-weight: 800; width: 36px; height: 36px; min-width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">1</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Launch 3-5 different ads to the same audience</div>
+            <div style="color: #888; font-size: 0.85rem; margin-top: 4px;">Different images/videos, different headlines, different angles. Keep the audience the same so you're only testing the creative.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border-left: 4px solid #a78bfa; border-radius: 0 10px 10px 0; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;">
+          <div style="background: rgba(139,92,246,0.15); color: #a78bfa; font-weight: 800; width: 36px; height: 36px; min-width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">2</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Wait for data — don't panic</div>
+            <div style="color: #888; font-size: 0.85rem; margin-top: 4px;">Let each ad spend at least 2-3x your target cost per lead before making any decisions. If your target CPL is $15, wait until each ad has spent $30-$45. This usually takes 3-5 days.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border-left: 4px solid #ef4444; border-radius: 0 10px 10px 0; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;">
+          <div style="background: rgba(239,68,68,0.15); color: #ef4444; font-weight: 800; width: 36px; height: 36px; min-width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">3</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Kill the losers</div>
+            <div style="color: #888; font-size: 0.85rem; margin-top: 4px;">If an ad has spent 3x your target CPL and still has zero or very few leads, turn it off. Don't hope it gets better. It won't. Redirect that budget to what's working.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border-left: 4px solid #22c55e; border-radius: 0 10px 10px 0; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;">
+          <div style="background: rgba(34,197,94,0.15); color: #22c55e; font-weight: 800; width: 36px; height: 36px; min-width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">4</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Scale the winners slowly</div>
+            <div style="color: #888; font-size: 0.85rem; margin-top: 4px;">Found an ad that's crushing it? Increase budget by 20-30% every 2-3 days. Going from $15/day to $20/day is fine. Going from $15/day to $50/day overnight will reset the learning phase and tank performance.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border-left: 4px solid #eab308; border-radius: 0 10px 10px 0; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start;">
+          <div style="background: rgba(234,179,8,0.15); color: #eab308; font-weight: 800; width: 36px; height: 36px; min-width: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">5</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.95rem;">Repeat forever</div>
+            <div style="color: #888; font-size: 0.85rem; margin-top: 4px;">Even winners fatigue eventually. When CPL starts rising, launch new creatives. The cycle never stops: test → kill losers → scale winners → test new creatives.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="danger-box" style="margin-top: 16px;">
+        <p><strong>🔴 The #1 beginner mistake: changing things too fast.</strong> You launch an ad, see no leads after 24 hours, and panic-edit the targeting. Meta needs 3-5 days to learn who to show your ad to (this is called the "learning phase"). Every time you edit the ad set, the learning phase resets. Be patient.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: LEARNING PHASE             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> 6. The Learning Phase (Don't Touch It)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        When you launch a new ad set, Meta enters what's called the <strong style="color: #fff;">"learning phase."</strong> During this phase, Meta is figuring out who to show your ad to. Performance will be inconsistent — some days great, some days terrible. This is normal.
+      </p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Find an ad set that says "Learning" or "Learning Limited" in the Delivery column. Show where it says this. If you have one that's exited learning ("Active"), show the difference in performance stability.</span>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 18px; text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">⏱️</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">How long?</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Usually 3-7 days or ~50 conversion events, whichever comes first</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 18px; text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">🚫</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">What resets it?</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Editing targeting, changing budget by more than 20%, pausing for more than a few hours</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 18px; text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">✅</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">What's safe to edit?</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Ad creative (new ads), bid caps, and small budget increases (under 20%)</div>
+        </div>
+      </div>
+
+      <div class="warning-box" style="margin-top: 16px;">
+        <p><strong>⚠️ Tell your client upfront:</strong> "The first week might look rough. That's normal — Meta is learning. Don't freak out. By week 2, we'll have real data to work with." Set this expectation on the onboarding call so they don't panic-text you on day 2.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: STARTER STRUCTURE          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 7. Your First Campaign Structure (Copy This)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Here's the exact structure for your first client's campaign. Don't overthink it:
+      </p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Build this structure live. Click "+ Create" → Leads → name it → create the first ad set with broad targeting → set location radius to 10 miles around a city → set age 25-55 → set $15/day budget. Walk through each field as you fill it in. This is the "follow along with me" moment.</span>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 24px;">
+        <div style="color: #3B82F6; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">📁 Campaign: [Client Name] - Leads - ABO Testing</div>
+        <div style="color: #888; font-size: 0.82rem; margin-bottom: 16px;">Objective: Leads | Budget: ABO (ad set level)</div>
+
+        <div style="margin-left: 24px; border-left: 2px solid rgba(139,92,246,0.3); padding-left: 20px; margin-bottom: 16px;">
+          <div style="color: #a78bfa; font-weight: 700; font-size: 0.9rem; margin-bottom: 4px;">📂 Ad Set 1: Broad - [City] 10mi - 25-55</div>
+          <div style="color: #888; font-size: 0.82rem; margin-bottom: 8px;">$10-15/day | Broad targeting (let Meta's AI find the right people)</div>
+
+          <div style="margin-left: 24px; border-left: 2px solid rgba(34,197,94,0.3); padding-left: 16px;">
+            <div style="color: #22c55e; font-size: 0.82rem; margin-bottom: 4px;">📄 Ad 1: Image - [Offer Angle A] - V1</div>
+            <div style="color: #22c55e; font-size: 0.82rem; margin-bottom: 4px;">📄 Ad 2: Image - [Offer Angle B] - V1</div>
+            <div style="color: #22c55e; font-size: 0.82rem; margin-bottom: 4px;">📄 Ad 3: Video - [Testimonial/BTS] - V1</div>
+          </div>
+        </div>
+
+        <div style="margin-left: 24px; border-left: 2px solid rgba(139,92,246,0.3); padding-left: 20px;">
+          <div style="color: #a78bfa; font-weight: 700; font-size: 0.9rem; margin-bottom: 4px;">📂 Ad Set 2: Interest - [Relevant Interest] - 25-55</div>
+          <div style="color: #888; font-size: 0.82rem; margin-bottom: 8px;">$10-15/day | Interest-based targeting (e.g., "Pizza", "Italian food", "DoorDash")</div>
+
+          <div style="margin-left: 24px; border-left: 2px solid rgba(34,197,94,0.3); padding-left: 16px;">
+            <div style="color: #22c55e; font-size: 0.82rem; margin-bottom: 4px;">📄 Ad 1: Same 3 ads as above</div>
+            <div style="color: #888; font-size: 0.75rem;">(Same creatives, different audience — this way you're testing audiences, not creatives)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 16px;">
+        <p><strong>💡 Total daily spend: $20-30/day.</strong> That's $600-900/month. Enough to generate real data and real leads. Don't let clients start below $10/day — Meta doesn't have enough budget to learn at that level.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 8: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 8. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Explain Campaign → Ad Set → Ad in your own words</strong>
+            <span>Goal → Who sees it + budget → What they see. Three levels, always built top-down.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Know when to use ABO vs CBO</strong>
+            <span>Testing = ABO (you control each ad set's budget). Scaling = CBO (Meta distributes automatically).</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Use the naming convention for campaigns, ad sets, and ads</strong>
+            <span>[Client] - [Goal] - [Type] for campaigns. [Audience] - [Location] - [Age] for ad sets. [Format] - [Angle] - [Version] for ads.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Use the budget simulator for a practice client</strong>
+            <span>Plug in realistic numbers. Screenshot the result. You'll use this exact tool on sales calls.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Know the testing framework: launch → wait → kill → scale → repeat</strong>
+            <span>3-5 ads, wait for 2-3x CPL spend, kill anything 3x+ target, scale winners 20-30% every 2-3 days.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Understand the learning phase and what NOT to touch</strong>
+            <span>3-7 days or ~50 conversions. Don't edit targeting, don't change budget more than 20%, don't pause. Be patient.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Know the copy-paste starter structure for your first client</strong>
+            <span>1 ABO campaign, 2 ad sets (broad + interest), 3 ads each. $20-30/day total.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>campaign-structure</span><span>CBO</span><span>ABO</span><span>testing</span><span>scaling</span><span>learning-phase</span><span>budget</span><span>beginner</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.5-the-pixel.html" class="nav-link">← The Pixel</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.7-ai-arbitrage-system.html" class="nav-link">The AI Arbitrage System →</a>
+    </div>
+  </div>
+
+  <script>
+    // === BUDGET SIMULATOR ===
+    function updateSim() {
+      const budget = parseInt(document.getElementById('budgetSlider').value);
+      const cpl = parseInt(document.getElementById('cplSlider').value);
+      const close = parseInt(document.getElementById('closeSlider').value);
+      const job = parseInt(document.getElementById('jobSlider').value);
+
+      document.getElementById('budgetVal').textContent = '$' + budget;
+      document.getElementById('cplVal').textContent = '$' + cpl;
+      document.getElementById('closeVal').textContent = close + '%';
+      document.getElementById('jobVal').textContent = '$' + job.toLocaleString();
+
+      const monthlySpend = budget * 30;
+      const leads = Math.floor(monthlySpend / cpl);
+      const customers = Math.round(leads * (close / 100));
+      const revenue = customers * job;
+      const roas = monthlySpend > 0 ? (revenue / monthlySpend).toFixed(1) : '0';
+
+      document.getElementById('simLeads').textContent = leads;
+      document.getElementById('simCustomers').textContent = customers;
+      document.getElementById('simRevenue').textContent = '$' + revenue.toLocaleString();
+      document.getElementById('simSpend').textContent = '$' + monthlySpend.toLocaleString();
+      document.getElementById('simROI').textContent = roas + 'x';
+      document.getElementById('simROI').style.color = roas >= 2 ? '#22c55e' : roas >= 1 ? '#eab308' : '#ef4444';
+    }
+    updateSim();
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.6-structure-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

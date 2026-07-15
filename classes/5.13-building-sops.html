@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.13: Building SOPs with AI — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .sop-card { background: #161616; border: 1px solid rgba(59,130,246,0.15); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    .sop-card h4 { color: #3B82F6; margin: 0 0 6px 0; font-size: 1rem; }
+    .sop-card .sop-desc { color: #888; font-size: 0.85rem; line-height: 1.5; margin: 0 0 12px; }
+    .sop-card .sop-time { color: #666; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.13 — Module 5: AI Integration</div>
+      <h1>Building SOPs <span>with AI</span></h1>
+      <div class="subtitle">
+        <span class="tag">Systems</span>
+        <span class="tag">Delegation</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Everything you do is in your head. Onboarding clients, launching ads, optimizing campaigns, sending reports. When you want to hire someone, you can't just say "go manage ads." You need step-by-step docs. Claude writes them for you based on what you already do. 5 minutes per SOP instead of 2 hours.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHY SOPs MATTER                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> Why This Matters</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;">
+        <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; padding: 20px;">
+          <p style="color: #ef4444; font-weight: 700; font-size: 0.95rem; margin: 0 0 8px;">Without SOPs</p>
+          <p style="color: #888; font-size: 0.82rem; line-height: 1.5; margin: 0;">You do everything yourself. You're the bottleneck. You can't take a day off. You can't hire because nobody knows your process. You cap at 5-7 clients.</p>
+        </div>
+        <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; padding: 20px;">
+          <p style="color: #22c55e; font-weight: 700; font-size: 0.95rem; margin: 0 0 8px;">With SOPs</p>
+          <p style="color: #888; font-size: 0.82rem; line-height: 1.5; margin: 0;">You hand someone a document. They follow it step by step. Same quality output. You focus on growth, not tasks. You scale past 10+ clients.</p>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 An SOP is just a checklist with context.</strong> Sounds corporate but it's really just "here's exactly what to do, in what order, and what to do if something goes wrong." That's it.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HOW IT WORKS                           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> How Claude Builds Your SOPs</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">You don't write SOPs from scratch. You just tell Claude what you did and it turns your messy explanation into a clean document.</p>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Do the task like normal</h4>
+        <p>Onboard a client, launch a campaign, send a report. Whatever you normally do.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Tell Claude what you did</h4>
+        <p>Open Claude Code and describe the steps in your own words. Messy is fine. Claude cleans it up.</p>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>I just onboarded a new client. Here's roughly what I did:
+
+- had a call, asked about their business, goals, budget, target audience
+- got access to their meta ad account and facebook page
+- looked at their past ads if they had any
+- set up their client folder in my project
+- did competitor research
+- wrote initial ad copy, made some images
+- set up the campaign structure in ads manager
+- launched with 3 ad sets and 3 ads each
+- told the client we'd check in after 5 days
+
+Turn this into a detailed SOP that a junior media buyer could follow step by step. Include specific instructions, not vague stuff. If there are decisions to make, include the criteria for making them. Add time estimates for each step.</pre>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Review and save</h4>
+        <p>Claude gives you a clean SOP. Read through it, fix anything that's off, and save it in your sops/ folder.</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 5 minutes vs 2 hours.</strong> Writing an SOP from scratch takes forever. Telling Claude what you did and letting it structure the document takes 5 minutes.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE 4 SOPs YOU NEED                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 4 SOPs Every Agency Needs</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Start with these four. They cover 90% of what you do every week.</p>
+
+      <!-- SOP 1 -->
+      <div class="sop-card">
+        <h4>1. Client Onboarding</h4>
+        <div class="sop-desc">Everything from the first call to launching the first campaign. The process that happens every time you sign a new client.</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Create an SOP for client onboarding at my ad agency. The steps are:
+
+1. Initial call: gather business info, goals, budget, audience, competitors
+2. Send contract and invoice
+3. Get access to meta ad account (business manager) and facebook page
+4. Set up their folder in the project (about.md, brand-voice.md, etc)
+5. Run competitor research using Meta Ad Library
+6. Create initial ad strategy doc and send to client for approval
+7. Build campaigns in ads manager
+8. Create ad copy and creatives
+9. Launch and set a 5-day review checkpoint
+10. Send client a "we're live" message with what to expect
+
+Make it detailed enough that someone who's never done this could follow it. Include time estimates for each step. Format as a markdown document.</pre>
+        </div>
+        <div class="sop-time">Takes Claude ~2 minutes to generate. Save as: sops/client-onboarding.md</div>
+      </div>
+
+      <!-- SOP 2 -->
+      <div class="sop-card">
+        <h4>2. Ad Launch Checklist</h4>
+        <div class="sop-desc">Before any ad goes live, run through this. Catches the mistakes that waste money.</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Create an ad launch checklist SOP. Before any ad goes live, verify:
+
+- Pixel is installed and firing correctly
+- Conversion event is set up (leads, purchases, etc)
+- Audience targeting matches the strategy doc
+- Budget is set correctly (daily, not lifetime unless intentional)
+- Ad copy has been proofread
+- Images/video are the right dimensions
+- CTA button matches the goal
+- Link goes to the right landing page
+- Landing page loads fast on mobile
+- Tracking UTMs are added
+- Campaign naming convention is followed
+- Client has approved the creative
+
+Format as a checkoff list with brief notes on each item.</pre>
+        </div>
+        <div class="sop-time">Save as: sops/ad-launch-checklist.md</div>
+      </div>
+
+      <!-- SOP 3 -->
+      <div class="sop-card">
+        <h4>3. Weekly Optimization Routine</h4>
+        <div class="sop-desc">What you do every Monday to keep campaigns healthy. The routine that makes or breaks your results.</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Create an SOP for weekly ad optimization. Every Monday I do this:
+
+1. Open ads manager, look at last 7 days of data
+2. Check each campaign: is it hitting the target cost per result?
+3. Kill any ad set that spent 2x the target cost with zero results
+4. If an ad set is performing well, consider increasing budget by 20%
+5. Check frequency. If above 3, audience is getting fatigued
+6. Check CTR. Below 1% means the creative isn't working
+7. Check the breakdown by age, gender, placement
+8. Note what's working and what's not
+9. Create 2-3 new ad variations to test
+10. Send the client a quick update
+
+Include the decision criteria. Like "if cost per lead is above $X, do Y." Make it so a junior buyer could follow this without asking me questions.</pre>
+        </div>
+        <div class="sop-time">Save as: sops/weekly-optimization.md</div>
+      </div>
+
+      <!-- SOP 4 -->
+      <div class="sop-card">
+        <h4>4. Client Reporting</h4>
+        <div class="sop-desc">Weekly report that takes 10 minutes. Keeps the client happy and reduces "how are my ads doing?" messages by 80%.</div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Create an SOP for weekly client reporting. Every Friday I:
+
+1. Pull data from ads manager (last 7 days and month-to-date)
+2. Fill in the reporting template: spend, results, cost per result, CTR, CPM
+3. Compare to last week and note trends (up or down arrows)
+4. Write 3-4 bullet points: what worked, what we changed, what we're testing next
+5. Keep it simple. Clients don't want a 10-page report.
+6. Send via email or the client's preferred channel
+
+Include a template for the actual report message. Make it something I can hand to a VA to do every week.</pre>
+        </div>
+        <div class="sop-time">Save as: sops/client-reporting.md</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE WATCH ME METHOD                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎙️</span> Advanced: The "Watch Me" Method</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">This is the easiest way to create SOPs. Next time you do a task, narrate it to Claude in real time.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>I'm about to optimize a client's ad account. Watch what I tell you and turn it into an SOP when I'm done. I'll walk you through each step as I do it.</pre>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 12px 0;">Then just talk through what you're doing:</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin: 12px 0;">
+        <p style="color: #ccc; font-size: 0.85rem; line-height: 1.8; margin: 0; font-style: italic;">
+          "ok first I'm opening ads manager and filtering to last 7 days..."<br>
+          "now I'm looking at campaign X, it spent $200 with 3 leads so $66 per lead, that's above our target of $40..."<br>
+          "I'm going to kill this ad set because it's been running 5 days with no improvement..."<br>
+          "now I'm checking frequency, it's at 3.5 so the audience is getting fatigued..."<br>
+          "I'm going to duplicate the winning ad set and test a new creative..."
+        </p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 12px 0;">When you're done, say:</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>OK turn all of that into a clean SOP. Format it so someone who's never done this could follow it step by step.</pre>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Way easier than writing from memory.</strong> You capture every step because you're doing it in real time. Claude organizes your stream-of-consciousness into a clean document.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- FOLDER STRUCTURE                       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📁</span> Where to Store SOPs</h2>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 20px; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; color: #ccc; line-height: 1.8;">
+        your-project/<br>
+        └── sops/<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── client-onboarding.md<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── ad-launch-checklist.md<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── weekly-optimization.md<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── client-reporting.md<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;├── competitor-research.md<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;└── new-hire-training.md
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin: 12px 0;">When you hire someone, you share the folder. They have everything they need to do the job the way you do it.</p>
+
+      <div class="warning-box">
+        <p><strong>⚠️ SOPs are living documents.</strong> Your process will change as you get better. Update them when something changes. A stale SOP is worse than no SOP because your hire will follow outdated steps.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHECKLIST                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> Homework Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">SOP Building Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="sopChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Created your sops/ folder</strong>
+            <span>Inside your Claude Code project</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Built a client onboarding SOP</strong>
+            <span>Paste the prompt, review the output, save it</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Built an ad launch checklist</strong>
+            <span>Run through this before every campaign goes live</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Built a weekly optimization SOP</strong>
+            <span>Your Monday routine, documented</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Built a client reporting SOP</strong>
+            <span>Your Friday routine, with a report template</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Tried the "Watch Me" method on a real task</strong>
+            <span>Narrate while you work, Claude documents it</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Reviewed and tweaked at least one SOP</strong>
+            <span>Claude gets it 90% right. The last 10% is your knowledge.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>sops</span><span>systems</span><span>delegation</span><span>claude-code</span><span>hiring</span><span>scaling</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.12-selling-automations.html" class="nav-link">← Selling Automations</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.1-intro-ai-media-buying.html" class="nav-link">Back to Module 5 →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.13-sops-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.4: Your AI Media Buying Agent — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .download-box { background: rgba(59,130,246,0.06); border: 2px solid rgba(59,130,246,0.3); border-radius: 14px; padding: 28px; margin: 24px 0; text-align: center; }
+    .download-box h3 { color: #fff; font-size: 1.2rem; margin: 0 0 8px 0; }
+    .download-box p { color: #888; font-size: 0.88rem; margin: 0 0 20px 0; }
+    .download-btn { display: inline-block; background: #3B82F6; color: #fff; padding: 14px 32px; border-radius: 10px; font-size: 1rem; font-weight: 700; text-decoration: none; transition: all 0.2s; }
+    .download-btn:hover { background: #2563EB; transform: translateY(-1px); }
+    .download-btn span { margin-right: 8px; }
+    .file-list { display: flex; gap: 12px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .file-tag { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px 14px; color: #888; font-size: 0.82rem; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.4 — Module 5: AI Integration</div>
+      <h1>Your <span>AI Media Buying Agent</span></h1>
+      <div class="subtitle">
+        <span class="tag">Download + Install</span>
+        <span class="tag">~10 min</span>
+        <span class="tag">Needs: Claude Code set up (Lesson 5.2)</span>
+      </div>
+    </div>
+
+    <div class="summary-box">You're about to install a full AI media buying system — 5 specialized agents, 500+ knowledge files, and built-in commands. Download the zip, drop it into your Claude Code workspace, and you've got an entire traffic team that works 24/7.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT YOU'RE GETTING                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> What You're Getting</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        This isn't just one file — it's a full <strong style="color: #fff;">Traffic Command system</strong>. 5 specialized AI agents that work together, 500+ knowledge files from real campaigns, and built-in commands you can run. Drop it into your workspace and you've got an entire traffic team.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 20px 0;">
+        <div style="background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.3rem; margin-bottom: 6px;">🎖️</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Aurelius</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Traffic Commander — routes tasks to the right specialist</div>
+        </div>
+        <div style="background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.15); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.3rem; margin-bottom: 6px;">📊</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Zenith</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Metrics Analyst — reads data, diagnoses problems</div>
+        </div>
+        <div style="background: rgba(168,85,247,0.04); border: 1px solid rgba(168,85,247,0.15); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.3rem; margin-bottom: 6px;">🎨</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Vortex</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Creative Architect — writes copy, generates hooks & angles</div>
+        </div>
+        <div style="background: rgba(234,179,8,0.04); border: 1px solid rgba(234,179,8,0.15); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.3rem; margin-bottom: 6px;">🔍</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Nexus</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Tracking Specialist — pixels, CAPI, attribution</div>
+        </div>
+        <div style="background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 16px; text-align: center;">
+          <div style="font-size: 1.3rem; margin-bottom: 6px;">🧠</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Stratos</div>
+          <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Strategy Advisor — scaling, budgets, campaign structure</div>
+        </div>
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin: 12px 0;">Plus 500+ knowledge files from real campaigns, 18 skills, 5 built-in commands, and client report templates. This is the same system we use in our agency.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DOWNLOAD                               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⬇️</span> Step 1: Download the Agent</h2>
+
+      <div class="download-box">
+        <h3>📦 Traffic Command — Multi-Agent System</h3>
+        <p>5 agents, 500+ knowledge files, 18 skills, 5 commands. Your entire AI traffic team.</p>
+        <a href="../downloads/ai-advertiser-agent.zip" class="download-btn" download>
+          <span>⬇️</span> Download Traffic Command (.zip)
+        </a>
+        <div class="file-list">
+          <div class="file-tag">agents/ — 5 specialized AI agents</div>
+          <div class="file-tag">knowledge/ — 500+ campaign frameworks</div>
+          <div class="file-tag">skills/ — 18 plug-and-play skills</div>
+          <div class="file-tag">commands/ — 5 built-in commands</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- INSTALL                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📂</span> Step 2: Install It</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; margin-bottom: 16px;">
+        <ol style="color: #ccc; font-size: 0.92rem; line-height: 2.2; margin: 0; padding-left: 20px;">
+          <li>Unzip the downloaded file — you'll see a folder called <strong style="color: #fff;">traffic-command-student-export</strong></li>
+          <li>Open VS Code with your <strong style="color: #fff;">my-ad-agency</strong> folder (from Lesson 5.2)</li>
+          <li>Drag the <strong style="color: #fff;">entire contents</strong> of the unzipped folder into your workspace</li>
+          <li>You should see folders: <code style="color: #3B82F6;">agents/</code>, <code style="color: #3B82F6;">knowledge/</code>, <code style="color: #3B82F6;">skills/</code>, <code style="color: #3B82F6;">commands/</code> plus a README.md</li>
+          <li>That's it. Your traffic team is loaded.</li>
+        </ol>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ If you customized your old CLAUDE.md</strong> (added client names, your voice preferences, etc.), don't delete it. The agents folder works alongside your existing CLAUDE.md — they add to it, they don't replace it.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TEST IT                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧪</span> Step 3: Test It</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Open Claude Code and try these. If it responds with detailed, specific answers, your agent is working.
+      </p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 20px; margin-bottom: 12px;">
+        <div style="color: #3B82F6; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;">TEST 1 — Diagnosis (uses Zenith)</div>
+        <div style="color: #fff; font-size: 0.95rem; font-family: monospace; background: rgba(59,130,246,0.06); padding: 12px 16px; border-radius: 8px;">"My CPM is $45 and CTR is 0.6%, what's wrong?"</div>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 20px; margin-bottom: 12px;">
+        <div style="color: #3B82F6; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;">TEST 2 — Creative Generation (uses Vortex)</div>
+        <div style="color: #fff; font-size: 0.95rem; font-family: monospace; background: rgba(59,130,246,0.06); padding: 12px 16px; border-radius: 8px;">"Write me 10 Facebook ad hooks for a dentist in Miami that needs more patients"</div>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 20px; margin-bottom: 12px;">
+        <div style="color: #3B82F6; font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;">TEST 3 — Strategy (uses Stratos)</div>
+        <div style="color: #fff; font-size: 0.95rem; font-family: monospace; background: rgba(59,130,246,0.06); padding: 12px 16px; border-radius: 8px;">"My client is a gym owner with $2K/month ad budget. Build me a campaign plan."</div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>✅ Good sign:</strong> If it references the knowledge base (TFC files), mentions Andromeda, uses specific niche benchmarks, or routes your question to the right specialist agent, the system is loaded and working.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT'S INSIDE                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> What's Inside the Agent</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Here's what your agent knows. You don't need to memorize any of this — the AI has it built in. But it helps to know what's under the hood.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin: 20px 0;">
+
+        <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;">
+          <div style="color: #3B82F6; font-weight: 700; font-size: 1rem; margin-bottom: 8px;">📂 500+ Knowledge Files</div>
+          <div style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">Real campaign data, frameworks, and strategies from actual ad accounts. Andromeda paradigm, creative diversification, hook frameworks, niche benchmarks, scaling protocols. The agents pull from this knowledge base when answering your questions — so you're getting answers based on real results, not generic AI.</div>
+        </div>
+
+        <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 1rem; margin-bottom: 8px;">🛠️ 18 Skills</div>
+          <div style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">Plug-and-play capabilities: hook generation, copy generation, creative briefs, metric diagnosis, creative fatigue detection, funnel analysis, tracking audits, campaign structure, budget allocation, kill/scale rules, unit economics, and more. Each skill is a focused workflow the agents use automatically.</div>
+        </div>
+
+        <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;">
+          <div style="color: #eab308; font-weight: 700; font-size: 1rem; margin-bottom: 8px;">⚡ 5 Built-in Commands</div>
+          <div style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">Type these in Claude Code for instant workflows: <code style="color: #3B82F6;">/traffic</code> (general traffic help), <code style="color: #3B82F6;">/traffic-audit</code> (full campaign audit), <code style="color: #3B82F6;">/traffic-diagnose</code> (diagnose a problem), <code style="color: #3B82F6;">/traffic-hooks</code> (generate hooks), <code style="color: #3B82F6;">/traffic-scale</code> (scaling plan).</div>
+        </div>
+
+        <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;">
+          <div style="color: #a855f7; font-weight: 700; font-size: 1rem; margin-bottom: 8px;">📋 Templates</div>
+          <div style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">Ready-to-use templates for performance reports, creative briefs, campaign audits, scaling readiness checklists, and campaign launch checklists. Just ask and the agents fill them in with your actual data.</div>
+        </div>
+
+        <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px;">
+          <div style="color: #ef4444; font-weight: 700; font-size: 1rem; margin-bottom: 8px;">🔍 Diagnostic Framework</div>
+          <div style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">Zenith diagnoses problems automatically: High CPM + low CTR = creative problem (routes to Vortex). Good CTR + low conversions = landing page problem. Good apps + low shows = follow-up problem. It tells you what's broken, whose job it is to fix it, and what to do next.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SETUP CHECKLIST                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> Setup Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Installation Progress</span>
+          <span style="color: #888; font-size: 14px;" id="agentProgressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="agentProgressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="agentChecklist">
+        <li>
+          <input type="checkbox" id="ag1">
+          <label class="check-content" for="ag1">
+            <strong>Downloaded the agent zip file</strong>
+            <span>Click the blue download button above</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="ag2">
+          <label class="check-content" for="ag2">
+            <strong>Unzipped and see agents/, knowledge/, skills/, commands/ folders</strong>
+            <span>Plus README.md and DEVELOPER-GUIDE.md</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="ag3">
+          <label class="check-content" for="ag3">
+            <strong>Dragged all contents into your VS Code workspace</strong>
+            <span>Your workspace should now have the agents, knowledge, skills, and commands folders</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="ag4">
+          <label class="check-content" for="ag4">
+            <strong>Ran Test 1 — asked for ad hooks</strong>
+            <span>Should give you hooks using the 7 categories</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="ag5">
+          <label class="check-content" for="ag5">
+            <strong>Ran Test 2 — asked about a high CPL</strong>
+            <span>Should tell you to kill it (3x+ target for 4 days)</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="ag6">
+          <label class="check-content" for="ag6">
+            <strong>Ran Test 3 — asked for a campaign plan</strong>
+            <span>Should mention Advantage+, creative diversity, and niche benchmarks</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT'S NEXT                            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚀</span> What's Next</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">
+        Your agent is installed. Now you're going to learn how to actually use it.
+      </p>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6;">
+        ➡️ <strong style="color: #fff;">Lesson 5.5:</strong> Reading Your Ad Data With AI — pull your campaign data into Claude Code and let the agent tell you what's working and what's not.
+      </p>
+
+      <div class="tip-box">
+        <p><strong>💡 Pro tip:</strong> As you go through the next lessons, your agent already knows everything they teach. So if you ever forget a concept, just ask your AI. That's the whole point.</p>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>agent</span><span>CLAUDE.md</span><span>download</span><span>media-buying</span><span>andromeda</span><span>hooks</span><span>optimization</span><span>niche-benchmarks</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.3-meta-api-connection.html" class="nav-link">← Meta API Connection</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.5-reading-ad-data-with-ai.html" class="nav-link">Reading Ad Data →</a>
+    </div>
+  </div>
+
+  <script>
+    const AGENT_STORAGE_KEY = 'ai-adv-5.4-agent-v3';
+    const agentCbs = document.querySelectorAll('#agentChecklist input[type="checkbox"]');
+    const agentTotal = agentCbs.length;
+    const agentFill = document.getElementById('agentProgressFill');
+    const agentCount = document.getElementById('agentProgressCount');
+    const agentSaved = JSON.parse(localStorage.getItem(AGENT_STORAGE_KEY) || '{}');
+    agentCbs.forEach(cb => { if (agentSaved[cb.id]) cb.checked = true; });
+    function updateAgentProgress() {
+      const n = document.querySelectorAll('#agentChecklist input:checked').length;
+      agentFill.style.width = Math.round((n/agentTotal)*100)+'%';
+      agentCount.textContent = n+' / '+agentTotal+' complete';
+      const s = {}; agentCbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(AGENT_STORAGE_KEY, JSON.stringify(s));
+    }
+    agentCbs.forEach(cb => cb.addEventListener('change', updateAgentProgress));
+    updateAgentProgress();
+  </script>
+</body>
+</html>

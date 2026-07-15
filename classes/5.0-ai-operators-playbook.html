@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The AI Operator's Playbook — by Rodrigo Krueger</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Layout */
+    .toc { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.02)); border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; padding: 20px 24px; margin: 32px 0 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .toc-item { display: block; background: #0d0d0d; border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 14px 16px; text-decoration: none; color: #ccc; transition: all 0.15s; }
+    .toc-item:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-2px); }
+    .toc-item .n { color: #3B82F6; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; }
+    .toc-item .t { color: #fff; font-weight: 800; font-size: 1rem; margin-top: 4px; }
+    .toc-item .d { color: #888; font-size: 0.78rem; margin-top: 4px; }
+
+    .part-divider { margin: 60px 0 32px; padding: 24px 28px; background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; }
+    .part-divider .pn { color: #3B82F6; font-weight: 800; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; }
+    .part-divider h2 { color: #fff; font-size: 2rem; font-weight: 800; margin: 6px 0 8px; }
+    .part-divider .pd-sub { color: #999; font-size: 0.95rem; line-height: 1.55; }
+
+    /* Pitch + Vs */
+    .pitch-box { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.02)); border: 1px solid rgba(59,130,246,0.25); border-radius: 16px; padding: 28px 32px; margin: 32px 0 24px; }
+    .pitch-box h2 { color: #fff; font-size: 1.5rem; margin: 0 0 12px; }
+    .pitch-box p { color: #ccc; font-size: 1rem; line-height: 1.7; margin: 0 0 14px; }
+
+    .vs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px; }
+    .vs-card { background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px 20px; }
+    .vs-card.bad { border-color: rgba(239,68,68,0.2); background: linear-gradient(135deg, rgba(239,68,68,0.04), transparent); }
+    .vs-card.good { border-color: rgba(34,197,94,0.25); background: linear-gradient(135deg, rgba(34,197,94,0.05), transparent); }
+    .vs-card .label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .vs-card.bad .label { color: #ef4444; }
+    .vs-card.good .label { color: #22c55e; }
+    .vs-card .title { color: #fff; font-weight: 800; font-size: 1rem; margin-top: 6px; }
+    .vs-card ul { margin: 10px 0 0; padding: 0 0 0 18px; color: #bbb; font-size: 0.85rem; line-height: 1.7; }
+
+    /* Question / Move / Rule cards */
+    .q-card, .move, .part-card, .rule { background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; }
+    .q-card .qn, .move .mn, .part-card .pn, .rule .rn { color: #3B82F6; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+    .q-card .qt, .move .mt, .part-card .pt, .rule .rt { color: #fff; font-weight: 800; font-size: 1.05rem; margin: 4px 0 6px; }
+    .q-card .qd, .move .md, .part-card .pd, .rule .rd { color: #bbb; font-size: 0.9rem; line-height: 1.65; margin-top: 4px; }
+    .q-card .bad-ex, .q-card .good-ex { font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.8rem; line-height: 1.55; padding: 10px 14px; border-radius: 8px; margin-top: 8px; }
+    .q-card .bad-ex { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15); color: #f87171; }
+    .q-card .good-ex { background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.18); color: #86efac; }
+    .q-card .ex-label { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase; margin-right: 8px; opacity: 0.85; }
+    .move .when { color: #888; font-size: 0.82rem; line-height: 1.55; margin-top: 8px; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+    .move .when strong { color: #ccc; }
+    .move .mp, .part-card .pe { background: #0a0a0a; border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.78rem; color: #d4d4d4; line-height: 1.65; }
+    .move .mp-label, .part-card .pe-label { color: #3B82F6; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+
+    /* Matrix */
+    .matrix, .rubric { width: 100%; font-size: 0.85rem; border-collapse: collapse; background: #0d0d0d; border-radius: 12px; overflow: hidden; }
+    .matrix th, .rubric th { text-align: left; padding: 12px; color: #3B82F6; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .matrix td, .rubric td { padding: 12px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .matrix td:first-child, .rubric td:first-child { color: #fff; font-weight: 600; }
+    .matrix tr:last-child td, .rubric tr:last-child td { border-bottom: none; }
+
+    /* Brief / Prompt boxes */
+    .brief, .prompt-box { background: #0a0a0a; border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 22px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.82rem; color: #d4d4d4; line-height: 1.75; white-space: pre-wrap; position: relative; }
+    .brief .k, .prompt-box .k { color: #3B82F6; font-weight: 700; }
+    .prompt-box .copy-hint { position: absolute; top: 12px; right: 14px; background: #3B82F6; color: #fff; font-size: 0.66rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Inter', sans-serif; }
+
+    /* Weak vs power */
+    .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .vs-col { background: #111; border-radius: 12px; padding: 18px; }
+    .vs-col.bad { border: 1px solid rgba(239,68,68,0.25); background: linear-gradient(180deg, rgba(239,68,68,0.04), transparent); }
+    .vs-col.good { border: 1px solid rgba(34,197,94,0.3); background: linear-gradient(180deg, rgba(34,197,94,0.05), transparent); }
+    .vs-col .label { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+    .vs-col.bad .label { color: #ef4444; }
+    .vs-col.good .label { color: #22c55e; }
+    .vs-col .body { font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.75rem; color: #d4d4d4; line-height: 1.7; margin-top: 10px; white-space: pre-wrap; }
+    .vs-col .result { background: #0a0a0a; border-radius: 8px; padding: 10px 12px; margin-top: 12px; color: #aaa; font-size: 0.78rem; line-height: 1.6; }
+    .vs-col .result-label { color: #888; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+
+    /* Gauge */
+    .gauge { display: flex; align-items: center; gap: 14px; background: #0d0d0d; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px 20px; }
+    .gauge .pct { font-size: 2rem; font-weight: 900; color: #3B82F6; min-width: 80px; text-align: center; }
+    .gauge .lbl { color: #ccc; font-size: 0.88rem; line-height: 1.5; }
+
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 2px; font-size: 0.92rem; }
+    .check-content span { color: #888; font-size: 0.85rem; line-height: 1.5; }
+
+    /* Back to top inline anchors */
+    .anchor-offset { display: block; position: relative; top: -20px; visibility: hidden; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div style="display:inline-block;padding:6px 14px;border:1px solid rgba(59,130,246,0.3);border-radius:999px;color:#3B82F6;font-size:0.75rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px;">AI ADVERTISER · SOP</div>
+      <h1 style="font-size:44px;font-weight:800;color:#fff;margin-bottom:14px;line-height:1.1;">The AI Operator's<br><span style="color:#3B82F6;">Playbook</span></h1>
+      <p style="font-size:18px;color:#A0A0A0;max-width:640px;margin:0 auto;line-height:1.6;">How I plan, prompt, and iterate to build anything with AI. The system, not the tricks. One SOP, one read, ship by Monday.</p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc">
+      <a href="#plan" class="toc-item">
+        <div class="n">Part 01</div>
+        <div class="t">Plan Like a CEO</div>
+        <div class="d">4 questions before you prompt</div>
+      </a>
+      <a href="#prompt" class="toc-item">
+        <div class="n">Part 02</div>
+        <div class="t">The Prompt Anatomy</div>
+        <div class="d">My 7-part structure</div>
+      </a>
+      <a href="#iterate" class="toc-item">
+        <div class="n">Part 03</div>
+        <div class="t">Iterate to Perfect</div>
+        <div class="d">The 4 refinement moves</div>
+      </a>
+    </div>
+
+    <!-- INTRO PITCH -->
+    <div class="pitch-box">
+      <h2>Most people use AI like a calculator. Operators use it like a team.</h2>
+      <p>Beginners type one-liners and hope. Operators run a system: 15 minutes planning, a structured prompt, then a tight iteration loop. The difference isn't smarter AI — it's a smarter process around the same AI.</p>
+      <p>This playbook is the exact system I use to build with Claude Code (and Base44, and ChatGPT, and any AI). It's three steps: <strong style="color:#fff;">Plan → Prompt → Iterate.</strong> Once it's in your head, you can build anything — landing pages, internal tools, client dashboards, full apps — without coding, without hiring, without losing weeks.</p>
+    </div>
+
+    <div class="vs-row">
+      <div class="vs-card bad">
+        <div class="label">Prompter</div>
+        <div class="title">What most agency owners do</div>
+        <ul>
+          <li>Opens Claude Code, types a one-liner</li>
+          <li>Gets a generic draft, gives up or rewrites it manually</li>
+          <li>Re-prompts blindly when stuck</li>
+          <li>Never saves the prompts that worked</li>
+          <li>"AI is overhyped"</li>
+        </ul>
+      </div>
+      <div class="vs-card good">
+        <div class="label">Operator</div>
+        <div class="title">What this playbook teaches</div>
+        <ul>
+          <li>Plans the brief on paper before opening AI</li>
+          <li>Writes a 7-part prompt that lands on the first try</li>
+          <li>Runs a 4-move iteration loop until it ships</li>
+          <li>Captures winning prompts as reusable skills</li>
+          <li>Builds an asset every week</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- PART 1: PLAN                                   -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <span class="anchor-offset" id="plan"></span>
+    <div class="part-divider">
+      <div class="pn">Part 01 · Pre-prompt</div>
+      <h2>Plan Like a CEO</h2>
+      <div class="pd-sub">Answer 4 questions before you open Claude Code. The 15 minutes you spend here save 5 hours of prompting in the wrong direction.</div>
+    </div>
+
+    <!-- 1.1 Principle -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> 1.1 The Principle — 80% Plan, 20% Execute</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Tactical workers prompt. Operators plan first. <strong style="color:#fff;">Every hour you spend planning saves five hours of prompting in the wrong direction.</strong> Not metaphorically. Literally.</p>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Beginners skip planning because typing into the chat box feels productive. It isn't. It's the AI version of opening Photoshop with no brief — you'll move pixels for hours and end up with nothing usable.</p>
+      <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:12px;padding:20px;">
+        <div style="color:#3B82F6;font-weight:700;font-size:0.95rem;margin-bottom:10px;">💡 Why AI specifically rewards planning</div>
+        <p style="color:#ccc;font-size:0.9rem;line-height:1.6;margin:0;">AI mirrors the specificity of your input. Vague brief in → generic output back. Tight brief in → usable output back. Your planning isn't separate from the prompt — it <em>is</em> the prompt.</p>
+      </div>
+    </div>
+
+    <!-- 1.2 The 4 Questions -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 1.2 The 4 Questions — Answer These Before You Open AI</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Open Notes / Notion / a napkin. Answer each in 1-3 sentences. Don't open Claude Code until they're all answered.</p>
+
+      <div class="q-card">
+        <div class="qn">Question 1</div>
+        <div class="qt">What does DONE look like?</div>
+        <div class="qd">Specific. Observable. If a stranger walked in, could they tell whether it's done?</div>
+        <div class="bad-ex"><span class="ex-label">WEAK:</span>"Make me a dashboard"</div>
+        <div class="good-ex"><span class="ex-label">STRONG:</span>"A web app where I input a client name + Meta ad account ID and get back a branded PDF report with weekly KPIs, top 3 ads, bottom 3 ads, and a 1-paragraph AI summary"</div>
+      </div>
+
+      <div class="q-card">
+        <div class="qn">Question 2</div>
+        <div class="qt">What are the constraints?</div>
+        <div class="qd">Time budget. Tools to use or avoid. Scope boundaries. The constraints keep AI from drifting into 4-hour scope creep. Say "don't" as often as "do."</div>
+        <div class="bad-ex"><span class="ex-label">WEAK:</span>"Build it however"</div>
+        <div class="good-ex"><span class="ex-label">STRONG:</span>"Static HTML only, no Next.js. Use the existing course CSS. No new dependencies. Time-box: 90 min. Don't rewrite anything already working."</div>
+      </div>
+
+      <div class="q-card">
+        <div class="qn">Question 3</div>
+        <div class="qt">What inputs does AI need to do this well?</div>
+        <div class="qd">Files. Examples. Brand voice. Existing patterns. URLs. Sample data. AI without context guesses; AI with context delivers.</div>
+        <div class="bad-ex"><span class="ex-label">WEAK:</span>"Write it in my voice"</div>
+        <div class="good-ex"><span class="ex-label">STRONG:</span>"Use this brand voice doc [paste], match the structure of this existing lesson [paste link], use these brand colors [hex codes], match the energy of this hero section [paste]"</div>
+      </div>
+
+      <div class="q-card">
+        <div class="qn">Question 4</div>
+        <div class="qt">How will I know it worked?</div>
+        <div class="qd">Define success BEFORE you build. The "demo moment" — what proves it works. Telling AI the success criteria makes it self-check.</div>
+        <div class="bad-ex"><span class="ex-label">WEAK:</span>"Should be good"</div>
+        <div class="good-ex"><span class="ex-label">STRONG:</span>"I can paste a real client name and ad account ID, click Generate, and get a branded PDF in &lt;30 sec that I could send to a client without editing"</div>
+      </div>
+    </div>
+
+    <!-- 1.3 Tool Selection -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> 1.3 Tool Selection — Right Tool for the Job</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Not every task is a Claude Code task. Picking the wrong tool burns hours. The shortcut:</p>
+
+      <table class="matrix">
+        <thead>
+          <tr><th>Task type</th><th>Use</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Custom code, files, repo edits</td><td>Claude Code</td><td>File access, persistent context, can spawn agents. Default for "build me something custom."</td></tr>
+          <tr><td>Full-stack app from one prompt (auth + UI + DB)</td><td>Base44 / Lovable / v0</td><td>One prompt → working web app. Faster than Claude Code when you need a hosted app, not a script.</td></tr>
+          <tr><td>Quick Q&A, brainstorming, copy drafts</td><td>Claude.ai / ChatGPT</td><td>Fast, no setup. Don't open Claude Code to draft a tweet.</td></tr>
+          <tr><td>Long task you want to run in the background</td><td>Agent + delegation</td><td>Specialized agent runs while you do other things. Best for research, audits, multi-step work.</td></tr>
+          <tr><td>Long-form writing, sales letters, VSLs</td><td>Claude.ai + copywriting skill</td><td>Better narrative quality, fewer AI patterns, easier to refine in chat.</td></tr>
+          <tr><td>Image / video / audio generation</td><td>Specialized tools (Midjourney, Runway, ElevenLabs)</td><td>Different model families. Claude/GPT can't render — use the right model.</td></tr>
+        </tbody>
+      </table>
+
+      <div style="background:rgba(234,179,8,0.06);border:1px solid rgba(234,179,8,0.2);border-radius:10px;padding:16px 20px;margin-top:16px;">
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:#eab308;">💡 Rule of thumb:</strong> If you'll use it once → ChatGPT. If you'll use it weekly → Claude Code (save it as a skill). If non-technical people need to use it → Base44.</p>
+      </div>
+    </div>
+
+    <!-- 1.4 Brief Template -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 1.4 The 1-Page Brief (Template + Real Example)</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Once you've answered the 4 questions, drop them into this template. This becomes the skeleton of your prompt in Part 2.</p>
+
+      <div style="color:#fff;font-weight:700;font-size:0.88rem;margin-bottom:10px;">📐 The template (copy this)</div>
+      <div class="brief"><span class="k">PROJECT:</span>      [name]
+<span class="k">DONE LOOKS LIKE:</span> [specific, observable outcome]
+<span class="k">CONSTRAINTS:</span>
+  - [tech / tools]
+  - [time budget]
+  - [what NOT to do]
+<span class="k">INPUTS:</span>
+  - [files / URLs / brand]
+  - [examples to match]
+<span class="k">SUCCESS CRITERIA:</span> [the demo moment that proves it works]
+<span class="k">TOOL CHOICE:</span>   [Claude Code / Base44 / ChatGPT / etc — and why]</div>
+
+      <div style="color:#fff;font-weight:700;font-size:0.88rem;margin:24px 0 10px;">🧪 Real example — the brief I wrote for this site</div>
+      <div class="brief"><span class="k">PROJECT:</span>      AI Advertiser SOP site (the one you're on)
+<span class="k">DONE LOOKS LIKE:</span> Live Vercel site at ai-advertiser-sop.vercel.app — one-page SOP teaching my planning, prompting, and iteration system. Matches visual style of ai-advertiser-course.
+<span class="k">CONSTRAINTS:</span>
+  - Static HTML only, no Next.js
+  - Match existing course CSS (don't rebuild)
+  - Time-box: 90 min for build + deploy
+  - One full SOP page, not a multi-module site
+<span class="k">INPUTS:</span>
+  - Existing site: sites/ai-advertiser-course/ (style + structure reference)
+  - My CLAUDE.md self-review rules (the rubric I want students to learn)
+  - Brand voice: direct, no fluff, agency-owner energy
+<span class="k">SUCCESS CRITERIA:</span> Students can read the whole SOP, understand my system, apply it to build their own thing the same week. Deploys cleanly to Vercel on first try.
+<span class="k">TOOL CHOICE:</span>   Claude Code — file edits, persistent context, can deploy via shell.</div>
+
+      <p style="color:#888;font-size:0.82rem;line-height:1.6;margin-top:12px;">That brief took 8 minutes. The actual build (one full SOP page + deploy) took 90 min. The brief was the work.</p>
+    </div>
+
+    <!-- 1.5 Plan checklist -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 1.5 Plan Checklist</h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="p1"><label class="check-content" for="p1"><strong>Answered the 4 questions on paper/Notes</strong><span>Done · constraints · inputs · success — before opening Claude Code.</span></label></li>
+        <li><input type="checkbox" id="p2"><label class="check-content" for="p2"><strong>Picked the right tool using the matrix</strong><span>Claude Code / Base44 / ChatGPT / agent — wrote down which and why.</span></label></li>
+        <li><input type="checkbox" id="p3"><label class="check-content" for="p3"><strong>10+ min of research / precedent reading</strong><span>Looked at existing patterns in the repo, brain, or web. Found something to match.</span></label></li>
+        <li><input type="checkbox" id="p4"><label class="check-content" for="p4"><strong>Wrote the 1-page brief using the template</strong><span>Project · Done · Constraints · Inputs · Success · Tool — all filled in.</span></label></li>
+        <li><input type="checkbox" id="p5"><label class="check-content" for="p5"><strong>Set a hard time budget for the build</strong><span>If you blow past 2× the budget, stop and re-plan. Don't grind.</span></label></li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- PART 2: PROMPT                                 -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <span class="anchor-offset" id="prompt"></span>
+    <div class="part-divider">
+      <div class="pn">Part 02 · Structured prompting</div>
+      <h2>The Prompt Anatomy</h2>
+      <div class="pd-sub">My 7-part structure: Role · Goal · Constraints · Inputs · Format · Examples · Eval. Lands on the first try.</div>
+    </div>
+
+    <!-- 2.1 Why one-liners fail -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 2.1 Why One-Liners Don't Scale</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Type <em>"Write me a landing page"</em> → generic AI landing page you've seen a thousand times. Type a structured prompt → the exact thing you can deploy.</p>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;"><strong style="color:#fff;">AI mirrors the specificity of your input.</strong> Power users aren't smarter — they're more specific.</p>
+
+      <div class="vs-grid">
+        <div class="vs-col bad">
+          <div class="label">⚠ WEAK PROMPT</div>
+          <div class="body">Write me a landing page for my SOP about how I use AI.</div>
+          <div class="result"><div class="result-label">What you get</div>Generic 5-section landing page. Stock copy. Hero says "Unlock the Power of AI." Three rounds of revision. You rewrite it yourself.</div>
+        </div>
+        <div class="vs-col good">
+          <div class="label">✓ POWER PROMPT</div>
+          <div class="body">[Role] AI Advertiser SOP site, teaching site for agency owners. Tone: direct, no fluff.
+
+[Goal] Landing page hero — eyebrow, h1, subtitle, CTA.
+
+[Constraints] No em dashes. No "unlock/empower." Fits above the fold. Static HTML.
+
+[Inputs] Voice: anti-guru. Audience: agency owners running 5-20 clients. Course: Plan, Prompt, Iterate.
+
+[Format] HTML snippet, inline styles. CSS vars: --orange: #3B82F6.
+
+[Examples] Match this energy: [paste].
+
+[Eval] Confirm: no em dashes, fits fold, uses #3B82F6.</div>
+          <div class="result"><div class="result-label">What you get</div>Drop-in hero. First try. Ships.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.2 The 7 parts -->
+    <div class="section">
+      <h2><span class="icon">🧬</span> 2.2 The 7 Parts of a Power Prompt</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Every power prompt I write has these 7 sections. Some are 1 line, some are 10. All are present.</p>
+
+      <div class="part-card">
+        <div class="pn">Part 1 of 7</div>
+        <div class="pt">Role / Context</div>
+        <div class="pd">Who you are. What the project is. Why this matters. Anchors AI to the right "register" — agency owner vs. junior copywriter vs. senior engineer.</div>
+        <div class="pe"><span class="pe-label">Example</span>You're helping me build the AI Advertiser SOP site. I run a media buying agency teaching students. The site is a teaching resource — tone is direct, no fluff. Code goes live on Vercel.</div>
+      </div>
+
+      <div class="part-card">
+        <div class="pn">Part 2 of 7</div>
+        <div class="pt">Goal</div>
+        <div class="pd">The exact outcome. One or two sentences. If you can't say it clearly, you don't know what you want — go back to Part 1 (Plan).</div>
+        <div class="pe"><span class="pe-label">Example</span>Write the landing page hero — eyebrow tag, h1, subtitle, primary CTA button.</div>
+      </div>
+
+      <div class="part-card">
+        <div class="pn">Part 3 of 7</div>
+        <div class="pt">Constraints</div>
+        <div class="pd">What NOT to do. Scope boundaries. Tech to use or avoid. Best operators specify "don't" as often as "do."</div>
+        <div class="pe"><span class="pe-label">Example</span>- No em dashes (I rewrite them anyway)
+- No "unlock / empower / leverage"
+- Static HTML only, no Next.js
+- Must fit above the fold on 13" laptop
+- Don't change anything outside the hero</div>
+      </div>
+
+      <div class="part-card">
+        <div class="pn">Part 4 of 7</div>
+        <div class="pt">Inputs</div>
+        <div class="pd">Everything AI needs to do this well. Files. Examples. Brand. URLs. Sample data. Without inputs, AI guesses wrongly. With inputs, AI extrapolates from your real patterns.</div>
+        <div class="pe"><span class="pe-label">Example</span>- Existing site for visual reference: [paste path]
+- Brand voice: anti-guru, direct, agency-owner energy
+- Audience: agency owners running 5-20 clients
+- CSS variables: --orange: #3B82F6; --bg: #0A0A0A</div>
+      </div>
+
+      <div class="part-card">
+        <div class="pn">Part 5 of 7</div>
+        <div class="pt">Output Format</div>
+        <div class="pd">The exact shape. HTML? JSON? Markdown? Code block? File path? Vague format = vague output. Specify down to indentation.</div>
+        <div class="pe"><span class="pe-label">Example</span>Output: clean HTML snippet, inline styles only (no separate CSS), semantic tags (h1 not div). Wrap in a single &lt;section&gt;. No comments in the output.</div>
+      </div>
+
+      <div class="part-card">
+        <div class="pn">Part 6 of 7</div>
+        <div class="pt">Examples</div>
+        <div class="pd">One example is worth 500 words of explanation. 1-3 examples max — more confuses.</div>
+        <div class="pe"><span class="pe-label">Example</span>Match this energy: [paste 1-2 hero sections you love]
+NOT this energy: [paste 1 you hate, so AI knows what to avoid]</div>
+      </div>
+
+      <div class="part-card">
+        <div class="pn">Part 7 of 7</div>
+        <div class="pt">Evaluation</div>
+        <div class="pd">How AI should self-check before answering. The secret weapon. Catches half your revisions before they happen.</div>
+        <div class="pe"><span class="pe-label">Example</span>Before answering, confirm:
+1. No em dashes
+2. Hero fits above the fold (under 600px tall)
+3. Accent color is #3B82F6
+4. No "unlock/empower/leverage"
+5. CTA button is high-contrast</div>
+      </div>
+    </div>
+
+    <!-- 2.3 3 Rules -->
+    <div class="section">
+      <h2><span class="icon">📐</span> 2.3 The 3 Rules That Make or Break Prompts</h2>
+
+      <div class="rule">
+        <div class="rn">Rule 1</div>
+        <div class="rt">Show, don't tell.</div>
+        <div class="rd">One example beats 500 words. "Write in my voice" is weak. "Write in this voice: [paste 3 paragraphs of your stuff]" is strong. Always.</div>
+      </div>
+
+      <div class="rule">
+        <div class="rn">Rule 2</div>
+        <div class="rt">Specify the format.</div>
+        <div class="rd">Vague format = vague output. "Give me a summary" → unstructured paragraph. "Give me a 3-bullet summary, each bullet under 15 words, no preamble" → exactly what you want.</div>
+      </div>
+
+      <div class="rule">
+        <div class="rn">Rule 3</div>
+        <div class="rt">State the test.</div>
+        <div class="rd">Telling AI what success looks like makes it self-check. The Eval section isn't optional — it's the difference between 60% output and 95% output.</div>
+      </div>
+    </div>
+
+    <!-- 2.4 Template -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 2.4 The Template (Copy + Paste)</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Save this somewhere you can reach in one keystroke.</p>
+
+      <div class="prompt-box"><span class="copy-hint">COPY ALL</span><span class="k">ROLE / CONTEXT:</span>
+[Who I am. What the project is. What's at stake. What "good" means.]
+
+<span class="k">GOAL:</span>
+[The exact outcome — 1 or 2 sentences.]
+
+<span class="k">CONSTRAINTS:</span>
+- [What NOT to do]
+- [Tech to use / avoid]
+- [Scope boundary]
+- [Time / size budget]
+
+<span class="k">INPUTS:</span>
+[Files, URLs, examples, brand voice, sample data — front-load it.]
+
+<span class="k">OUTPUT FORMAT:</span>
+[Exact shape — HTML / JSON / markdown / code block.]
+
+<span class="k">EXAMPLES:</span>
+[1-3 examples of what right looks like. Show, don't tell.]
+
+<span class="k">EVALUATION:</span>
+Before answering, confirm:
+1. [Check 1]
+2. [Check 2]
+3. [Check 3]</div>
+    </div>
+
+    <!-- 2.5 3 Real Prompts -->
+    <div class="section">
+      <h2><span class="icon">🧪</span> 2.5 Three Real Prompts I've Shipped (Steal These)</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:20px;">Real prompts from real builds. Notice how the 7 parts show up every time, just dressed differently.</p>
+
+      <div style="color:#fff;font-weight:700;font-size:0.92rem;margin-bottom:10px;">🔹 Prompt A — Generate ad copy variations</div>
+      <div class="prompt-box"><span class="copy-hint">A</span><span class="k">CONTEXT:</span> You're a senior media buyer writing Meta ads for a roofing client in Tampa, FL.
+
+<span class="k">GOAL:</span> Generate 6 short Meta ad copy variations (under 90 chars primary text + 40 char headline) for a $0-out-of-pocket insurance roof replacement offer.
+
+<span class="k">CONSTRAINTS:</span>
+- No em dashes, no "unlock/empower"
+- Each variation = different angle (urgency, social proof, fear, benefit, authority, story)
+- Tampa-specific where it fits
+- No fake stats — only credible numbers like "300+ roofs done"
+
+<span class="k">INPUTS:</span>
+- Niche: residential roofing, storm/insurance focus
+- Offer: free drone inspection, insurance handles claim, $0 out of pocket
+- Trust signals: licensed/bonded/insured, lifetime warranty, 300+ local roofs
+
+<span class="k">FORMAT:</span> Markdown table — Angle | Primary Text | Headline.
+
+<span class="k">EXAMPLES:</span> Match the energy of this winning ad: [paste your control ad]
+
+<span class="k">EVALUATION:</span> Before answering, confirm:
+1. Each row has a different angle
+2. No copy exceeds char limits
+3. Tampa appears in 2+ variations
+4. No em dashes, no "unlock/empower"</div>
+
+      <div style="color:#fff;font-weight:700;font-size:0.92rem;margin:30px 0 10px;">🔹 Prompt B — Audit a Meta ad account</div>
+      <div class="prompt-box"><span class="copy-hint">B</span><span class="k">CONTEXT:</span> Senior media buyer doing a paid audit for a prospect. Deliverable goes to the prospect — it's the work that closes them.
+
+<span class="k">GOAL:</span> Audit the last 30 days of this Meta ad account. 1-page report: 3 wins, 3 problems, 3 specific tests for next week.
+
+<span class="k">CONSTRAINTS:</span>
+- Plain English, no jargon
+- Specific to THIS account — no generic advice
+- Every claim backed by a number from the account
+- Under 1 page (about 600 words)
+
+<span class="k">INPUTS:</span>
+- Ad account ID: act_XXXXX
+- Date range: last 30 days
+- Industry: dental practice, $40 target CPL
+- Audit framework: [paste your standard checklist]
+
+<span class="k">FORMAT:</span> Markdown doc, 3 sections (Wins, Problems, Tests). Each section: 3 bullets. Each bullet: headline + 2-sentence detail + 1 supporting metric.
+
+<span class="k">EXAMPLES:</span> Match the structure of this past audit: [paste]
+
+<span class="k">EVALUATION:</span> Confirm:
+1. All 9 bullets have a specific metric
+2. No generic advice — all account-specific
+3. Total under 600 words
+4. The 3 tests are concrete (variable, hypothesis, success metric)</div>
+
+      <div style="color:#fff;font-weight:700;font-size:0.92rem;margin:30px 0 10px;">🔹 Prompt C — Build a custom internal tool (Claude Code)</div>
+      <div class="prompt-box"><span class="copy-hint">C</span><span class="k">CONTEXT:</span> Small internal tool for my media buying agency. Single user. Lives locally. Node.js + a single HTML file.
+
+<span class="k">GOAL:</span> CLI script that reads a CSV of leads, deduplicates by email + phone, scores each one (0-100) based on reviews/rating/recency, outputs a sorted CSV ready for cold outreach.
+
+<span class="k">CONSTRAINTS:</span>
+- One Node.js file, &lt;200 lines
+- No dependencies beyond `papaparse`
+- Don't refactor anything in the repo
+- Don't add tests — one-off
+- Time-box: 30 min
+
+<span class="k">INPUTS:</span>
+- Sample CSV: /Users/me/leads/sample.csv
+- Scoring: review_count (40 pts) + rating (30 pts) + has_email (20) + has_phone (10)
+- Output path: /Users/me/leads/sample_scored.csv
+
+<span class="k">FORMAT:</span> Single Node.js file at `tools/score-leads.js`. 5-line usage comment at top.
+
+<span class="k">EXAMPLES:</span> Match style of: tools/clean-emails.js
+
+<span class="k">EVALUATION:</span> Confirm:
+1. Runs end-to-end on sample CSV without errors
+2. Output CSV has score column, sorted descending
+3. Under 200 lines
+4. No new deps beyond papaparse</div>
+    </div>
+
+    <!-- 2.6 Prompt checklist -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 2.6 Prompt Checklist</h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="pr1"><label class="check-content" for="pr1"><strong>Memorized the 7 parts</strong><span>Role · Goal · Constraints · Inputs · Format · Examples · Eval. Should be reciteable.</span></label></li>
+        <li><input type="checkbox" id="pr2"><label class="check-content" for="pr2"><strong>Saved the template somewhere reachable in 2 seconds</strong><span>Notion, Apple Notes, text expander, Claude Code skill.</span></label></li>
+        <li><input type="checkbox" id="pr3"><label class="check-content" for="pr3"><strong>Rewrote one typical prompt using the 7-part structure</strong><span>Take a prompt from yesterday. Restructure. Run both. Compare.</span></label></li>
+        <li><input type="checkbox" id="pr4"><label class="check-content" for="pr4"><strong>Added an Evaluation block to your next 3 prompts</strong><span>Even just 2-3 self-check items. Kills most revision rounds.</span></label></li>
+        <li><input type="checkbox" id="pr5"><label class="check-content" for="pr5"><strong>Stole one of the 3 example prompts (A/B/C) and ran it</strong><span>Adapt to your niche. See it work.</span></label></li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- PART 3: ITERATE                                -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <span class="anchor-offset" id="iterate"></span>
+    <div class="part-divider">
+      <div class="pn">Part 03 · Refinement</div>
+      <h2>Iterate to Perfect</h2>
+      <div class="pd-sub">First drafts are always 60%. The 4 moves (Critique · Show · Add · Reset), the self-review rubric, and how to capture wins so you never re-invent.</div>
+    </div>
+
+    <!-- 3.1 60% truth -->
+    <div class="section">
+      <h2><span class="icon">💯</span> 3.1 The First Draft Is Always 60%</h2>
+      <div class="gauge">
+        <div class="pct">60%</div>
+        <div class="lbl"><strong style="color:#fff;">AI's first pass is usually 60% there.</strong> Not 100. Not 0. Sixty. That's the baseline. Trying to one-shot perfection is the most common amateur mistake.</div>
+      </div>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin:18px 0;"><strong style="color:#fff;">Pros expect iteration.</strong> They prompt the first draft KNOWING they'll refine. Beginners give up after one pass and conclude "AI sucks." Operators run the loop.</p>
+    </div>
+
+    <!-- 3.2 4 moves -->
+    <div class="section">
+      <h2><span class="icon">🔁</span> 3.2 The 4 Refinement Moves</h2>
+
+      <div class="move">
+        <div class="mn">Move 1</div>
+        <div class="mt">🔍 CRITIQUE — Ask AI to find its own flaws</div>
+        <div class="md">Before you spot the problems, ask AI to spot them. Models are surprisingly good at critiquing themselves when framed adversarially.</div>
+        <div class="when"><strong>Use when:</strong> you have a draft and you can tell something's off but can't pin it down.</div>
+        <div class="mp"><span class="mp-label">Steal this prompt</span>Critique this output as if you're a skeptical senior strategist reviewing it before it ships. What's missing? What's weakest? What did you skip? Be brutal — I'd rather hear it from you than from the client.</div>
+      </div>
+
+      <div class="move">
+        <div class="mn">Move 2</div>
+        <div class="mt">👁️ SHOW — Show AI exactly what's wrong</div>
+        <div class="md">Don't say "make it better." Show the bad output, point at the specific issue, explain why it's wrong, say what to keep.</div>
+        <div class="when"><strong>Use when:</strong> AI delivered something almost right and you can articulate the issue.</div>
+        <div class="mp"><span class="mp-label">Steal this prompt</span>Here's your output: [paste]. The issue is in [section X]. Specifically [the headline is too generic / the tone shifted to corporate]. Fix that. Keep everything else exactly as is.</div>
+      </div>
+
+      <div class="move">
+        <div class="mn">Move 3</div>
+        <div class="mt">➕ ADD — Extend instead of restarting</div>
+        <div class="md">When something's missing, don't restart. Don't re-explain. Add to the conversation. Preserves context and builds on what works.</div>
+        <div class="when"><strong>Use when:</strong> the output is good but incomplete.</div>
+        <div class="mp"><span class="mp-label">Steal this prompt</span>Good — keep that. Now add: a third variation that targets first-time home buyers specifically. Same constraints as before. Don't change the first two.</div>
+      </div>
+
+      <div class="move">
+        <div class="mn">Move 4</div>
+        <div class="mt">🔄 RESET — Start fresh with everything you learned</div>
+        <div class="md">Sometimes the conversation gets stuck. Open a new chat. Write a NEW prompt baking in everything from the failed rounds. Fastest path forward, not slowest.</div>
+        <div class="when"><strong>Use when:</strong> 3+ rounds and not converging.</div>
+        <div class="mp"><span class="mp-label">Steal this prompt</span>[New chat. Write a fresh 7-part prompt that includes:]
+- The original goal
+- All constraints you discovered are important
+- Examples of wrong outputs and what was wrong
+- An explicit "don't do X" list based on what you learned</div>
+      </div>
+
+      <div style="background:rgba(234,179,8,0.06);border:1px solid rgba(234,179,8,0.2);border-radius:10px;padding:16px 20px;margin-top:16px;">
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:#eab308;">💡 Order of use:</strong> Critique → Show → Add → Reset. Move down only if the current move doesn't fix it. Most builds end at Show. Reset is a last resort, not a first instinct.</p>
+      </div>
+    </div>
+
+    <!-- 3.3 Self-review rubric -->
+    <div class="section">
+      <h2><span class="icon">🪞</span> 3.3 The Self-Review Rubric (Before You Ship)</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Before AI output goes to a client, student, or the public, run it through this 4-question check. If any answer is "no," fix it. <strong style="color:#fff;">Don't ship and apologize.</strong></p>
+
+      <table class="rubric">
+        <thead><tr><th>Check</th><th>Question</th></tr></thead>
+        <tbody>
+          <tr><td>Instruction match</td><td>Does this do EXACTLY what was asked? Not 80%. Exactly.</td></tr>
+          <tr><td>Completeness</td><td>Is anything missing? Did AI skip a section, a constraint, an edge case?</td></tr>
+          <tr><td>Voice / tone</td><td>Does it sound like ME (or my brand)? Or did it drift into corporate AI voice?</td></tr>
+          <tr><td>AI pattern scan</td><td>Em dashes? Triple structures? "Unlock / empower / leverage"? "Let's dive in"? Scrub them.</td></tr>
+        </tbody>
+      </table>
+
+      <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:16px 20px;margin-top:16px;">
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:#22c55e;">🏆 This rubric lives in my CLAUDE.md.</strong> It runs on every conversation I have with Claude Code. Put it in yours too — it becomes automatic.</p>
+      </div>
+    </div>
+
+    <!-- 3.4 Capture the win -->
+    <div class="section">
+      <h2><span class="icon">💾</span> 3.4 Capture the Win — So You Never Re-Invent</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">When a prompt finally works, the job isn't done. It's done when the prompt is <strong style="color:#fff;">saved, named, and reachable in 5 seconds next time.</strong> Otherwise next week you're re-inventing the same wheel.</p>
+
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px 18px;margin-bottom:10px;">
+        <div style="color:#3B82F6;font-weight:700;font-size:0.85rem;">1. Save to your SOP folder</div>
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:6px 0 0;">Drop the prompt into <code style="color:#fff;">/sops/[name].md</code>. Title it clearly. Include context for when to use it.</p>
+      </div>
+
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px 18px;margin-bottom:10px;">
+        <div style="color:#3B82F6;font-weight:700;font-size:0.85rem;">2. Turn it into a Claude Code skill</div>
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:6px 0 0;">If you'll use it regularly, make it a skill (folder under <code style="color:#fff;">.claude/skills/</code>). Trigger with a slash command. 5-second activation.</p>
+      </div>
+
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px 18px;margin-bottom:10px;">
+        <div style="color:#3B82F6;font-weight:700;font-size:0.85rem;">3. Add it to your team's library</div>
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:6px 0 0;">Notion page or shared GitHub repo of "tested prompts." Knowledge compounds across the agency, not just for you.</p>
+      </div>
+
+      <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:16px 20px;margin-top:16px;">
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:#3B82F6;">🧠 The compounding effect:</strong> Each saved prompt cuts 20-30 minutes off the next time. Save 5 prompts a month → 100+ hours/year. This is how operators outpace prompters by 10× — never re-doing work.</p>
+      </div>
+    </div>
+
+    <!-- 3.5 When to stop -->
+    <div class="section">
+      <h2><span class="icon">⚠️</span> 3.5 When to Stop Iterating</h2>
+      <p style="color:#ccc;font-size:0.95rem;line-height:1.7;margin-bottom:16px;">Iteration is the work. But iteration without convergence is grinding. If you've done <strong style="color:#fff;">5+ rounds and it's not getting better</strong>, stop. The problem isn't AI — it's the brief.</p>
+      <ul style="color:#ccc;font-size:0.9rem;line-height:1.8;margin-left:20px;">
+        <li><strong style="color:#fff;">The goal was vague.</strong> "Done looks like" was never specific in your planning. AI is guessing.</li>
+        <li><strong style="color:#fff;">The constraints were missing.</strong> AI is drifting. Add 3-5 "don't" rules.</li>
+        <li><strong style="color:#fff;">The inputs were wrong.</strong> Bad examples / brand voice in. Weird out.</li>
+      </ul>
+      <div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:16px 20px;margin-top:16px;">
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:#ef4444;">🚨 The move:</strong> Stop iterating. Go back to Part 1 (Plan). Re-answer the 4 questions with what you've learned. Then write a fresh prompt from scratch. This feels like going backward — it's the fastest path forward.</p>
+      </div>
+    </div>
+
+    <!-- 3.6 Iterate checklist -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 3.6 Iterate Checklist</h2>
+      <ul class="checklist">
+        <li><input type="checkbox" id="i1"><label class="check-content" for="i1"><strong>Accepted that first drafts are 60% — iteration IS the work</strong><span>Stop expecting one-shot perfection. Plan for 2-4 refinement rounds.</span></label></li>
+        <li><input type="checkbox" id="i2"><label class="check-content" for="i2"><strong>Used the Critique move at least once this week</strong><span>Got AI to find its own flaws.</span></label></li>
+        <li><input type="checkbox" id="i3"><label class="check-content" for="i3"><strong>Put the Self-Review rubric in your CLAUDE.md or system prompt</strong><span>AI auto-self-checks against the 4 questions on every output.</span></label></li>
+        <li><input type="checkbox" id="i4"><label class="check-content" for="i4"><strong>Captured at least 1 winning prompt as an SOP or skill</strong><span>Saved. Named. Reachable in 5 seconds.</span></label></li>
+        <li><input type="checkbox" id="i5"><label class="check-content" for="i5"><strong>Built and shipped 1 thing using the full loop</strong><span>A real deliverable. Even small. The system only works if you run it.</span></label></li>
+      </ul>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- THE FULL LOOP                                  -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="part-divider" style="margin-top:60px;">
+      <div class="pn">The Whole System</div>
+      <h2>Plan → Prompt → Iterate → Review → Capture</h2>
+      <div class="pd-sub">That's the chain. Memorize it. Run it on every meaningful AI task. Watch your output quality 10× in a week.</div>
+    </div>
+
+    <div class="section">
+      <div style="background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px;">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;">
+          <div style="text-align:center;background:#161616;border-radius:8px;padding:14px 18px;min-width:110px;">
+            <div style="font-size:1.5rem;">📋</div>
+            <div style="color:#fff;font-weight:700;font-size:0.78rem;margin-top:4px;">PLAN</div>
+            <div style="color:#666;font-size:0.66rem;">4 Qs + brief</div>
+          </div>
+          <div style="color:#444;font-size:1.2rem;">→</div>
+          <div style="text-align:center;background:#161616;border-radius:8px;padding:14px 18px;min-width:110px;">
+            <div style="font-size:1.5rem;">🧬</div>
+            <div style="color:#fff;font-weight:700;font-size:0.78rem;margin-top:4px;">PROMPT</div>
+            <div style="color:#666;font-size:0.66rem;">7-part structure</div>
+          </div>
+          <div style="color:#444;font-size:1.2rem;">→</div>
+          <div style="text-align:center;background:#161616;border-radius:8px;padding:14px 18px;min-width:110px;">
+            <div style="font-size:1.5rem;">🔁</div>
+            <div style="color:#fff;font-weight:700;font-size:0.78rem;margin-top:4px;">ITERATE</div>
+            <div style="color:#666;font-size:0.66rem;">Critique · Show · Add · Reset</div>
+          </div>
+          <div style="color:#444;font-size:1.2rem;">→</div>
+          <div style="text-align:center;background:#161616;border-radius:8px;padding:14px 18px;min-width:110px;">
+            <div style="font-size:1.5rem;">🪞</div>
+            <div style="color:#fff;font-weight:700;font-size:0.78rem;margin-top:4px;">REVIEW</div>
+            <div style="color:#666;font-size:0.66rem;">4-Q rubric</div>
+          </div>
+          <div style="color:#444;font-size:1.2rem;">→</div>
+          <div style="text-align:center;background:#161616;border-radius:8px;padding:14px 18px;min-width:110px;">
+            <div style="font-size:1.5rem;">💾</div>
+            <div style="color:#fff;font-weight:700;font-size:0.78rem;margin-top:4px;">CAPTURE</div>
+            <div style="color:#666;font-size:0.66rem;">Save · skill · share</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai-operator</span><span>planning</span><span>prompt-anatomy</span><span>iteration</span><span>self-review</span><span>knowledge-capture</span><span>claude-code</span></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="margin-top:60px;text-align:center;color:#666;font-size:14px;border-top:1px solid rgba(255,255,255,0.05);padding-top:30px;">
+      <p style="margin-bottom:8px;">Made for AI Advertiser students · by Rodrigo Krueger</p>
+      <p>Tools I use: <a href="__BASE44_AFFILIATE_LINK__" target="_blank" style="color:#3B82F6;text-decoration:none;font-weight:600;">Base44</a> for no-code apps · Claude Code for everything else</p>
+    </div>
+  </div>
+
+  <script>
+    // Combined checklist progress (all checkboxes on the page)
+    const STORAGE_KEY = 'ai-adv-sop-v2-single-page';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function persist() {
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', persist));
+
+    // Smooth scroll for TOC
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <defs>
+    <linearGradient id="vx-bg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9b59b6"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="vx-glow" x1="40" y1="0" x2="40" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="80" height="80" rx="16" fill="#0d0d0d"/>
+  <rect width="80" height="80" rx="16" fill="url(#vx-glow)"/>
+  <rect x="2" y="2" width="76" height="76" rx="14" fill="none" stroke="url(#vx-bg)" stroke-width="2" opacity="0.6"/>
+  <!-- Spiral vortex -->
+  <path d="M40 40 Q48 32, 52 40 Q56 48, 48 52 Q40 56, 36 48 Q32 40, 40 36 Q48 32, 54 38 Q60 44, 52 54 Q44 62, 34 54 Q26 46, 34 34 Q42 26, 56 36" fill="none" stroke="url(#vx-bg)" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+  <!-- Outer ring -->
+  <circle cx="40" cy="40" r="26" fill="none" stroke="#7c3aed" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 4"/>
+  <!-- Center eye -->
+  <circle cx="40" cy="40" r="8" fill="none" stroke="#a78bfa" stroke-width="2"/>
+  <circle cx="40" cy="40" r="3.5" fill="#a78bfa"/>
+  <circle cx="41" cy="39" r="1.5" fill="#fff" opacity="0.8"/>
+  <!-- Scan lines -->
+  <line x1="40" y1="12" x2="40" y2="20" stroke="#9b59b6" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <line x1="40" y1="60" x2="40" y2="68" stroke="#9b59b6" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <line x1="12" y1="40" x2="20" y2="40" stroke="#9b59b6" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+  <line x1="60" y1="40" x2="68" y2="40" stroke="#9b59b6" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+</svg>

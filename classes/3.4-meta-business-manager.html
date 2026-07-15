@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.4: Setting Up Meta Business Manager — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .click-step .click-path { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; font-family: 'SF Mono', monospace; font-size: 0.85rem; color: #3B82F6; margin-bottom: 12px; display: inline-block; }
+    .click-step .click-path span { color: #666; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .scenario-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 20px; margin-bottom: 12px; }
+    .scenario-card h4 { color: #3B82F6; margin: 0 0 6px 0; font-size: 0.95rem; }
+    .scenario-card p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.4 — Module 3: Fulfillment</div>
+      <h1>Setting Up <span>Meta Business Manager</span></h1>
+      <div class="subtitle">
+        <span class="tag">Meta Ads</span>
+        <span class="tag">Screen Share</span>
+        <span class="tag">~20 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Do this lesson with your laptop open. Follow along click by click. By the end you'll have a fully set up Business Manager with an ad account ready to run ads. Don't skip steps — one wrong setting and your account gets restricted.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: BEFORE YOU START           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 1. Before You Start — What You Need</h2>
+
+      <div class="card">
+        <h3>Have These Ready</h3>
+        <ul>
+          <li><strong style="color: #fff;">A personal Facebook account</strong> — BM is linked to your personal account. It won't show your personal stuff to clients. It's just how Meta verifies you're a real person.</li>
+          <li><strong style="color: #fff;">A business email</strong> — Use your agency email (e.g. brez@youragency.com), not your personal Gmail. Looks professional when adding clients.</li>
+          <li><strong style="color: #fff;">Your agency name</strong> — Whatever you set up in lesson 0.2. This is what clients see when you request access to their stuff.</li>
+          <li><strong style="color: #fff;">A credit card or debit card</strong> — For your own ad account's payment method. Client accounts use THEIR card.</li>
+        </ul>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>⚠️ NEVER use a fake name or fake business on your BM.</strong> Meta will ban you permanently. Use your real info. They verify it.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: CREATE YOUR BM             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏗️</span> 2. Create Your Business Manager</h2>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Go to business.facebook.com</h4>
+        <div class="click-path">business.facebook.com <span>→</span> Create Account</div>
+        <p>Open this URL in your browser. If you're logged into Facebook, you'll see a "Create Account" button. If you already have a BM from a past project, you can use that one — skip to Section 3.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Enter your business details</h4>
+        <p>Three fields:</p>
+        <ul style="color: #ccc; font-size: 0.92rem; line-height: 1.8; margin: 8px 0; padding-left: 20px;">
+          <li><strong style="color: #fff;">Business name:</strong> Your agency name (e.g. "Brez Media" or "AI Advertiser Agency")</li>
+          <li><strong style="color: #fff;">Your name:</strong> Your real full name</li>
+          <li><strong style="color: #fff;">Business email:</strong> Your agency email</li>
+        </ul>
+        <p>Click "Submit." Meta sends a verification email.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Verify your email</h4>
+        <p>Check your inbox (and spam folder). Click the verification link. You're now inside Business Manager.</p>
+        <div class="tip-box">
+          <p><strong>💡 Bookmark this:</strong> business.facebook.com/latest/home — this is your BM dashboard. You'll live here.</p>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 4">
+        <h4>Complete business verification (do this NOW, not later)</h4>
+        <div class="click-path">Business Settings <span>→</span> Security Center <span>→</span> Start Verification</div>
+        <p>Meta requires business verification to run ads at scale. Upload your business documents (LLC paperwork, EIN letter, or utility bill with business name). This takes 1-5 business days to approve.</p>
+        <div class="warning-box">
+          <p><strong>⚠️ Don't skip this.</strong> Without verification, your ad accounts have lower spending limits and are more likely to get restricted. Do it on day 1 so it's approved by the time you need it.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: CREATE AD ACCOUNT          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💳</span> 3. Create Your Ad Account</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Your first ad account is for YOU — learning and testing. You'll practice running small campaigns here before touching a client's account. When you get a real client, you'll manage their ad account inside THEIR Business Manager (Section 6 explains how).
+      </p>
+
+      <div class="click-step" data-step="Step 5">
+        <h4>Navigate to Ad Accounts</h4>
+        <div class="click-path">Business Settings <span>→</span> Accounts <span>→</span> Ad Accounts <span>→</span> Add</div>
+        <p>Click the blue "Add" dropdown. You'll see three options:</p>
+        <ul style="color: #ccc; font-size: 0.92rem; line-height: 1.8; margin: 8px 0; padding-left: 20px;">
+          <li><strong style="color: #3B82F6;">Create a New Ad Account</strong> — for YOUR agency or a new client</li>
+          <li><strong style="color: #888;">Request Access to an Ad Account</strong> — when a client already has one</li>
+          <li><strong style="color: #888;">Add an Ad Account</strong> — for claiming an existing account you own</li>
+        </ul>
+        <p>Click <strong>"Create a New Ad Account."</strong></p>
+      </div>
+
+      <div class="click-step" data-step="Step 6">
+        <h4>Configure the ad account</h4>
+        <ul style="color: #ccc; font-size: 0.92rem; line-height: 1.8; margin: 8px 0; padding-left: 20px;">
+          <li><strong style="color: #fff;">Account name:</strong> "[Your Agency] - Learning" for your first one. For clients: "[Agency] - [Client Name]"</li>
+          <li><strong style="color: #fff;">Time zone:</strong> Match the client's location. If Tony's Pizza is in Tampa, pick Eastern Time. This affects when daily budgets reset.</li>
+          <li><strong style="color: #fff;">Currency:</strong> USD (or whatever the client pays in). <span style="color: #ef4444; font-weight: 600;">You CANNOT change this later.</span></li>
+        </ul>
+      </div>
+
+      <div class="click-step" data-step="Step 7">
+        <h4>Set permissions</h4>
+        <p>Select <strong>"My business (Your Agency Name)"</strong> for who this ad account is for. Then add yourself as admin with <strong>all permissions toggled ON</strong>.</p>
+        <div class="tip-box">
+          <p><strong>💡 Pro tip:</strong> Always give yourself full admin access. If something breaks at 11pm, you don't want to be locked out of your own ad account.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: ADD PAYMENT                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💰</span> 4. Add Payment Method</h2>
+
+      <div class="click-step" data-step="Step 8">
+        <h4>Add your card</h4>
+        <div class="click-path">Business Settings <span>→</span> Payments <span>→</span> Add Payment Method</div>
+        <p>For your learning account, add your own credit card. For client accounts, the client adds their card — never put your personal card on a client's ad account.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+        <div class="scenario-card">
+          <h4>Scenario A: Client pays Meta directly</h4>
+          <p>Client adds their credit card to their ad account. You manage the ads, they pay for the spend. <strong style="color: #22c55e;">This is the standard setup.</strong> You charge your monthly fee separately via Stripe.</p>
+        </div>
+        <div class="scenario-card">
+          <h4>Scenario B: You front the ad spend</h4>
+          <p>You put your card on their ad account and invoice them for spend + your fee. <strong style="color: #eab308;">Only do this with trusted clients.</strong> Risk: client doesn't pay you back. Some agencies do this for a markup on spend (charge $500 for $300 in ads).</p>
+        </div>
+      </div>
+
+      <div class="warning-box" style="margin-top: 16px;">
+        <p><strong>⚠️ Start with Scenario A.</strong> Let the client pay Meta directly. You don't want to be chasing clients for ad spend money when you're just starting out.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: CONNECT PAGES              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📄</span> 5. Connect a Facebook Page</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Every ad runs under a Facebook Page. No page = no ads. Most clients already have one. If they don't, you'll create one for them.
+      </p>
+
+      <div class="click-step" data-step="Step 9">
+        <h4>Add the client's page to your BM</h4>
+        <div class="click-path">Business Settings <span>→</span> Accounts <span>→</span> Pages <span>→</span> Add</div>
+        <p>Three options again:</p>
+        <ul style="color: #ccc; font-size: 0.92rem; line-height: 1.8; margin: 8px 0; padding-left: 20px;">
+          <li><strong style="color: #3B82F6;">Add a Page</strong> — claim a page you own</li>
+          <li><strong style="color: #3B82F6;">Request Access to a Page</strong> — ask the client to grant you access (most common)</li>
+          <li><strong style="color: #888;">Create a New Page</strong> — if client doesn't have one</li>
+        </ul>
+        <p>For clients: use <strong>"Request Access."</strong> Enter the page name or URL. The client gets a notification to approve. Once approved, you can run ads under their page.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 10">
+        <h4>Connect Instagram (if they have one)</h4>
+        <div class="click-path">Business Settings <span>→</span> Accounts <span>→</span> Instagram Accounts <span>→</span> Add</div>
+        <p>Click "Connect Your Instagram Account." The client needs to log in and authorize. This lets you run Instagram ads (Feed, Stories, Reels) under their handle. If they don't have Instagram, skip it — Facebook-only ads still work fine.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: GETTING ACCESS TO CLIENTS  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🤝</span> 6. Getting Access to a Client's Ad Account</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px;">
+        The simplest way: the client adds your personal profile directly to their Business Manager. You log into their BM and manage their ads from there. That's it. No complicated partner setups.
+      </p>
+
+      <div style="background: #161616; border: 1px solid rgba(34,197,94,0.25); border-radius: 12px; padding: 24px; margin-bottom: 16px;">
+        <h4 style="color: #22c55e; margin: 0 0 12px 0;">✅ The Simple Method (Use This)</h4>
+        <div style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">
+          <p><strong style="color: #fff;">Client adds YOU to their Business Manager as a user.</strong></p>
+          <ol style="padding-left: 18px; margin: 8px 0;">
+            <li>Client goes to their Business Settings → People → Add</li>
+            <li>They type your email address</li>
+            <li>They give you access to their Ad Account (Manage Campaigns) + their Page</li>
+            <li>You accept the invite in your email</li>
+            <li>Done. You can now see their ad account when you log into Ads Manager.</li>
+          </ol>
+          <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px 18px; margin-top: 16px;">
+            <p style="margin: 0;"><strong style="color: #22c55e;">Copy-paste this message to your client:</strong></p>
+            <p style="margin: 8px 0 0; color: #fff; font-style: italic;">"Hey! To get started on your ads, I need access to your Facebook ad account. Here's what to do: Go to business.facebook.com → click Business Settings → People → Add → type in my email: [YOUR EMAIL]. Then give me access to your ad account and your Facebook page. Takes 2 minutes. Let me know if you need help!"</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 24px; margin-bottom: 16px;">
+        <h4 style="color: #3B82F6; margin: 0 0 12px 0;">🆕 What if the client has NOTHING set up?</h4>
+        <div style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">
+          <p><strong style="color: #fff;">More common than you'd think.</strong> Most local businesses don't have a Business Manager or an ad account.</p>
+          <ol style="padding-left: 18px; margin: 8px 0;">
+            <li>Help them create a Business Manager (walk them through Section 2 of this lesson on a call)</li>
+            <li>Help them create an ad account inside their BM</li>
+            <li>Create or connect their Facebook Page</li>
+            <li>Have them add their payment method</li>
+            <li>Have them add you as a user (People → Add → your email)</li>
+            <li>Now you manage everything, and they own everything</li>
+          </ol>
+          <p style="margin-top: 12px;"><strong style="color: #3B82F6;">Why this way:</strong> The client owns their own ad account, page, and data. If you part ways, nothing needs to be transferred. Clean and professional.</p>
+        </div>
+      </div>
+
+      <div style="background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 20px; margin-top: 16px;">
+        <h4 style="color: #3B82F6; margin: 0 0 8px 0;">📝 Note: When you hit 10-15+ clients</h4>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">
+          Logging in and out of 15 different Business Managers gets annoying fast. At that point, create your own agency BM and have clients add it as a <strong>Partner</strong> (Business Settings → Partners → Add → your BM ID). This lets you see all client ad accounts in one dashboard. But don't worry about this until you're at scale — the simple method works perfectly for your first 10 clients.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: COMMON MISTAKES            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚫</span> 7. Common Mistakes That Get You Banned</h2>
+
+      <div class="danger-box" style="margin-bottom: 12px;">
+        <p><strong>🔴 Using a fake personal account to create BM.</strong> Meta checks. They'll ban your BM and every ad account inside it. Use your real Facebook profile.</p>
+      </div>
+      <div class="danger-box" style="margin-bottom: 12px;">
+        <p><strong>🔴 Creating multiple BMs to get around a ban.</strong> Meta links them by IP, device, and payment method. They'll ban those too. If you get restricted, appeal — don't try to sneak around it.</p>
+      </div>
+      <div class="danger-box" style="margin-bottom: 12px;">
+        <p><strong>🔴 Setting the wrong timezone or currency.</strong> You can't change currency after creation. Wrong timezone means your daily budgets reset at the wrong time. Double check before clicking create.</p>
+      </div>
+      <div class="warning-box" style="margin-bottom: 12px;">
+        <p><strong>🟡 Not enabling two-factor authentication (2FA).</strong> Go to Business Settings → Security Center → turn on 2FA for everyone. If someone hacks your BM, they can drain every ad account inside it.</p>
+      </div>
+      <div class="warning-box" style="margin-bottom: 12px;">
+        <p><strong>🟡 Giving clients admin access to your BM.</strong> Only give clients access to THEIR ad account and THEIR page. Never full BM admin. They could accidentally (or intentionally) mess up your other clients' stuff.</p>
+      </div>
+      <div class="tip-box">
+        <p><strong>💡 Best practice:</strong> Add a second admin to your BM (a trusted partner, co-founder, or even a second email you own). If your main account gets locked out, the second admin can recover everything.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 8: QUICK REFERENCE            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🗺️</span> 8. BM Navigation Cheat Sheet</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Business Manager has a lot of menus. Here's where to find the stuff you'll actually use:
+      </p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(59,130,246,0.2); background: rgba(59,130,246,0.06);">
+          <div style="padding: 12px 20px; font-weight: 700; color: #3B82F6; font-size: 0.82rem;">I WANT TO...</div>
+          <div style="padding: 12px 20px; font-weight: 700; color: #3B82F6; font-size: 0.82rem;">GO HERE</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Create or manage ads</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Ads Manager (ads.facebook.com)</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Add/manage ad accounts</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Business Settings → Accounts → Ad Accounts</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Add/manage pages</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Business Settings → Accounts → Pages</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Set up or check the pixel</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Events Manager (facebook.com/events_manager)</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Add a partner/client</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Business Settings → Partners → Add</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Add payment method</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Business Settings → Payments</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Find your BM ID</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Business Settings → Business Info</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr;">
+          <div style="padding: 12px 20px; color: #fff; font-size: 0.88rem;">Turn on 2FA / security</div>
+          <div style="padding: 12px 20px; color: #ccc; font-size: 0.88rem; font-family: monospace;">Business Settings → Security Center</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 9: SETUP CHECKLIST            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 9. Do-It-With-Me Setup Checklist</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Open Business Manager right now and tick these off as you go. Don't move to lesson 3.5 until every box is checked.
+      </p>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Setup Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Created Business Manager account at business.facebook.com</strong>
+            <span>Used your real name, agency name, and business email. Verified email.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Started business verification in Security Center</strong>
+            <span>Uploaded LLC docs, EIN letter, or utility bill. Takes 1-5 days to approve.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Enabled two-factor authentication (2FA)</strong>
+            <span>Business Settings → Security Center → require 2FA for all users. Non-negotiable.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Created your first ad account</strong>
+            <span>Named it "[Your Agency] - Learning". Correct timezone. Correct currency (can't change later!).</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Added payment method to your learning ad account</strong>
+            <span>Your credit or debit card. You'll test with small amounts ($5-10/day) to learn.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Connected or created a Facebook Page</strong>
+            <span>Even a test page for now. You need one to run any ad.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Bookmarked business.facebook.com and ads.facebook.com</strong>
+            <span>You'll visit these every day. Make them easy to find.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c8">
+          <label class="check-content" for="c8">
+            <strong>Found and saved your Business Manager ID</strong>
+            <span>Business Settings → Business Info. Copy this number. You'll give it to clients when requesting access.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c9">
+          <label class="check-content" for="c9">
+            <strong>Added a backup admin (second email or trusted person)</strong>
+            <span>If your account gets locked, a backup admin can recover everything. Don't skip this.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>meta</span><span>business-manager</span><span>setup</span><span>screen-share</span><span>beginner</span><span>ad-account</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.3-ad-platforms.html" class="nav-link">← The Ad Platforms</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.5-the-pixel.html" class="nav-link">The Pixel →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-3.4-bm-setup-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

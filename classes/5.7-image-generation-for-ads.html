@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.7: Image Generation for Ads — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; color: #ccc; line-height: 1.7; white-space: pre-wrap; overflow-x: auto; }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+    .tool-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 12px; padding: 16px; text-align: center; }
+    .tool-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .tool-name { color: #fff; font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .tool-desc { color: #888; font-size: 0.82rem; line-height: 1.5; }
+    .niche-section { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px 20px; margin: 10px 0; }
+    .niche-title { color: #3B82F6; font-weight: 700; font-size: 0.9rem; margin-bottom: 8px; }
+    .formula-box { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .formula-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .formula-box code { color: #3B82F6; background: rgba(59,130,246,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.82rem; }
+    .canva-steps { counter-reset: canva; list-style: none; padding: 0; }
+    .canva-steps li { color: #ccc; font-size: 0.88rem; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 12px; }
+    .canva-steps li:last-child { border-bottom: none; }
+    .canva-steps li::before { counter-increment: canva; content: counter(canva); background: rgba(59,130,246,0.2); color: #3B82F6; font-weight: 700; font-size: 0.8rem; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .checklist { list-style: none; padding: 0; margin: 16px 0; }
+    .checklist li { color: #ccc; font-size: 0.88rem; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 10px; }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon { color: #3B82F6; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.7 — Module 5: AI Integration</div>
+      <h1>Image Generation <span>for Ads</span></h1>
+      <div class="subtitle">
+        <span class="tag">Creative</span>
+        <span class="tag">AI Images</span>
+        <span class="tag">~7 min read</span>
+      </div>
+    </div>
+
+    <div class="summary-box">You don't need a graphic designer. AI image generators can make product mockups, lifestyle shots, before/after visuals, and scroll-stopping ad images in minutes. This lesson covers the tools, prompting tricks, and 12 ready-to-use prompts for common niches.</div>
+
+    <!-- WHICH TOOL -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> Which Tool to Use</h2>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-icon">🧠</div>
+          <div class="tool-name">ChatGPT (DALL-E 3)</div>
+          <div class="tool-desc">Easiest to use. Just describe what you want. Start here.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon">🎨</div>
+          <div class="tool-name">Midjourney</div>
+          <div class="tool-desc">Better quality for lifestyle & aspirational images. Runs through Discord.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-icon">🎭</div>
+          <div class="tool-name">Leonardo AI</div>
+          <div class="tool-desc">Generous free tier. Good for product-style shots.</div>
+        </div>
+      </div>
+      <p style="color: #888; font-size: 0.85rem; margin-top: 8px;">We're focusing on ChatGPT since most of you already have it. The prompting principles work across all of them.</p>
+    </div>
+
+    <!-- PROMPTING RULES -->
+    <div class="section">
+      <h2><span class="icon">📐</span> Prompting Rules for Ad Images</h2>
+      <ul style="color: #ccc; font-size: 0.88rem; line-height: 2; padding-left: 20px;">
+        <li><strong style="color:#fff;">Be specific about the scene.</strong> Not "a person at a gym" but "a 30-year-old woman in a modern gym doing a dumbbell curl, smiling, wearing a black tank top, warm lighting and brick walls."</li>
+        <li><strong style="color:#fff;">Include the format.</strong> Say "square format for Instagram feed" or "vertical 9:16 for stories."</li>
+        <li><strong style="color:#fff;">Say what style you want.</strong> "Professional photo realistic" vs "flat illustration" vs "cinematic lighting" produce completely different results.</li>
+        <li><strong style="color:#fff;">Mention text placement.</strong> "Leave empty space in the top third for text" or "clean background on the left side for copy."</li>
+        <li><strong style="color:#fff;">No logos in the image.</strong> AI is terrible at text and logos. Generate clean and add text/logos in Canva after.</li>
+      </ul>
+    </div>
+
+    <!-- THE FORMULA -->
+    <div class="section">
+      <h2><span class="icon">🧪</span> The Prompting Formula</h2>
+      <div class="formula-box">
+        <p><code>[subject]</code> in <code>[setting/location]</code>, <code>[action/pose]</code>, <code>[style/mood]</code>, <code>[lighting]</code>, <code>[camera angle]</code>, <code>[format]</code>. <code>[additional details]</code>. Leave space for text overlay on <code>[position]</code>.</p>
+      </div>
+      <div class="code-block">A happy family eating pizza at a cozy Italian restaurant, warm golden
+lighting, shot from slightly above like a food blog photo, photo
+realistic, square format for Instagram. The restaurant has exposed
+brick and candles on the table. Leave empty space in the top portion
+for text overlay.</div>
+    </div>
+
+    <!-- 12 PROMPTS BY NICHE -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 12 Ready-to-Use Prompts by Niche</h2>
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-bottom: 16px;">Copy these. Change the details to match your client.</p>
+
+      <div class="niche-section">
+        <div class="niche-title">1. Restaurant / Pizza Shop</div>
+        <div class="code-block">A close-up of a fresh margherita pizza being pulled from a wood-fired oven with melting cheese stretching, steam rising, warm orange kitchen lighting, photo realistic, square format. Rustic Italian kitchen background slightly blurred.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">2. Gym / Fitness Studio</div>
+        <div class="code-block">A fit 28-year-old man doing battle ropes in a modern industrial gym, intense focused expression, dramatic side lighting, slight motion blur on the ropes, photo realistic, vertical 9:16 format. Dark moody atmosphere. Leave space at top for text.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">3. Dentist / Dental Practice</div>
+        <div class="code-block">A confident woman in her 30s smiling wide showing perfect white teeth, clean bright background with soft natural light, headshot style, photo realistic, square format. Genuinely happy, not staged. Soft bokeh in light blue tones.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">4. Med Spa / Beauty Clinic</div>
+        <div class="code-block">Close-up of a woman's face with glowing clear skin, soft studio lighting from the side, minimal makeup, calm relaxed expression, luxury aesthetic, photo realistic, square format. Clean white and gold background. Space on left for text.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">5. Real Estate Agent</div>
+        <div class="code-block">A young couple getting handed house keys in front of a modern suburban home, golden hour sunlight, genuine happy expressions, photo realistic, landscape 16:9. "Sold" sign slightly blurred in background.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">6. HVAC / Home Services</div>
+        <div class="code-block">A clean modern living room with a family relaxing on the couch looking comfortable, AC unit subtly visible on wall, warm cozy lighting, photo realistic, square format. Summer sunlight through windows but family looks cool.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">7. Barber Shop / Hair Salon</div>
+        <div class="code-block">A skilled barber doing a precise fade haircut on a young man, close-up side angle showing detail work, warm vintage lighting, exposed brick walls, photo realistic, square format. Barber focused, client relaxed.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">8. Dog Groomer / Pet Services</div>
+        <div class="code-block">An adorable golden retriever puppy just after grooming with a bow on its head, sitting on a grooming table looking at camera, clean white background, bright cheerful lighting, photo realistic, square format.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">9. Personal Injury Lawyer</div>
+        <div class="code-block">A concerned middle-aged person at a desk across from an attentive attorney, modern law office with bookshelves, warm serious lighting, photo realistic, landscape format. Empathetic mood, not aggressive.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">10. Auto Detailing</div>
+        <div class="code-block">A glossy black luxury sedan with perfect mirror-finish paint reflecting the sky, low angle in a clean parking lot, golden hour lighting, photo realistic, landscape 16:9. Water droplets on hood catching light.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">11. Yoga / Pilates Studio</div>
+        <div class="code-block">A woman doing yoga warrior pose in a bright airy studio with natural light through large windows, plants in background, calm peaceful mood, photo realistic, vertical 9:16. Wooden floors, minimal. Space at bottom for text.</div>
+      </div>
+
+      <div class="niche-section">
+        <div class="niche-title">12. Coffee Shop / Cafe</div>
+        <div class="code-block">A beautifully crafted latte with intricate latte art, sitting on a rustic wooden table, morning sunlight from the side, pastry blurred in background, overhead shot, photo realistic, square format. Cozy warm tones.</div>
+      </div>
+    </div>
+
+    <!-- CANVA STEP -->
+    <div class="section">
+      <h2><span class="icon">🎨</span> After You Generate: The Canva Step</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Your AI image is the background. The finished ad needs text:</p>
+      <ul class="canva-steps">
+        <li>Upload your AI-generated image</li>
+        <li>Add your headline text on top</li>
+        <li>Add a CTA button or text ("Book Now", "Claim Your Free Trial")</li>
+        <li>Drop in the client's logo</li>
+        <li>Export as PNG or JPG</li>
+      </ul>
+      <p style="color: #888; font-size: 0.85rem; margin-top: 12px;">Takes 5 minutes. Professional-looking ad creative that cost you $0 and no designer.</p>
+    </div>
+
+    <!-- BEFORE/AFTER -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> Before/After Prompts</h2>
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-bottom: 12px;">These work great for results-based businesses (med spas, detailing, landscaping):</p>
+      <div class="code-block">Create a side-by-side before and after image. Left side: [describe
+the "before" state]. Right side: [describe the "after" state]. Clean
+white divider line in the middle, "BEFORE" and "AFTER" labels at the
+top. Photo realistic, square format.</div>
+    </div>
+
+    <!-- COMMON MISTAKES -->
+    <div class="section">
+      <h2><span class="icon">⚠️</span> Common Mistakes</h2>
+      <div class="warning-box"><p><strong>⚠️ Don't put text in the AI image.</strong> It will look like gibberish. Always add text in Canva after.</p></div>
+      <div class="warning-box"><p><strong>⚠️ Don't use the first image you get.</strong> Generate 3-4 versions and pick the best one.</p></div>
+      <div class="warning-box"><p><strong>⚠️ Don't forget the format.</strong> If you need 1:1 square for feed ads, say it in the prompt. Cropping after always looks worse.</p></div>
+      <div class="warning-box"><p><strong>⚠️ Don't make it too perfect.</strong> Ads that look "real" outperform stock photos. "Candid shot" and "natural lighting" help a lot.</p></div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section">
+      <h2><span class="icon">✅</span> Checklist</h2>
+      <ul class="checklist">
+        <li><span class="check-icon">☐</span> Picked your image generation tool (ChatGPT recommended)</li>
+        <li><span class="check-icon">☐</span> Tried the prompting formula on one niche</li>
+        <li><span class="check-icon">☐</span> Generated at least 3 variations of one ad image</li>
+        <li><span class="check-icon">☐</span> Opened Canva and added text/logo/CTA to one image</li>
+        <li><span class="check-icon">☐</span> Saved your best prompts for reuse</li>
+        <li><span class="check-icon">☐</span> Generated a before/after image for a results-based niche</li>
+        <li><span class="check-icon">☐</span> Built a small library of 5+ ad images for one client</li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai</span><span>image-generation</span><span>dall-e</span><span>midjourney</span><span>canva</span><span>ad-creative</span><span>prompting</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.6-ai-ad-copy-creative-generation.html" class="nav-link">← AI Ad Copy</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.8-ai-video-animation-for-ads.html" class="nav-link">AI Video & Animation →</a>
+    </div>
+  </div>
+</body>
+</html>

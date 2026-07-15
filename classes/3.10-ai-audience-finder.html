@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.10: Targeting in the Andromeda Era — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .screen-link { display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; margin-bottom: 6px; }
+    .screen-link:hover { border-color: rgba(59,130,246,0.4); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.10 — Module 3: Fulfillment</div>
+      <h1>Targeting in the Andromeda Era — <span>Less Is More</span></h1>
+      <div class="subtitle">
+        <span class="tag">Andromeda</span>
+        <span class="tag">Targeting</span>
+        <span class="tag">~10 min</span>
+      </div>
+    </div>
+
+    <!-- Agent badge -->
+    <div style="display: flex; align-items: center; gap: 16px; background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.2); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px;">
+      <img src="../images/agents/nexus.svg" alt="Nexus" style="width: 56px; height: 56px; border-radius: 12px;">
+      <div>
+        <div style="color: #2563eb; font-weight: 800; font-size: 1rem;">NEXUS — Research & Verification</div>
+        <div style="color: #888; font-size: 0.85rem; margin-top: 2px;">This lesson is short on purpose. Andromeda changed everything about targeting. The old way is dead. What replaced it is simpler — but you have to understand WHY, or you'll waste time on stuff that doesn't matter anymore.</div>
+      </div>
+    </div>
+
+    <div class="summary-box">Stop spending hours building complex audiences. Under Andromeda, the algorithm finds your buyers through your creatives, not your targeting settings. For local businesses: set the radius, go broad, let the creative do the work.</div>
+
+    <!-- SCREENS TO OPEN -->
+    <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 0.95rem;">🖥️ Screens to Open</h3>
+      <a href="https://adsmanager.facebook.com/adsmanager/manage/adsets" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">1.</span>
+        <span><strong style="color: #fff;">Ads Manager — Ad Set Level</strong> — Where targeting lives. Show the audience section.</span>
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE OLD WAY IS DEAD        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💀</span> 1. The Old Way Is Dead</h2>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open Ads Manager → Ad Set → Audience section. Show the interest targeting dropdown. Then explain why most of it doesn't matter anymore.</span>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Before December 2024, media buyers spent <em>hours</em> on targeting. Interest stacking, lookalike audiences, custom combinations, exclusions — it was an art form. Then Meta launched Andromeda and made 90% of it irrelevant.</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden;">
+        <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch;">
+          <div style="padding: 24px;">
+            <div style="color: #ef4444; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">❌ OLD WAY (Pre-Andromeda)</div>
+            <div style="font-size: 0.82rem; line-height: 2; color: #888;">
+              <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">5+ interest groups per ad set</div>
+              <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">Lookalike audiences 1%, 3%, 5%</div>
+              <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">Behavior + interest stacking</div>
+              <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">Exclude existing customers</div>
+              <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">Separate ad sets per audience</div>
+              <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">Hours of audience research</div>
+            </div>
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.04);">
+              <div style="color: #ef4444; font-weight: 700; font-size: 0.82rem;">2-3 hours per client</div>
+              <div style="color: #666; font-size: 0.72rem;">And it barely mattered</div>
+            </div>
+          </div>
+          <div style="width: 1px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="background: #161616; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #666; font-weight: 800; font-size: 0.8rem; position: absolute;">VS</div>
+          </div>
+          <div style="padding: 24px;">
+            <div style="color: #22c55e; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">✅ NEW WAY (Andromeda)</div>
+            <div style="font-size: 0.82rem; line-height: 2; color: #ccc;">
+              <div><strong style="color: #22c55e;">Broad targeting</strong> (no interests)</div>
+              <div><strong style="color: #22c55e;">Location radius only</strong> (for local biz)</div>
+              <div><strong style="color: #22c55e;">Age range</strong> (if relevant — 25-65 is fine)</div>
+              <div><strong style="color: #22c55e;">That's it.</strong> Seriously.</div>
+              <div style="color: #666;">The algorithm finds buyers</div>
+              <div style="color: #666;">Through your creative diversity</div>
+            </div>
+            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.04);">
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem;">5 minutes per client</div>
+              <div style="color: #888; font-size: 0.72rem;">And it performs better</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: WHY BROAD WORKS            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> 2. Why Broad Targeting Wins</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This is the hardest thing for new media buyers to accept. It feels wrong to NOT target. But here's the math:</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="color: #3B82F6; font-weight: 800; font-size: 1.8rem;">10,000x</div>
+          <div style="color: #888; font-size: 0.78rem; margin-top: 4px;">More ad candidates Andromeda evaluates per auction</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="color: #22c55e; font-weight: 800; font-size: 1.8rem;">3.1B</div>
+          <div style="color: #888; font-size: 0.78rem; margin-top: 4px;">Daily active users Meta can search through for your buyer</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(139,92,246,0.2); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="color: #a78bfa; font-weight: 800; font-size: 1.8rem;">+22%</div>
+          <div style="color: #888; font-size: 0.78rem; margin-top: 4px;">ROAS improvement with Advantage+ broad targeting</div>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(37,99,235,0.02)); border: 1px solid rgba(37,99,235,0.3); border-radius: 14px; padding: 24px;">
+        <div style="color: #2563eb; font-weight: 800; font-size: 0.95rem; margin-bottom: 10px;">The Logic</div>
+        <p style="color: #ccc; font-size: 0.92rem; line-height: 1.7; margin: 0 0 12px 0;">When you add interest targeting, you're telling Meta: "Only show my ads to people who like [pizza]." But Meta already knows who likes pizza — and it knows a LOT more than the interest categories you can select.</p>
+        <p style="color: #ccc; font-size: 0.92rem; line-height: 1.7; margin: 0 0 12px 0;">By going broad, you're saying: "Here are 20 different ads with 20 different angles. Show them to whoever responds." The algorithm learns from every impression which PEOPLE respond to which CREATIVES — and it optimizes in real time.</p>
+        <p style="color: #fff; font-size: 0.92rem; line-height: 1.7; margin: 0; font-weight: 600;">Your creatives ARE the targeting. A pizza ad showing a family dinner targets families. The same pizza ad about late-night munchies targets college students. The algorithm figures this out automatically — faster and better than you ever could manually.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: LOCAL BIZ TARGETING        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📍</span> 3. The Only Targeting That Matters: Location</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">For local businesses, there's ONE targeting setting you actually need: <strong style="color: #fff;">location radius</strong>. A pizza shop in Miami doesn't need to reach people in New York. Everything else? Leave it broad.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: In Ads Manager → Ad Set → Audience → Locations. Type the business address. Set the radius. Show the map with the circle. That's it — that's the whole targeting setup.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px;">
+        <div style="color: #fff; font-weight: 800; font-size: 0.95rem; margin-bottom: 16px;">🎯 The Setup (Takes 2 Minutes)</div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- Step 1 -->
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: #2563eb; color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;">1</div>
+            <div>
+              <div style="color: #fff; font-weight: 700; font-size: 0.88rem;">Location → Drop pin or type address</div>
+              <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">Use the business address. Select "People living in or recently in this location."</div>
+            </div>
+          </div>
+          <!-- Step 2 -->
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: #2563eb; color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;">2</div>
+            <div>
+              <div style="color: #fff; font-weight: 700; font-size: 0.88rem;">Set radius</div>
+              <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">Use the guide below. Depends on the type of business.</div>
+            </div>
+          </div>
+          <!-- Step 3 -->
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: #2563eb; color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;">3</div>
+            <div>
+              <div style="color: #fff; font-weight: 700; font-size: 0.88rem;">Age range (optional)</div>
+              <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">Only if it makes sense. A bar = 21+. A retirement home = 55+. A pizza shop? Leave it 18-65+.</div>
+            </div>
+          </div>
+          <!-- Step 4 -->
+          <div style="display: flex; gap: 14px; align-items: start;">
+            <div style="background: #22c55e; color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;">✓</div>
+            <div>
+              <div style="color: #22c55e; font-weight: 700; font-size: 0.88rem;">Done. No interests. No behaviors. No lookalikes.</div>
+              <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">Let your 15-25 diverse creatives do the targeting for you.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Radius guide -->
+      <div style="margin-top: 20px;">
+        <div style="color: #fff; font-weight: 700; font-size: 0.95rem; margin-bottom: 12px;">📏 Radius Guide by Business Type</div>
+        <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; font-size: 0.82rem;">
+            <div style="padding: 12px 16px; color: #2563eb; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.06);">Business Type</div>
+            <div style="padding: 12px 16px; color: #2563eb; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.06);">Radius</div>
+            <div style="padding: 12px 16px; color: #2563eb; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.06);">Why</div>
+
+            <div style="padding: 10px 16px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.03);">🍕 Restaurant / Café</div>
+            <div style="padding: 10px 16px; color: #22c55e; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.03);">5-10 miles</div>
+            <div style="padding: 10px 16px; color: #888; border-bottom: 1px solid rgba(255,255,255,0.03);">People won't drive 30 min for pizza</div>
+
+            <div style="padding: 10px 16px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.03);">🦷 Dentist / Doctor</div>
+            <div style="padding: 10px 16px; color: #22c55e; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.03);">10-15 miles</div>
+            <div style="padding: 10px 16px; color: #888; border-bottom: 1px solid rgba(255,255,255,0.03);">Will travel further for healthcare</div>
+
+            <div style="padding: 10px 16px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.03);">💪 Gym / Studio</div>
+            <div style="padding: 10px 16px; color: #22c55e; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.03);">5-8 miles</div>
+            <div style="padding: 10px 16px; color: #888; border-bottom: 1px solid rgba(255,255,255,0.03);">Must be on their commute or nearby</div>
+
+            <div style="padding: 10px 16px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.03);">🏠 Real Estate</div>
+            <div style="padding: 10px 16px; color: #22c55e; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.03);">15-25 miles</div>
+            <div style="padding: 10px 16px; color: #888; border-bottom: 1px solid rgba(255,255,255,0.03);">People search across metro areas</div>
+
+            <div style="padding: 10px 16px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.03);">🧹 Home Services</div>
+            <div style="padding: 10px 16px; color: #22c55e; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.03);">10-20 miles</div>
+            <div style="padding: 10px 16px; color: #888; border-bottom: 1px solid rgba(255,255,255,0.03);">Service area depends on drive time</div>
+
+            <div style="padding: 10px 16px; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.03);">🛒 E-commerce / Online</div>
+            <div style="padding: 10px 16px; color: #22c55e; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.03);">Entire country</div>
+            <div style="padding: 10px 16px; color: #888; border-bottom: 1px solid rgba(255,255,255,0.03);">No physical location = no radius needed</div>
+
+            <div style="padding: 10px 16px; color: #ccc;">📋 Coaching / Services</div>
+            <div style="padding: 10px 16px; color: #22c55e; font-weight: 700;">Entire country</div>
+            <div style="padding: 10px 16px; color: #888;">Virtual delivery = go nationwide</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: RETARGETING                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> 4. The One Exception: Retargeting</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">There's one place where custom audiences still matter: <strong style="color: #fff;">retargeting people who already know the business.</strong> These are warm audiences — they visited the website, watched a video, or are on the customer list. They're cheaper to convert because they already have context.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">🟢 Worth Setting Up</div>
+          <div style="font-size: 0.82rem; line-height: 1.8; color: #ccc;">
+            <div><strong>Website visitors</strong> (last 30-90 days)</div>
+            <div><strong>Video viewers</strong> (watched 50%+)</div>
+            <div><strong>Customer email list</strong> (upload to Meta)</div>
+            <div><strong>Instagram/FB engagers</strong> (last 30 days)</div>
+            <div><strong>Lead form openers</strong> (didn't submit)</div>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 18px;">
+          <div style="color: #ef4444; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">🔴 Don't Bother</div>
+          <div style="font-size: 0.82rem; line-height: 1.8; color: #888;">
+            <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.3);">Interest-based audiences</div>
+            <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.3);">Lookalike audiences</div>
+            <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.3);">Behavior stacking</div>
+            <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.3);">Detailed targeting expansion</div>
+            <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.3);">Saved audiences from 2023</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #2563eb;">For most local biz clients on Day 1:</strong> They won't have website traffic or an email list yet. That's fine — start with broad + location only. Build the retargeting audiences over time as traffic comes in. Week 1 = cold. Week 4+ = retargeting layer on top.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: RESEARCH VS TARGETING      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔍</span> 5. Research the Audience, Don't Target Them</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Here's where Nexus still matters. You don't use AI to build targeting settings — you use it to <strong style="color: #fff;">understand the audience so your creatives speak to them.</strong> The research feeds your copy and creatives, not your Ads Manager settings.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Paste this prompt into Claude with "Tony's Pizza" as the example. Show the output. Point out how this feeds your AD COPY (lesson 3.8), not your targeting settings.</span>
+      </div>
+
+      <div style="background: #0a0a0a; border: 1px solid rgba(37,99,235,0.3); border-radius: 12px; padding: 20px; position: relative;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <img src="../images/agents/nexus.svg" alt="Nexus" style="width: 28px; height: 28px; border-radius: 6px;">
+          <span style="color: #2563eb; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Nexus Audience Research Prompt</span>
+          <button onclick="copyResearch()" id="copyResBtn" style="margin-left: auto; background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">COPY</button>
+        </div>
+        <div id="researchPrompt" style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; line-height: 1.7; color: #ccc; white-space: pre-wrap;">I'm running Facebook/Instagram ads for a local business. I need to deeply understand their target audience — NOT for targeting settings (I'm using broad targeting), but to write better ad copy and create better visuals.
+
+BUSINESS: [Business name]
+WHAT THEY SELL: [Product/service]
+LOCATION: [City, state]
+PRICE RANGE: [Average ticket]
+
+Give me:
+1. The top 10 REASONS someone would buy this (not features — emotional motivations)
+2. The top 5 OBJECTIONS they'd have before buying
+3. The top 5 MOMENTS when they'd think about this product (triggers)
+4. What language/slang does this audience actually use?
+5. Who are they comparing this business to? (competitors + alternatives)
+6. What does their day look like? (daily routine relevant to the product)
+
+Be specific. Use real examples. No generic marketing talk.</div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">This research → your ad angles.</strong> Each "reason to buy" = an ad angle for Aurelius. Each "objection" = a BAB or PAS ad. Each "trigger moment" = a hook. You're not targeting pizza lovers — you're writing an ad that speaks to someone staring at an empty fridge at 7pm.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: THE DECISION TREE          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🌳</span> 6. Quick Decision: What Targeting Do I Use?</h2>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px;">
+        <!-- Question 1 -->
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="color: #fff; font-weight: 700; font-size: 1rem;">Does the business have a physical location?</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <!-- YES branch -->
+          <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 18px;">
+            <div style="color: #22c55e; font-weight: 800; font-size: 0.85rem; margin-bottom: 10px; text-align: center;">YES — Local Business</div>
+            <div style="background: rgba(34,197,94,0.06); border-radius: 8px; padding: 14px; font-size: 0.82rem; line-height: 1.7; color: #ccc;">
+              <div>📍 <strong style="color: #fff;">Location:</strong> Business address + radius</div>
+              <div>👤 <strong style="color: #fff;">Age:</strong> Only if necessary</div>
+              <div>🎯 <strong style="color: #fff;">Interests:</strong> NONE</div>
+              <div>📋 <strong style="color: #fff;">Retargeting:</strong> Add after week 2+</div>
+              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); color: #22c55e; font-weight: 600;">→ Let 15-25 diverse creatives do the targeting</div>
+            </div>
+          </div>
+          <!-- NO branch -->
+          <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 18px;">
+            <div style="color: #3B82F6; font-weight: 800; font-size: 0.85rem; margin-bottom: 10px; text-align: center;">NO — Online Business</div>
+            <div style="background: rgba(59,130,246,0.06); border-radius: 8px; padding: 14px; font-size: 0.82rem; line-height: 1.7; color: #ccc;">
+              <div>📍 <strong style="color: #fff;">Location:</strong> Entire country</div>
+              <div>👤 <strong style="color: #fff;">Age:</strong> Only if necessary</div>
+              <div>🎯 <strong style="color: #fff;">Interests:</strong> NONE</div>
+              <div>📋 <strong style="color: #fff;">Retargeting:</strong> Add after week 2+</div>
+              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); color: #3B82F6; font-weight: 600;">→ Advantage+ Shopping or broad CBO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 7. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Explain why interest targeting is dead</strong>
+            <span>Andromeda evaluates 10,000x more candidates. The algorithm finds buyers through creative diversity, not your targeting settings.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Set up location radius targeting for a local business</strong>
+            <span>Business address + radius. "People living in or recently in this location." That's it.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Know the right radius for 5+ business types</strong>
+            <span>Restaurant 5-10mi, Dentist 10-15mi, Gym 5-8mi, Real Estate 15-25mi, Home Services 10-20mi.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Explain "creative IS the targeting"</strong>
+            <span>A family dinner ad targets families. A late-night ad targets night owls. The algorithm matches creative to person automatically.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Use the Nexus research prompt for audience understanding</strong>
+            <span>Research feeds your copy and creatives — NOT your Ads Manager targeting settings.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>andromeda</span><span>targeting</span><span>broad</span><span>location-radius</span><span>retargeting</span><span>nexus</span><span>audience-research</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.9-ai-creative-builder.html" class="nav-link">← AI Creative Builder</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.11-campaign-optimizer.html" class="nav-link">Campaign Optimizer →</a>
+    </div>
+  </div>
+
+  <script>
+    // === COPY RESEARCH PROMPT ===
+    function copyResearch() {
+      const text = document.getElementById('researchPrompt').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyResBtn');
+        btn.textContent = 'COPIED ✓';
+        btn.style.background = '#22c55e';
+        setTimeout(() => { btn.textContent = 'COPY'; btn.style.background = '#2563eb'; }, 2000);
+      });
+    }
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.10-targeting-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.1: Introduction to AI-Powered Media Buying — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: 12px; overflow: hidden; background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); }
+    .before-after-side { padding: 24px; }
+    .before-after-header { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+    .before-after-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.88rem; }
+    .before-after-item:last-child { border-bottom: none; }
+    .pillar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 20px 0; }
+    .pillar-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 12px; padding: 20px; }
+    .pillar-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .pillar-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .pillar-title { color: #fff; font-weight: 700; font-size: 1rem; }
+    .pillar-desc { color: #ccc; font-size: 0.88rem; line-height: 1.6; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .outcome-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 20px 0; }
+    .outcome-card { background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.15); border-radius: 10px; padding: 16px; text-align: center; }
+    .outcome-icon { font-size: 1.5rem; margin-bottom: 8px; }
+    .outcome-text { color: #fff; font-weight: 600; font-size: 0.9rem; }
+    .outcome-sub { color: #888; font-size: 0.8rem; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.1 — Module 5: AI Integration</div>
+      <h1>Introduction to <span>AI-Powered Media Buying</span></h1>
+      <div class="subtitle">
+        <span class="tag">Overview</span>
+        <span class="tag">No Setup Needed</span>
+        <span class="tag">~3 min read</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Nothing to install here — just read through so you know what we're building over the next 4 lessons. Quick overview, then we get our hands dirty.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: WHAT YOU'RE ABOUT TO BUILD -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> What You're About to Build</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        By the end of this module you'll have software watching your ads while you sleep, Claude writing copy for you in seconds, and a daily routine that takes maybe 5 minutes. I use this exact setup for my clients.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: BEFORE VS AFTER            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> Before AI vs. After AI</h2>
+
+      <div class="before-after">
+        <div class="before-after-side" style="border-right: 1px solid rgba(255,255,255,0.06);">
+          <div class="before-after-header" style="color: #ef4444;">❌ Before AI</div>
+          <div class="before-after-item">
+            <span style="color: #888;">You manually check ads every few hours</span>
+          </div>
+          <div class="before-after-item">
+            <span style="color: #888;">You guess which headline works best</span>
+          </div>
+          <div class="before-after-item">
+            <span style="color: #888;">You spend 2 hours writing ad copy</span>
+          </div>
+          <div class="before-after-item">
+            <span style="color: #888;">You forget to kill a bad ad and waste $200 overnight</span>
+          </div>
+        </div>
+        <div class="before-after-side">
+          <div class="before-after-header" style="color: #22c55e;">✅ After AI</div>
+          <div class="before-after-item">
+            <span style="color: #ccc;">Software watches your ads <strong style="color:#fff;">every minute</strong></span>
+          </div>
+          <div class="before-after-item">
+            <span style="color: #ccc;">AI writes 20 headlines in 30 seconds — you pick the best</span>
+          </div>
+          <div class="before-after-item">
+            <span style="color: #ccc;">Bad ads get killed <strong style="color:#fff;">automatically</strong></span>
+          </div>
+          <div class="before-after-item">
+            <span style="color: #ccc;">You wake up to a report, not a disaster</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: THE 2-TOOL SYSTEM          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏗️</span> The 2-Tool System</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        You're setting up two tools that work together:
+      </p>
+
+      <div class="pillar-grid">
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <div class="pillar-icon" style="background: rgba(34,197,94,0.2);">🧠</div>
+            <div class="pillar-title">Tool 1: Claude Code = The Brain</div>
+          </div>
+          <div class="pillar-desc">
+            Writes your ad copy, researches competitors, builds strategy. It's basically a really smart intern that never sleeps.
+          </div>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <div class="pillar-icon" style="background: rgba(59,130,246,0.2);">⚡</div>
+            <div class="pillar-title">Tool 2: The Software = The Hands</div>
+          </div>
+          <div class="pillar-desc">
+            Actually creates ads on Facebook, monitors performance, makes changes. The thing that clicks buttons so you don't have to.
+          </div>
+        </div>
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin-top: 12px;">You're still the one making decisions. These just do the grunt work.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: WHAT YOU'LL HAVE           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> What You'll Have by the End of Module 5</h2>
+
+      <div class="outcome-grid">
+        <div class="outcome-card">
+          <div class="outcome-icon">🧠</div>
+          <div class="outcome-text">Claude Code set up and talking to you</div>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-icon">🔗</div>
+          <div class="outcome-text">Software connected to your Facebook ad account</div>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-icon">🤖</div>
+          <div class="outcome-text">An AI agent (a set of rules) that manages your ads</div>
+        </div>
+        <div class="outcome-card">
+          <div class="outcome-icon">⏱️</div>
+          <div class="outcome-text">A daily routine that takes 5 minutes</div>
+        </div>
+      </div>
+
+      <!-- removed tip box -->
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: REAL TALK                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚠️</span> Real Talk — Set Your Expectations</h2>
+
+      <div class="warning-box">
+        <p><strong>⚠️ This is NOT "push a button and make money."</strong></p>
+        <ul style="margin: 8px 0 0 0; padding-left: 20px; color: #ccc; font-size: 0.88rem; line-height: 1.8;">
+          <li>You still need to <strong style="color: #fff;">think</strong> and make decisions</li>
+          <li>AI is a power tool — useless without someone who knows what they're doing</li>
+          <li>This module teaches you how to actually use it</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: WHAT'S NEXT                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">➡️</span> What's Next</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        <strong style="color: #fff;">Lesson 5.2:</strong> We set up Claude Code. Takes about 15 minutes.
+      </p>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai</span><span>claude-code</span><span>ai-advertiser-software</span><span>automation</span><span>media-buying</span><span>introduction</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="4.5-scaling-systems.html" class="nav-link">← Scaling Systems</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.2-claude-code-setup.html" class="nav-link">Claude Code Setup →</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <defs>
+    <linearGradient id="zn-bg" x1="0" y1="80" x2="80" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16a34a"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="zn-glow" x1="40" y1="0" x2="40" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4ade80" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#16a34a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="80" height="80" rx="16" fill="#0d0d0d"/>
+  <rect width="80" height="80" rx="16" fill="url(#zn-glow)"/>
+  <rect x="2" y="2" width="76" height="76" rx="14" fill="none" stroke="url(#zn-bg)" stroke-width="2" opacity="0.6"/>
+  <!-- Mountain peak / zenith -->
+  <path d="M14 62 L32 30 L40 42 L48 26 L66 62" fill="none" stroke="url(#zn-bg)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- Summit marker -->
+  <circle cx="48" cy="26" r="4" fill="none" stroke="#4ade80" stroke-width="1.5"/>
+  <circle cx="48" cy="26" r="1.5" fill="#4ade80"/>
+  <!-- Upward arrow from peak -->
+  <line x1="48" y1="22" x2="48" y2="14" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+  <path d="M44 18 L48 13 L52 18" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Chart bars underneath -->
+  <rect x="18" y="54" width="6" height="8" rx="1" fill="#16a34a" opacity="0.3"/>
+  <rect x="26" y="50" width="6" height="12" rx="1" fill="#16a34a" opacity="0.4"/>
+  <rect x="34" y="46" width="6" height="16" rx="1" fill="#16a34a" opacity="0.5"/>
+  <rect x="50" y="48" width="6" height="14" rx="1" fill="#22c55e" opacity="0.5"/>
+  <rect x="58" y="44" width="6" height="18" rx="1" fill="#22c55e" opacity="0.6"/>
+  <!-- Baseline -->
+  <line x1="14" y1="62" x2="66" y2="62" stroke="#22c55e" stroke-width="1" opacity="0.3"/>
+</svg>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 4.2: Advanced Reporting — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 4.2 — Module 4: Scaling</div>
+      <h1>Advanced Reporting — <span>Monthly Strategy Calls</span></h1>
+      <div class="subtitle">
+        <span class="tag">Reporting</span>
+        <span class="tag">Strategy Calls</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">You already know how to send weekly reports (lesson 3.11). Now it's time to level up: monthly strategy calls that make clients feel like they have a CMO on their team. This is how you retain clients for 12+ months — and upsell them.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: MONTHLY REPORT TEMPLATE    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> 1. The Monthly Report (Goes Deeper Than Weekly)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Your weekly report is a quick snapshot. The monthly report tells the <strong style="color: #fff;">story of the month</strong> — what happened, why it happened, and what you're doing next. Send this 1 day before the monthly call.</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.3); border-radius: 14px; padding: 24px; position: relative;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+          <span style="color: #3B82F6; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">📋 Monthly Report Template</span>
+          <button onclick="copyTemplate()" id="copyBtn" style="margin-left: auto; background: #2563eb; color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">COPY</button>
+        </div>
+        <div id="templateText" style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem; line-height: 1.8; color: #ccc; white-space: pre-wrap;">📊 MONTHLY PERFORMANCE REPORT — [Month Year]
+[Business Name] | Prepared by [Your Name]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📈 THE BIG NUMBERS
+• Total Ad Spend: $[X]
+• Total Leads Generated: [X]
+• Cost Per Lead: $[X]
+• Estimated Revenue from Ads: $[X]
+• Return on Ad Spend (ROAS): [X]x
+
+📊 MONTH-OVER-MONTH COMPARISON
+             This Month    Last Month    Change
+Spend:       $[X]          $[X]          [+/-X%]
+Leads:       [X]           [X]           [+/-X%]
+CPL:         $[X]          $[X]          [+/-X%]
+Revenue:     $[X]          $[X]          [+/-X%]
+
+🏆 WINS THIS MONTH
+• [Best performing ad/angle and why]
+• [Any record days or weeks]
+• [New audience or creative that worked]
+
+📉 CHALLENGES
+• [What didn't work and what you learned]
+• [Any external factors — seasonality, competition]
+
+🎯 NEXT MONTH PLAN
+• [3 specific things you'll do differently]
+• [New creative angles to test]
+• [Budget recommendation]
+
+💡 RECOMMENDATION
+[One clear recommendation — increase budget, add service, etc.]</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE STRATEGY CALL          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📞</span> 2. The 30-Minute Monthly Strategy Call</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This call is the single most important thing for client retention. It's where you go from "vendor" to "partner." Here's the exact structure:</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: #161616; border-left: 4px solid #3B82F6; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="color: #3B82F6; font-weight: 800; font-size: 0.9rem;">Minutes 1-10: The Numbers</div>
+            <div style="color: #666; font-size: 0.75rem;">⏱️ 10 min</div>
+          </div>
+          <div style="color: #888; font-size: 0.85rem; line-height: 1.6;">
+            Walk through the monthly report. Spend, leads, CPL, revenue. Compare to last month. Keep it simple — don't bury them in data. <strong style="color: #ccc;">Lead with the number THEY care about</strong> (usually leads or revenue, never impressions).
+          </div>
+        </div>
+
+        <div style="background: #161616; border-left: 4px solid #22c55e; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="color: #22c55e; font-weight: 800; font-size: 0.9rem;">Minutes 10-20: The Learnings</div>
+            <div style="color: #666; font-size: 0.75rem;">⏱️ 10 min</div>
+          </div>
+          <div style="color: #888; font-size: 0.85rem; line-height: 1.6;">
+            What worked, what didn't, and what you learned. Show your top performing ad and explain WHY it worked. This is where you demonstrate expertise. <strong style="color: #ccc;">"The family angle outperformed the discount angle 3:1 — your customers respond more to emotion than price."</strong>
+          </div>
+        </div>
+
+        <div style="background: #161616; border-left: 4px solid #a78bfa; border-radius: 0 10px 10px 0; padding: 18px 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="color: #a78bfa; font-weight: 800; font-size: 0.9rem;">Minutes 20-30: Next Month Plan</div>
+            <div style="color: #666; font-size: 0.75rem;">⏱️ 10 min</div>
+          </div>
+          <div style="color: #888; font-size: 0.85rem; line-height: 1.6;">
+            3 specific things you'll do next month. New creative angles, budget changes, new offers to test. Ask for their input — <strong style="color: #ccc;">"Any promotions coming up? Seasonal events? New menu items?"</strong> This makes them feel heard and gives you content ideas.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: BAD MONTHS                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📉</span> 3. How to Present Bad Months</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Bad months happen. CPL spikes, leads drop, a campaign tanks. How you handle it determines whether the client stays or leaves.</p>
+
+      <div style="background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02)); border: 1px solid rgba(239,68,68,0.3); border-radius: 14px; padding: 24px; margin-bottom: 16px;">
+        <div style="color: #ef4444; font-weight: 800; font-size: 0.95rem; margin-bottom: 12px;">🚫 NEVER DO THIS:</div>
+        <div style="font-size: 0.85rem; line-height: 1.8; color: #888;">
+          <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">"The algorithm was being weird this month"</div>
+          <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">"Facebook is just really competitive right now"</div>
+          <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">"I'm not sure what happened"</div>
+          <div style="text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">Hiding or spinning the numbers</div>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02)); border: 1px solid rgba(34,197,94,0.3); border-radius: 14px; padding: 24px;">
+        <div style="color: #22c55e; font-weight: 800; font-size: 0.95rem; margin-bottom: 12px;">✅ THE FORMULA: Own It → Explain Why → Show the Plan</div>
+        <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; margin-top: 12px;">
+          <div style="font-size: 0.85rem; line-height: 1.8; color: #ccc; font-style: italic;">
+            "Hey Tony, I want to be upfront — this month wasn't as strong as last month. CPL went from $12 to $18. Here's what happened: our top 3 creatives hit creative fatigue around week 3, and I didn't refresh them fast enough. That's on me. Here's what I'm doing about it: I've already built 10 new ad variations, and I'm testing a completely new angle — customer testimonial videos. Based on what I'm seeing in the first 48 hours, next month should bounce back. I'll have an update for you by next Friday."
+          </div>
+        </div>
+        <div style="color: #22c55e; font-size: 0.82rem; margin-top: 12px; font-weight: 600;">Clients don't expect perfection. They expect honesty and a plan. This script keeps them.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: ROI CALCULATOR             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧮</span> 4. The ROI Calculator (Speak Their Language)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Most clients don't understand ROAS or CPL. They understand: <strong style="color: #fff;">"I put in X dollars and got Y dollars back."</strong> Show them that math every month.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Build this calculation live for Tony's Pizza during the call. Use their real numbers. The "wow" moment is when they see the profit number.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px;">
+        <div style="color: #fff; font-weight: 800; font-size: 0.95rem; margin-bottom: 16px;">🍕 Example: Tony's Pizza — January</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem;">
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Ad Spend</span>
+            <span style="color: #ef4444; font-weight: 700;">-$1,500</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Your Management Fee</span>
+            <span style="color: #ef4444; font-weight: 700;">-$1,500</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Total Investment</span>
+            <span style="color: #fff; font-weight: 700;">-$3,000</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Leads Generated</span>
+            <span style="color: #ccc;">125 leads</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Avg Order Value</span>
+            <span style="color: #ccc;">$35</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Close Rate (est. 40%)</span>
+            <span style="color: #ccc;">50 new customers</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Revenue from Ads</span>
+            <span style="color: #22c55e; font-weight: 700;">+$1,750</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span style="color: #888;">Repeat Customer Revenue (est. 3x/year)</span>
+            <span style="color: #22c55e; font-weight: 700;">+$5,250</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; background: rgba(34,197,94,0.06); border-radius: 8px; padding: 12px 16px; margin-top: 8px;">
+            <span style="color: #22c55e; font-weight: 800; font-size: 1rem;">Total Customer Value (Year 1)</span>
+            <span style="color: #22c55e; font-weight: 800; font-size: 1rem;">+$7,000</span>
+          </div>
+          <div style="text-align: center; margin-top: 8px;">
+            <span style="color: #22c55e; font-weight: 800; font-size: 1.2rem;">ROI: 133% — For every $1 spent, Tony gets $2.33 back</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #2563eb;">Pro tip:</strong> Always include the repeat customer math. First-time orders undervalue your work. When Tony sees that 50 new customers = $7K+ in yearly revenue for a $3K investment, he'll never cancel.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: UPSELL                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💎</span> 5. Upsell Opportunities During Monthly Calls</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Monthly calls are the best time to grow your revenue per client. Don't "sell" — just make natural suggestions based on results.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #3B82F6; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">💰 Budget Increase</div>
+          <div style="font-size: 0.82rem; line-height: 1.6; color: #888;">
+            <em>"We're getting leads at $12 each. If we increase budget from $1.5K to $2.5K, we could get 80 more leads next month. Want to test it?"</em>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">📱 Add Instagram</div>
+          <div style="font-size: 0.82rem; line-height: 1.6; color: #888;">
+            <em>"Your Facebook ads are crushing it. I think we could get even better results on Instagram with video content. Want me to add that for an extra $500/mo?"</em>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(234,179,8,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #eab308; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">🔄 Retargeting Campaign</div>
+          <div style="font-size: 0.82rem; line-height: 1.6; color: #888;">
+            <em>"We have 2,000 website visitors from ads now. I can run a retargeting campaign to bring back the ones who didn't convert. Usually $300-500/mo extra."</em>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(139,92,246,0.2); border-radius: 10px; padding: 18px;">
+          <div style="color: #a78bfa; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">📍 Google Ads</div>
+          <div style="font-size: 0.82rem; line-height: 1.6; color: #888;">
+            <em>"People are searching for 'pizza near me' 5,000 times a month in your area. We could add Google Ads to catch those. Extra $1K/mo management."</em>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">💡</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">Only upsell when results are GOOD. Never try to upsell during a bad month. Wait until you have wins to build on.</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHECKLIST                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li><input type="checkbox" id="c1"><label class="check-content" for="c1"><strong>Save the monthly report template</strong><span>Copy it. Customize it for each client. Send 1 day before your monthly call.</span></label></li>
+        <li><input type="checkbox" id="c2"><label class="check-content" for="c2"><strong>Know the 30-minute call structure</strong><span>10 min numbers, 10 min learnings, 10 min next month plan. Never wing it.</span></label></li>
+        <li><input type="checkbox" id="c3"><label class="check-content" for="c3"><strong>Practice the bad month script</strong><span>Own it → Explain why → Show the plan. Clients respect honesty.</span></label></li>
+        <li><input type="checkbox" id="c4"><label class="check-content" for="c4"><strong>Build an ROI calculator for your client</strong><span>Use their real numbers. Include repeat customer value. Show them the "wow" math.</span></label></li>
+        <li><input type="checkbox" id="c5"><label class="check-content" for="c5"><strong>Identify one upsell opportunity</strong><span>Look at your current client. What's one thing you could add that would get them more results?</span></label></li>
+      </ul>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="4.1-managing-multiple-clients.html" class="nav-link">← Managing Multiple Clients</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="4.3-raising-your-prices.html" class="nav-link">Raising Your Prices →</a>
+    </div>
+  </div>
+
+  <script>
+    function copyTemplate() {
+      const text = document.getElementById('templateText').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = 'COPIED ✓'; btn.style.background = '#22c55e';
+        setTimeout(() => { btn.textContent = 'COPY'; btn.style.background = '#2563eb'; }, 2000);
+      });
+    }
+
+    const STORAGE_KEY = 'ai-adv-4.2-advanced-reporting';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

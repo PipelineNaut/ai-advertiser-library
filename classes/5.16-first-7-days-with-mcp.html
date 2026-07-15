@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.16: Your First 7 Days With Claude Code + Meta MCP — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .copy-btn { position: absolute; top: 8px; right: 10px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #3B82F6; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .copy-btn:hover { background: rgba(59,130,246,0.3); }
+    .copy-btn.copied { background: #22c55e; color: #fff; border-color: #22c55e; }
+    .prompt-block { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.05)); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 22px 22px 18px 22px; margin: 14px 0; position: relative; }
+    .prompt-block::before { content: '💬 PASTE IN CLAUDE CODE'; position: absolute; top: -10px; left: 16px; background: #3B82F6; color: #fff; font-size: 0.7rem; padding: 3px 12px; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px; }
+    .prompt-block pre { margin: 8px 0 0 0; color: #e6e6e6; font-family: 'SF Mono', 'Menlo', monospace; font-size: 0.86rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+
+    .day-card { background: #131318; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 28px 28px 24px 28px; margin-bottom: 24px; position: relative; overflow: hidden; }
+    .day-card::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: linear-gradient(180deg, #3B82F6, #8b5cf6); }
+    .day-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+    .day-label { display: flex; align-items: center; gap: 14px; }
+    .day-num { width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #3B82F6, #8b5cf6); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 1.3rem; line-height: 1; flex-shrink: 0; }
+    .day-name { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; color: #888; font-weight: 700; margin-bottom: 4px; }
+    .day-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.5px; }
+    .day-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .day-meta span { font-size: 0.72rem; padding: 5px 11px; border-radius: 999px; background: rgba(59,130,246,0.1); color: #3B82F6; font-weight: 600; }
+    .day-summary { color: #bbb; font-size: 0.95rem; line-height: 1.6; margin: 14px 0 22px 0; }
+    .day-section { margin-top: 22px; }
+    .day-section h4 { color: #fff; font-size: 0.95rem; font-weight: 700; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; }
+    .day-section h4::before { content: ''; width: 6px; height: 6px; border-radius: 3px; background: #3B82F6; display: inline-block; }
+    .expected-outcome { background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 14px 18px; margin-top: 16px; }
+    .expected-outcome strong { color: #22c55e; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+    .expected-outcome p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .mistake { background: rgba(239,68,68,0.04); border-left: 3px solid #ef4444; padding: 10px 16px; margin-top: 14px; border-radius: 0 8px 8px 0; }
+    .mistake strong { color: #ef4444; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
+    .mistake p { color: #bbb; font-size: 0.86rem; line-height: 1.6; margin: 0; }
+    .week-flow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin: 18px 0; }
+    @media (max-width: 720px) { .week-flow { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 480px) { .week-flow { grid-template-columns: repeat(2, 1fr); } }
+    .flow-pill { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 12px 8px; text-align: center; }
+    .flow-pill .flow-day { color: #3B82F6; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+    .flow-pill .flow-theme { color: #fff; font-size: 0.85rem; font-weight: 600; margin-top: 4px; }
+    .time-block { display: inline-block; background: rgba(139,92,246,0.1); color: #c4b5fd; font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 6px; margin-bottom: 8px; }
+
+    /* Path cards */
+    .path-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+    @media (max-width: 720px) { .path-grid { grid-template-columns: 1fr; } }
+    .path-card { background: #131318; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; position: relative; }
+    .path-card.recommended { border-color: rgba(59,130,246,0.4); box-shadow: 0 0 0 1px rgba(59,130,246,0.15); }
+    .path-card .path-badge { position: absolute; top: -10px; left: 18px; background: #3B82F6; color: #fff; font-size: 0.7rem; padding: 4px 12px; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px; }
+    .path-card h4 { color: #fff; margin: 0 0 6px 0; font-size: 1.05rem; }
+    .path-card .path-sub { color: #888; font-size: 0.82rem; margin-bottom: 14px; }
+    .path-card ol { margin: 0 0 14px 0; padding-left: 22px; color: #ccc; font-size: 0.9rem; line-height: 1.7; }
+    .path-card ol li { margin-bottom: 4px; }
+    .path-card .path-result { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 10px 14px; color: #ccc; font-size: 0.85rem; }
+    .path-card .path-result strong { color: #22c55e; }
+
+    /* Code block (reused from 5.3) */
+    .code-block { background: #0a0a0a; border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; padding: 18px 22px; margin: 14px 0; position: relative; overflow-x: auto; }
+    .code-block::before { content: 'Terminal'; position: absolute; top: 0; left: 0; background: #3B82F6; color: #fff; font-size: 0.7rem; padding: 4px 12px; border-radius: 10px 0 8px 0; font-weight: 700; letter-spacing: 0.5px; }
+    .code-block pre { margin: 0; padding-top: 8px; color: #e6e6e6; font-family: 'SF Mono', 'Menlo', monospace; font-size: 0.86rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+    .code-block .accent { color: #3B82F6; }
+    .code-block .green { color: #22c55e; }
+
+    /* Decision matrix */
+    .matrix { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88rem; }
+    .matrix th, .matrix td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .matrix th { background: rgba(59,130,246,0.08); color: #3B82F6; font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .matrix td { color: #ccc; }
+    .matrix td:last-child { color: #fff; font-weight: 600; }
+    .matrix tr:last-child td { border-bottom: none; }
+
+    /* FAQ */
+    .faq-item { background: #131318; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 16px 20px; margin-bottom: 10px; }
+    .faq-item .q { color: #3B82F6; font-weight: 700; font-size: 0.92rem; margin-bottom: 6px; }
+    .faq-item .a { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+
+    /* Two-thing compare */
+    .thing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+    @media (max-width: 720px) { .thing-grid { grid-template-columns: 1fr; } }
+    .thing-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.18); border-radius: 12px; padding: 20px; }
+    .thing-card.faded { background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.08); }
+    .thing-card h4 { color: #fff; margin: 0 0 4px 0; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .thing-card .thing-sub { color: #888; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; font-weight: 600; }
+    .thing-card .thing-body { color: #ccc; font-size: 0.88rem; line-height: 1.6; }
+    .thing-card .thing-verdict { margin-top: 12px; font-size: 0.85rem; font-weight: 700; }
+    .thing-card .thing-verdict.yes { color: #22c55e; }
+    .thing-card .thing-verdict.no { color: #888; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.16 — Module 5: AI Integration</div>
+      <h1>Your First 7 Days With <span>Claude Code + Meta MCP</span></h1>
+      <div class="subtitle">
+        <span class="tag">Daily Workflow</span>
+        <span class="tag">~30 min/day</span>
+        <span class="tag">Practical Operator Class</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      You connected the MCP in <a href="5.3-meta-mcp-connection.html" style="color: #3B82F6;">Lesson 5.3</a>. Now what? This is the exact 7-day operator routine I run for every client. Each day is one focused workflow, ~30 minutes, all driven by copy-paste prompts in Claude Code. After one week of this, you'll be running ads faster than any media buyer on the planet — and your client retention will go through the roof.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- META CONNECTION DEEP DIVE -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔌</span> Before The Week Starts — The Meta Connection (Read This)</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">
+        Before you run a single prompt in this lesson, you need Claude wired into Meta. <strong style="color: #fff;">Half the questions in the community right now</strong> come from students who got the install wrong because they confused two completely different Meta artifacts. Let's clear that up first.
+      </p>
+
+      <!-- ═══════ MCP vs CLI ═══════ -->
+      <h3 style="color: #fff; margin-top: 26px;">Meta dropped TWO things — you only need one</h3>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">
+        On April 29, 2026, Meta released both at the same time. They have similar names. They are NOT the same product.
+      </p>
+
+      <div class="thing-grid">
+        <div class="thing-card">
+          <h4>🔵 The Meta Ads MCP</h4>
+          <div class="thing-sub">What 99% of you need</div>
+          <div class="thing-body">
+            A hosted HTTP endpoint at <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;font-size:0.85em;">https://mcp.facebook.com/ads</code>. No install. You point your AI tool at this URL, log into Facebook once, you're connected forever. This is what Claude Desktop and Claude Code (the AI you talk to) use.
+          </div>
+          <div class="thing-verdict yes">✓ This is what this lesson uses</div>
+        </div>
+        <div class="thing-card faded">
+          <h4>⚙️ The Meta Ads CLI</h4>
+          <div class="thing-sub">For engineers only</div>
+          <div class="thing-body">
+            A standalone command-line binary. You install it locally with <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#888;font-size:0.85em;">npm i -g @meta/ads-cli</code> and call it from bash scripts, cron jobs, or Python pipelines. Useful if you're building backend automation outside of an AI chat. Most students never need this.
+          </div>
+          <div class="thing-verdict no">✗ Skip unless you're scripting</div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 The translation:</strong> When somebody says "Meta CLI" they usually mean the MCP (because they're calling the install command "the CLI"). Officially Meta calls the URL approach the <strong>MCP server</strong> and the binary approach the <strong>CLI</strong>. For everything in this lesson, the MCP is the right answer.</p>
+      </div>
+
+      <!-- ═══════ PATH A — CLAUDE DESKTOP ═══════ -->
+      <h3 style="color: #fff; margin-top: 32px;">🖥️ Path A — If you use Claude Desktop</h3>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">
+        Claude Desktop is the standalone Claude app on Mac/Windows. Click → click → chat. No terminal, no VS Code, no command lines anywhere.
+      </p>
+
+      <div class="path-card recommended">
+        <div class="path-badge">CLAUDE DESKTOP</div>
+        <h4 style="margin-top: 12px;">5-click install</h4>
+        <div class="path-sub">Zero terminal. Zero config file editing.</div>
+        <ol>
+          <li>Open Claude Desktop</li>
+          <li>Settings (cog icon, bottom left) → <strong style="color:#fff;">Connectors</strong></li>
+          <li>Click the <strong style="color:#fff;">+ Add custom connector</strong> button</li>
+          <li>Name: <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">META MCP</code> &nbsp;·&nbsp; URL: <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">https://mcp.facebook.com/ads</code></li>
+          <li>Click <strong style="color:#fff;">Add</strong> → approve Facebook OAuth in browser → done</li>
+        </ol>
+        <div class="path-result">
+          <strong>Result:</strong> 29 Meta Ads tools appear under the "Tools" section of Claude Desktop. Type "list my ad accounts" in any chat and Claude does the rest.
+        </div>
+      </div>
+
+      <!-- ═══════ PATH B — CLAUDE CODE IN VS CODE ═══════ -->
+      <h3 style="color: #fff; margin-top: 32px;">💻 Path B — If you use Claude Code inside VS Code</h3>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">
+        Claude Code is the agent that lives in your terminal. Most AI Advertiser students run it inside VS Code's integrated terminal or as a VS Code panel. Two ways to install — pick whichever feels less scary.
+      </p>
+
+      <!-- WAY 1: prompt -->
+      <div class="path-card recommended" style="margin-top: 18px;">
+        <div class="path-badge">VS CODE — WAY 1 (EASIEST)</div>
+        <h4 style="margin-top: 12px;">Let Claude install it for you</h4>
+        <div class="path-sub">No terminal commands. You just paste a prompt and Claude handles everything.</div>
+        <ol>
+          <li>Open VS Code in any project folder</li>
+          <li>Start Claude Code — either via the panel extension OR by opening the terminal (Cmd+`) and typing <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">claude</code></li>
+          <li>Paste the prompt below into the chat</li>
+          <li>When Claude asks, log into Facebook and approve the connection</li>
+        </ol>
+        <div class="prompt-block">
+          <button class="copy-btn" data-copy="Install the official Meta Ads MCP for me. It's an HTTP transport server at https://mcp.facebook.com/ads — please run the &quot;claude mcp add&quot; command with the http transport. After it's installed, test the connection by listing my Facebook ad accounts and walk me through the OAuth approval flow step by step.">Copy</button>
+<pre>Install the official Meta Ads MCP for me. It's an HTTP transport server at https://mcp.facebook.com/ads — please run the "claude mcp add" command with the http transport. After it's installed, test the connection by listing my Facebook ad accounts and walk me through the OAuth approval flow step by step.</pre>
+        </div>
+        <div class="path-result">
+          <strong>Result:</strong> Claude runs the install command, opens Facebook OAuth in your browser, waits for you to authorize, then confirms by listing your ad accounts. You never touched the terminal directly.
+        </div>
+      </div>
+
+      <!-- WAY 2: manual -->
+      <div class="path-card" style="margin-top: 14px;">
+        <div class="path-badge" style="background: #888;">VS CODE — WAY 2 (MANUAL)</div>
+        <h4 style="margin-top: 12px;">Run the command yourself</h4>
+        <div class="path-sub">Use this if Way 1 throws errors or your Claude Code version is stubborn about installs.</div>
+        <ol>
+          <li>Open VS Code terminal: <strong style="color:#fff;">Cmd+`</strong> (Mac) or <strong style="color:#fff;">Ctrl+`</strong> (Windows)</li>
+          <li>Paste this command and hit enter:</li>
+        </ol>
+        <div class="code-block">
+          <button class="copy-btn" data-copy='claude mcp add --transport http meta-ads "https://mcp.facebook.com/ads"'>Copy</button>
+<pre><span class="green">$</span> claude mcp add <span class="accent">--transport http meta-ads</span> <span style="color:#fbbf24;">"https://mcp.facebook.com/ads"</span></pre>
+        </div>
+        <ol start="3">
+          <li>Start Claude Code: type <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">claude</code> and hit enter</li>
+          <li>Paste any Meta-related prompt (e.g. "list my ad accounts") — the OAuth flow triggers on first use</li>
+        </ol>
+        <div class="path-result">
+          <strong>Result:</strong> Same end state as Way 1. The only difference is YOU typed the install command instead of letting Claude do it.
+        </div>
+      </div>
+
+      <div class="warning-box" style="margin-top: 18px;">
+        <p><strong>⚠️ The setup is per-app, not per-account.</strong> If you install it in Claude Desktop and ALSO use VS Code's Claude Code, you'll authorize Facebook OAuth twice — once for each app. That's normal. After those two one-time approvals, both apps stay connected independently.</p>
+      </div>
+
+      <!-- ═══════ DECISION MATRIX ═══════ -->
+      <h3 style="color: #fff; margin-top: 32px;">🎯 Which path should YOU use?</h3>
+
+      <table class="matrix">
+        <tr>
+          <th>Your situation</th>
+          <th>Use</th>
+        </tr>
+        <tr>
+          <td>I mostly chat with Claude in the desktop app (not coding)</td>
+          <td>Path A — Claude Desktop</td>
+        </tr>
+        <tr>
+          <td>I use VS Code daily and want everything in one place</td>
+          <td>Path B Way 1</td>
+        </tr>
+        <tr>
+          <td>I'm following the rest of this 7-day lesson</td>
+          <td>Path B Way 1</td>
+        </tr>
+        <tr>
+          <td>Way 1 keeps failing on my machine</td>
+          <td>Path B Way 2 (manual)</td>
+        </tr>
+        <tr>
+          <td>I want to run Meta operations from Python or a cron job</td>
+          <td>The standalone CLI binary (advanced, not in this lesson)</td>
+        </tr>
+      </table>
+
+      <!-- ═══════ FAQ ═══════ -->
+      <h3 style="color: #fff; margin-top: 32px;">❓ Common confusions cleared up</h3>
+
+      <div class="faq-item">
+        <div class="q">Do I need to install BOTH Claude Desktop and VS Code?</div>
+        <p class="a">No. Pick one based on your workflow. The MCP works the same in either. Most students who go past $5k/mo end up using both — Desktop for quick chats, VS Code for the daily ops grind.</p>
+      </div>
+
+      <div class="faq-item">
+        <div class="q">I saw "@meta/ads-cli" on GitHub — is that what I install?</div>
+        <p class="a">No. That's the standalone CLI binary for scripts and cron jobs. For everything in this course you want the MCP (the URL approach). Installing the CLI doesn't connect Claude to Meta — those are two different products that happened to ship the same day.</p>
+      </div>
+
+      <div class="faq-item">
+        <div class="q">Will my Facebook session expire and break this every few hours?</div>
+        <p class="a">No. That was the OLD token-based API (which is why we killed the old lesson 5.3). The MCP uses Meta-managed OAuth tokens that are refreshed server-side. You don't see them, you don't refresh them, they don't expire on you.</p>
+      </div>
+
+      <div class="faq-item">
+        <div class="q">Can I use this with multiple Facebook accounts (one per client)?</div>
+        <p class="a">Yes — but it's per-Facebook-profile. When you OAuth, you grant access to whatever ad accounts that profile can see (your own + any client BMs that gave you access). To use a totally different personal profile, sign out and re-authorize.</p>
+      </div>
+
+      <div class="faq-item">
+        <div class="q">After install, where do I "see" the MCP is connected?</div>
+        <p class="a"><strong style="color:#fff;">Claude Desktop:</strong> Settings → Connectors → you'll see "META MCP" with a green dot. &nbsp;·&nbsp; <strong style="color:#fff;">Claude Code:</strong> run <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">claude mcp list</code> in your terminal — <code style="background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#3B82F6;">meta-ads</code> should appear in the output.</p>
+      </div>
+
+      <div class="faq-item">
+        <div class="q">Do I need a Meta Dev App, Marketing API approval, or any of that old garbage?</div>
+        <p class="a">No. None of it. That's what made the old setup miserable. The official MCP bypasses the entire Dev App world — you just OAuth as yourself like you're logging into any other Facebook-connected app.</p>
+      </div>
+
+      <div class="faq-item">
+        <div class="q">I installed it, but Claude isn't using it when I ask Meta questions. Why?</div>
+        <p class="a">Two common causes: (1) you installed it in the WRONG Claude — e.g. you set it up in Claude Desktop but you're chatting in VS Code. The MCP is per-app. (2) Claude doesn't know to use it yet — just say in chat: <em>"List your available MCP tools — I want to confirm meta-ads is loaded."</em> If it's listed, your next Meta prompt will trigger it. If it's not, the install didn't complete.</p>
+      </div>
+
+      <div class="danger-box" style="margin-top: 18px;">
+        <p><strong>⚠️ Don't combine install paths without a reason.</strong> Some students panic, install Path A, then ALSO run Path B's manual command "just to be safe." This doesn't break anything but it creates two separately-authorized connections you have to manage. Pick one path, finish it, test it works, move on.</p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 26px 0 0 0;">
+        Once you confirm Claude can list your ad accounts, you're ready. The rest of this lesson assumes the MCP is live. Now let's get into the actual 7-day routine.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WEEK AT A GLANCE -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🗓️</span> The Week at a Glance</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">
+        7 days, 7 themes. Stack them and you have an operator routine that scales with you.
+      </p>
+
+      <div class="week-flow">
+        <div class="flow-pill"><div class="flow-day">Mon</div><div class="flow-theme">Audit</div></div>
+        <div class="flow-pill"><div class="flow-day">Tue</div><div class="flow-theme">Create</div></div>
+        <div class="flow-pill"><div class="flow-day">Wed</div><div class="flow-theme">Launch</div></div>
+        <div class="flow-pill"><div class="flow-day">Thu</div><div class="flow-theme">Optimize</div></div>
+        <div class="flow-pill"><div class="flow-day">Fri</div><div class="flow-theme">Report</div></div>
+        <div class="flow-pill"><div class="flow-day">Sat</div><div class="flow-theme">Research</div></div>
+        <div class="flow-pill"><div class="flow-day">Sun</div><div class="flow-theme">Plan</div></div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Read this once, then bookmark it.</strong> You'll come back here every morning. The prompts are designed to copy → paste → tweak the account ID → run. That's it. The whole point is to remove decision fatigue.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DAY 1 — MONDAY: AUDIT -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Day 1 — Monday</h2>
+
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-label">
+            <div class="day-num">1</div>
+            <div>
+              <div class="day-name">Monday</div>
+              <h3 class="day-title">Audit & Diagnose</h3>
+            </div>
+          </div>
+          <div class="day-meta">
+            <span>⏱ 30 min</span>
+            <span>🎯 Find what's working</span>
+          </div>
+        </div>
+
+        <div class="day-summary">
+          Walk into Monday knowing exactly which campaigns deserve more money, which need to die, and which are quietly bleeding cash. No spreadsheets, no Ads Manager rabbit holes. One prompt → full picture.
+        </div>
+
+        <div class="day-section">
+          <h4>The morning prompt</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Pull last 30 days of performance for ad account [ACCOUNT_ID]. Build me a table sorted by ROAS descending with these columns: campaign name, status, spend, CPA, ROAS, CTR, frequency, hook rate. Then below the table give me 3 lists:&#10;&#10;1. SCALE — campaigns with ROAS above target and frequency under 2.5&#10;2. KILL — campaigns with CPA above target after $100+ spend OR ROAS below 1.0&#10;3. INVESTIGATE — campaigns with high spend but unclear performance (frequency above 3, CTR dropping, etc.)&#10;&#10;Be opinionated. Don't just dump data — tell me what to do.">Copy</button>
+<pre>Pull last 30 days of performance for ad account [ACCOUNT_ID]. Build me a table sorted by ROAS descending with these columns: campaign name, status, spend, CPA, ROAS, CTR, frequency, hook rate. Then below the table give me 3 lists:
+
+1. SCALE — campaigns with ROAS above target and frequency under 2.5
+2. KILL — campaigns with CPA above target after $100+ spend OR ROAS below 1.0
+3. INVESTIGATE — campaigns with high spend but unclear performance (frequency above 3, CTR dropping, etc.)
+
+Be opinionated. Don't just dump data — tell me what to do.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>The deep work block (15 min)</h4>
+          <p style="color: #ccc; font-size: 0.9rem; line-height: 1.6;">After Claude gives you the kill list, drill into the WHY before executing. Bad audience? Creative fatigue? Landing page mismatch? Send this:</p>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="For each campaign in the KILL list, dig deeper. Look at: creative-level CTR breakdown, audience overlap with my scaling campaigns, day-by-day performance trend, and frequency curve. Tell me whether the campaign died because of creative fatigue, audience saturation, landing page mismatch, or just a bad concept. Be specific.">Copy</button>
+<pre>For each campaign in the KILL list, dig deeper. Look at: creative-level CTR breakdown, audience overlap with my scaling campaigns, day-by-day performance trend, and frequency curve. Tell me whether the campaign died because of creative fatigue, audience saturation, landing page mismatch, or just a bad concept. Be specific.</pre>
+          </div>
+        </div>
+
+        <div class="expected-outcome">
+          <strong>Expected outcome</strong>
+          <p>A clear list of campaigns to kill, scale, or investigate — with the reasoning behind each call. You walk into Tuesday knowing what creative concepts are dying and need replacement.</p>
+        </div>
+
+        <div class="mistake">
+          <strong>Common mistake</strong>
+          <p>Don't just take Claude's KILL recommendations and pause everything immediately. Read the WHY first. If it's creative fatigue, the audience is still good — keep that ad set, just swap creative. Killing prematurely throws away learning.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DAY 2 — TUESDAY: CREATE -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Day 2 — Tuesday</h2>
+
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-label">
+            <div class="day-num">2</div>
+            <div>
+              <div class="day-name">Tuesday</div>
+              <h3 class="day-title">Creative Generation</h3>
+            </div>
+          </div>
+          <div class="day-meta">
+            <span>⏱ 45 min</span>
+            <span>🎯 Build the next batch</span>
+          </div>
+        </div>
+
+        <div class="day-summary">
+          Yesterday told you what's dying. Today you replace it. Pull the patterns from your winners, generate 15-25 new hook variations, brief 5 fresh angles. Volume wins. The agencies stuck on 2 creatives a week are why they lose.
+        </div>
+
+        <div class="day-section">
+          <h4>Step 1 — Mine your winners (10 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Look at the top 5 ROAS ads in account [ACCOUNT_ID] from the last 60 days. Pull their full ad copy (primary text, headline, description) and analyze what they have in common: hook structure, emotional driver (curiosity / fear / aspiration / proof), CTA style, length, format (single image / carousel / video). Give me a 'winning ad DNA' summary I can use to brief new creative.">Copy</button>
+<pre>Look at the top 5 ROAS ads in account [ACCOUNT_ID] from the last 60 days. Pull their full ad copy (primary text, headline, description) and analyze what they have in common: hook structure, emotional driver (curiosity / fear / aspiration / proof), CTA style, length, format (single image / carousel / video). Give me a 'winning ad DNA' summary I can use to brief new creative.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Step 2 — Generate the new batch (20 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Based on the winning ad DNA you just identified, write 15 new ad variations for [CLIENT_NAME / OFFER_NAME]. Split them like this:&#10;&#10;- 5 hooks using the SAME proven structure but new angles&#10;- 5 hooks testing a NEW emotional driver (whichever wasn't represented in the winners)&#10;- 5 hooks that are deliberately weird/contrarian to break category norms&#10;&#10;Each variation gives me: primary text, headline (under 40 chars), and description. Match the client's voice — casual, no AI patterns, no em dashes, no triple structures. Write like a real human typing in IG comments.">Copy</button>
+<pre>Based on the winning ad DNA you just identified, write 15 new ad variations for [CLIENT_NAME / OFFER_NAME]. Split them like this:
+
+- 5 hooks using the SAME proven structure but new angles
+- 5 hooks testing a NEW emotional driver (whichever wasn't represented in the winners)
+- 5 hooks that are deliberately weird/contrarian to break category norms
+
+Each variation gives me: primary text, headline (under 40 chars), and description. Match the client's voice — casual, no AI patterns, no em dashes, no triple structures. Write like a real human typing in IG comments.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Step 3 — Image / video briefs (15 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="For each of the 15 ad copy variations, write a 1-line creative brief that I can hand to a designer or feed into image gen. Specify: format (static / carousel / video), main visual element, mood, text overlay (if any), and one reference style (e.g. 'Hormozi school dark + bold text', 'soft pastel UGC', 'iPhone screenshot style', 'meme/contrarian'). Keep each brief under 30 words.">Copy</button>
+<pre>For each of the 15 ad copy variations, write a 1-line creative brief that I can hand to a designer or feed into image gen. Specify: format (static / carousel / video), main visual element, mood, text overlay (if any), and one reference style (e.g. 'Hormozi school dark + bold text', 'soft pastel UGC', 'iPhone screenshot style', 'meme/contrarian'). Keep each brief under 30 words.</pre>
+          </div>
+        </div>
+
+        <div class="expected-outcome">
+          <strong>Expected outcome</strong>
+          <p>15 fresh ad copy variations + 15 creative briefs ready to hand off. You're not testing 2 ads per week like an agency on training wheels — you're testing 15.</p>
+        </div>
+
+        <div class="mistake">
+          <strong>Common mistake</strong>
+          <p>Don't skip Step 1. Generating creative without mining your winners is the #1 reason AI-written ads underperform. The DNA pass turns Claude from a random idea generator into a pattern-matched copywriter.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DAY 3 — WEDNESDAY: LAUNCH -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Day 3 — Wednesday</h2>
+
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-label">
+            <div class="day-num">3</div>
+            <div>
+              <div class="day-name">Wednesday</div>
+              <h3 class="day-title">Build & Launch</h3>
+            </div>
+          </div>
+          <div class="day-meta">
+            <span>⏱ 40 min</span>
+            <span>🎯 Ship the new batch</span>
+          </div>
+        </div>
+
+        <div class="day-summary">
+          Take Tuesday's 15 variations and push them into Meta. The MCP can build campaigns, ad sets, and ads in PAUSED state in seconds. Your only job is to QA before flipping the switch.
+        </div>
+
+        <div class="day-section">
+          <h4>Build everything paused (25 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Build a new campaign in account [ACCOUNT_ID] using this exact structure:&#10;&#10;CAMPAIGN&#10;- Name: [#XXX] [PAGE-A] [LEADS] [TEST-COLD] [1-3-1 ABO] [BATCH-MAY-15] — 05/15&#10;- Objective: leads (or sales for ecom)&#10;- Buying type: AUCTION&#10;- Status: PAUSED&#10;&#10;AD SETS (create 3, duplicates of each other)&#10;- Daily budget: $50 each&#10;- Audience: [SPECIFY: lookalike / interest / broad]&#10;- Placement: Advantage+ placements&#10;- Optimization: leads (or purchase)&#10;&#10;ADS (create 5 in each ad set, same 5 across all 3 ad sets)&#10;- Use the 5 BEST variations from yesterday's batch&#10;- Use Page ID [PAGE_ID] and Pixel ID [PIXEL_ID]&#10;- Apply UTM parameters per Brez convention: utm_source=meta&utm_medium={{placement}}&utm_campaign={{campaign.name}}&utm_content={{adset.name}}&utm_term={{ad.name}}&#10;&#10;Show me the structure preview before creating. Build everything in PAUSED state. I'll activate manually after QA.">Copy</button>
+<pre>Build a new campaign in account [ACCOUNT_ID] using this exact structure:
+
+CAMPAIGN
+- Name: [#XXX] [PAGE-A] [LEADS] [TEST-COLD] [1-3-1 ABO] [BATCH-MAY-15] — 05/15
+- Objective: leads (or sales for ecom)
+- Buying type: AUCTION
+- Status: PAUSED
+
+AD SETS (create 3, duplicates of each other)
+- Daily budget: $50 each
+- Audience: [SPECIFY: lookalike / interest / broad]
+- Placement: Advantage+ placements
+- Optimization: leads (or purchase)
+
+ADS (create 5 in each ad set, same 5 across all 3 ad sets)
+- Use the 5 BEST variations from yesterday's batch
+- Use Page ID [PAGE_ID] and Pixel ID [PIXEL_ID]
+- Apply UTM parameters per Brez convention: utm_source=meta&utm_medium={{placement}}&utm_campaign={{campaign.name}}&utm_content={{adset.name}}&utm_term={{ad.name}}
+
+Show me the structure preview before creating. Build everything in PAUSED state. I'll activate manually after QA.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>QA check (10 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Before I activate, run a QA pass on the campaign you just built. Check: budgets sum correctly, all ads have the right Page + Pixel, UTM parameters are applied at the ad level, optimization event matches the objective, audience size is between 500K and 5M (warm flag if outside), no typos in copy, headline length under 40 chars. Flag anything wrong. Don't activate yet.">Copy</button>
+<pre>Before I activate, run a QA pass on the campaign you just built. Check: budgets sum correctly, all ads have the right Page + Pixel, UTM parameters are applied at the ad level, optimization event matches the objective, audience size is between 500K and 5M (warm flag if outside), no typos in copy, headline length under 40 chars. Flag anything wrong. Don't activate yet.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Activate (5 min)</h4>
+          <p style="color: #ccc; font-size: 0.9rem; line-height: 1.6;">QA passed. Pull the trigger:</p>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="QA looks good. Activate the campaign and all ad sets you just built. Then confirm back: campaign ID, ad set IDs, and that all are ACTIVE.">Copy</button>
+<pre>QA looks good. Activate the campaign and all ad sets you just built. Then confirm back: campaign ID, ad set IDs, and that all are ACTIVE.</pre>
+          </div>
+        </div>
+
+        <div class="expected-outcome">
+          <strong>Expected outcome</strong>
+          <p>New campaign live with 3 ad sets × 5 ads = 15 active ad creatives testing. Total daily spend: $150. By Thursday morning you'll have ~24 hours of data to act on.</p>
+        </div>
+
+        <div class="warning-box">
+          <p><strong>⚠️ Never let Claude activate without QA.</strong> The MCP can build campaigns in seconds. It can also activate $5,000/day campaigns in seconds. Always run the QA prompt and read the preview before saying go.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DAY 4 — THURSDAY: OPTIMIZE -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Day 4 — Thursday</h2>
+
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-label">
+            <div class="day-num">4</div>
+            <div>
+              <div class="day-name">Thursday</div>
+              <h3 class="day-title">Optimization</h3>
+            </div>
+          </div>
+          <div class="day-meta">
+            <span>⏱ 25 min</span>
+            <span>🎯 Cut losers, scale winners</span>
+          </div>
+        </div>
+
+        <div class="day-summary">
+          24-48 hours of data on Wednesday's launch. Time to be ruthless. Kill what isn't working before it burns more spend. Double down on what is.
+        </div>
+
+        <div class="day-section">
+          <h4>The killer prompt (10 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Look at the campaign launched on Wednesday in account [ACCOUNT_ID]. For each ad with at least $30 in spend, check: CPA vs target (target is $XX), ROAS vs target (target is X.X), hook rate, CTR. List me every underperformer and recommend whether to pause it. Show me the list first and wait for my confirmation before pausing anything.">Copy</button>
+<pre>Look at the campaign launched on Wednesday in account [ACCOUNT_ID]. For each ad with at least $30 in spend, check: CPA vs target (target is $XX), ROAS vs target (target is X.X), hook rate, CTR. List me every underperformer and recommend whether to pause it. Show me the list first and wait for my confirmation before pausing anything.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>The scaler prompt (10 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Now show me the winners — any ad with CPA below target and ROAS above target after at least $30 spend. For each winner: duplicate the ad set with 2x the budget into a new campaign with the same structure but PAUSED. This is my scale stack — I'll activate manually tomorrow once today's data fully confirms the win. Never auto-scale.">Copy</button>
+<pre>Now show me the winners — any ad with CPA below target and ROAS above target after at least $30 spend. For each winner: duplicate the ad set with 2x the budget into a new campaign with the same structure but PAUSED. This is my scale stack — I'll activate manually tomorrow once today's data fully confirms the win. Never auto-scale.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Anti-fatigue check (5 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Check all my currently active scaling campaigns in account [ACCOUNT_ID]. For each one, look at frequency over the last 7 days. Flag any ad set where frequency is above 2.8 OR where CTR has dropped more than 25% week-over-week. These are showing fatigue — recommend either refreshing creative or pausing.">Copy</button>
+<pre>Check all my currently active scaling campaigns in account [ACCOUNT_ID]. For each one, look at frequency over the last 7 days. Flag any ad set where frequency is above 2.8 OR where CTR has dropped more than 25% week-over-week. These are showing fatigue — recommend either refreshing creative or pausing.</pre>
+          </div>
+        </div>
+
+        <div class="expected-outcome">
+          <strong>Expected outcome</strong>
+          <p>Losers paused. Winners queued at 2x budget for tomorrow's activation. Fatigue signals caught before they tank ROAS. The account is leaner and more profitable than yesterday.</p>
+        </div>
+
+        <div class="mistake">
+          <strong>Common mistake</strong>
+          <p>Don't scale on day 1. New campaigns need 48-72 hours to leave the learning phase. Activating the 2x duplicates the same day you spot a winner often kills the original campaign's pacing. Patience compounds.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DAY 5 — FRIDAY: REPORT -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Day 5 — Friday</h2>
+
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-label">
+            <div class="day-num">5</div>
+            <div>
+              <div class="day-name">Friday</div>
+              <h3 class="day-title">Client Reporting</h3>
+            </div>
+          </div>
+          <div class="day-meta">
+            <span>⏱ 30 min</span>
+            <span>🎯 Make the client feel like a genius</span>
+          </div>
+        </div>
+
+        <div class="day-summary">
+          Client retention is 80% about communication, 20% about results. Friday is when you turn the week into a narrative they can forward to their business partner. This single prompt replaces 2 hours of dashboard wrangling.
+        </div>
+
+        <div class="day-section">
+          <h4>The weekly report prompt (20 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Generate a client-ready weekly report for [CLIENT_NAME] (account [ACCOUNT_ID]) covering the last 7 days. Format it as plain markdown I can paste into Loom notes or an email. Structure:&#10;&#10;1. HEADLINE METRICS — spend, leads/sales, CPA, ROAS, vs last week (with % change)&#10;2. THE STORY — 2-3 sentences explaining what happened this week in plain English (not jargon)&#10;3. WHAT WORKED — 2-3 specific wins (top ad concept, audience that hit, scaling move)&#10;4. WHAT DIDN'T — 1-2 misses and what we learned&#10;5. NEXT WEEK'S MOVE — 2-3 concrete actions we're taking based on this week's data&#10;&#10;Write it like a smart operator updating a partner — direct, no fluff, no apologizing for losses. Numbers first, story second.">Copy</button>
+<pre>Generate a client-ready weekly report for [CLIENT_NAME] (account [ACCOUNT_ID]) covering the last 7 days. Format it as plain markdown I can paste into Loom notes or an email. Structure:
+
+1. HEADLINE METRICS — spend, leads/sales, CPA, ROAS, vs last week (with % change)
+2. THE STORY — 2-3 sentences explaining what happened this week in plain English (not jargon)
+3. WHAT WORKED — 2-3 specific wins (top ad concept, audience that hit, scaling move)
+4. WHAT DIDN'T — 1-2 misses and what we learned
+5. NEXT WEEK'S MOVE — 2-3 concrete actions we're taking based on this week's data
+
+Write it like a smart operator updating a partner — direct, no fluff, no apologizing for losses. Numbers first, story second.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>The Loom prep (10 min)</h4>
+          <p style="color: #ccc; font-size: 0.9rem; line-height: 1.6;">Drop the report into Loom notes, screen-record yourself walking through it for 3-5 minutes. Send the Loom link. Clients pay for the feeling that you understand their business, not the dashboard itself.</p>
+        </div>
+
+        <div class="expected-outcome">
+          <strong>Expected outcome</strong>
+          <p>One Loom + report sent every Friday before EOD. Clients stop ghosting you, retention goes from 4 months to 12+, and they refer you to their network unprompted.</p>
+        </div>
+
+        <div class="tip-box">
+          <p><strong>💡 Make this non-negotiable.</strong> The agencies that lose clients are the ones that go silent for 2 weeks and only show up to ask for an invoice approval. A weekly Friday Loom is the cheapest insurance policy in your business.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DAY 6 — SATURDAY: RESEARCH -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Day 6 — Saturday</h2>
+
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-label">
+            <div class="day-num">6</div>
+            <div>
+              <div class="day-name">Saturday</div>
+              <h3 class="day-title">Research & Intel</h3>
+            </div>
+          </div>
+          <div class="day-meta">
+            <span>⏱ 45 min</span>
+            <span>🎯 Build the edge for next week</span>
+          </div>
+        </div>
+
+        <div class="day-summary">
+          The accounts that compound year over year aren't the ones running the best ads — they're the ones with the best intel pipeline. Saturday is where you spy on competitors, mine VOC, and seed Monday's hypotheses.
+        </div>
+
+        <div class="day-section">
+          <h4>Competitor sweep (20 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="I want a competitor sweep for [CLIENT_NIICHE]. Pull the top 5 advertisers in this niche from the Meta Ad Library (search for [SEED_KEYWORDS]). For each one: how many ads they have running, the most common hook angle, the format mix (video vs static vs carousel), the offer they're leading with, and any pricing they're showing publicly. End with: 'here are 3 angles they're using that we're NOT testing — recommend one we should adapt for next week.'">Copy</button>
+<pre>I want a competitor sweep for [CLIENT_NIICHE]. Pull the top 5 advertisers in this niche from the Meta Ad Library (search for [SEED_KEYWORDS]). For each one: how many ads they have running, the most common hook angle, the format mix (video vs static vs carousel), the offer they're leading with, and any pricing they're showing publicly. End with: 'here are 3 angles they're using that we're NOT testing — recommend one we should adapt for next week.'</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Voice-of-customer mining (15 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Scrape Reddit, YouTube comments, and Amazon reviews for [CLIENT_NIICHE / PRODUCT]. Pull 20-30 quotes that include emotional language about the problem we solve. Group them into 3 buckets: PAIN (what hurts), DESIRE (what they want), OBJECTION (why they haven't bought yet). I want to use this as raw material for next week's hooks.">Copy</button>
+<pre>Scrape Reddit, YouTube comments, and Amazon reviews for [CLIENT_NIICHE / PRODUCT]. Pull 20-30 quotes that include emotional language about the problem we solve. Group them into 3 buckets: PAIN (what hurts), DESIRE (what they want), OBJECTION (why they haven't bought yet). I want to use this as raw material for next week's hooks.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Next-week hypothesis (10 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Take everything from today (competitor sweep + VOC mining) and synthesize: what's the ONE hypothesis we should test next week that nobody else in this market is testing? Write it as a tweet-length statement I can put at the top of Monday's plan.">Copy</button>
+<pre>Take everything from today (competitor sweep + VOC mining) and synthesize: what's the ONE hypothesis we should test next week that nobody else in this market is testing? Write it as a tweet-length statement I can put at the top of Monday's plan.</pre>
+          </div>
+        </div>
+
+        <div class="expected-outcome">
+          <strong>Expected outcome</strong>
+          <p>Fresh competitor intel + 20-30 VOC quotes + one sharp hypothesis. Monday no longer starts cold — you walk in with a thesis to validate.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DAY 7 — SUNDAY: PLAN -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> Day 7 — Sunday</h2>
+
+      <div class="day-card">
+        <div class="day-header">
+          <div class="day-label">
+            <div class="day-num">7</div>
+            <div>
+              <div class="day-name">Sunday</div>
+              <h3 class="day-title">Plan & Reset</h3>
+            </div>
+          </div>
+          <div class="day-meta">
+            <span>⏱ 20 min</span>
+            <span>🎯 Compound the system</span>
+          </div>
+        </div>
+
+        <div class="day-summary">
+          Most operators don't take Sunday seriously and that's why they stay stuck doing the same week over and over. 20 minutes here = the difference between an agency that plateaus and one that compounds.
+        </div>
+
+        <div class="day-section">
+          <h4>The retrospective (10 min)</h4>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Run a retrospective on the last 7 days for account [ACCOUNT_ID]. Tell me:&#10;&#10;1. What was the single biggest win and what made it work?&#10;2. What was the single biggest miss and what would I do differently?&#10;3. What SOP or workflow tweak would have made this week 20% faster?&#10;4. What's one assumption about this account I held on Monday that I no longer believe on Sunday?&#10;&#10;Be brutal. No coddling. I want the operator-level read, not a participation trophy.">Copy</button>
+<pre>Run a retrospective on the last 7 days for account [ACCOUNT_ID]. Tell me:
+
+1. What was the single biggest win and what made it work?
+2. What was the single biggest miss and what would I do differently?
+3. What SOP or workflow tweak would have made this week 20% faster?
+4. What's one assumption about this account I held on Monday that I no longer believe on Sunday?
+
+Be brutal. No coddling. I want the operator-level read, not a participation trophy.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Update your SOPs (5 min)</h4>
+          <p style="color: #ccc; font-size: 0.9rem; line-height: 1.6;">If the retrospective surfaced a workflow improvement, capture it now while it's fresh:</p>
+          <div class="prompt-block">
+            <button class="copy-btn" data-copy="Based on this week's retrospective, write a 3-5 line addendum to my operator SOP that I can add under the relevant day. Make it specific, actionable, and dated.">Copy</button>
+<pre>Based on this week's retrospective, write a 3-5 line addendum to my operator SOP that I can add under the relevant day. Make it specific, actionable, and dated.</pre>
+          </div>
+        </div>
+
+        <div class="day-section">
+          <h4>Step away (5 min)</h4>
+          <p style="color: #ccc; font-size: 0.9rem; line-height: 1.6;">Close the laptop. Go outside. The system runs while you're not at the keyboard. Operators who can't unplug burn out at $15k/mo and never make it to $50k. Build the business that lets you actually live.</p>
+        </div>
+
+        <div class="expected-outcome">
+          <strong>Expected outcome</strong>
+          <p>One sharper week ahead. Your SOPs get a little better. Your hypotheses get a little better. Over 52 Sundays this is the difference between a $10k/mo operator and a $100k/mo operator running 12 accounts in 4 hours a day.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE META LESSON -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> The Meta-Lesson</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">
+        Look at the structure of this week. <strong style="color: #fff;">Monday looks at the past. Tuesday-Wednesday builds the future. Thursday adjusts. Friday communicates. Saturday spies. Sunday compounds.</strong>
+      </p>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">
+        Every day has one job. You're not multitasking — you're stacking single-purpose 20-45 minute blocks across a week. That's why a solo operator with this workflow runs circles around a 5-person team without one.
+      </p>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">
+        The MCP didn't make you 10x faster. <strong style="color: #fff;">The MCP plus a structured weekly system</strong> made you 10x faster. Most students get the tool, skip the system, and wonder why nothing changes.
+      </p>
+
+      <div class="tip-box">
+        <p><strong>💡 One client first.</strong> Run this routine for ONE account for 4 weeks straight before adding a second client. The compounding effect doesn't show up in week 1. It shows up in week 4 when you realize you're doing it on autopilot and have hours left in the day.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WRAP UP -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> You Have The System</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Bookmark this page. Run Monday's prompts tomorrow morning. The first week feels mechanical because you're learning the prompts. By week 3 you'll modify them for your niche. By week 6 you'll have your own personalized weekly playbook.
+      </p>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Next: <a href="5.17-scaling-to-multi-client.html" style="color: #3B82F6;">Lesson 5.17 — Scaling This System Across Multiple Clients</a> (coming soon).
+      </p>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="../index.html" style="color: #3B82F6; text-decoration: none; font-weight: 600;">← Back to all lessons</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy') || btn.parentElement.querySelector('pre').innerText;
+        navigator.clipboard.writeText(text);
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1400);
+      });
+    });
+  </script>
+</body>
+</html>

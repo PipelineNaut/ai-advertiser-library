@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.3: Connecting Software to Meta API — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .permission-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 16px 0; }
+    .permission-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; padding: 16px; }
+    .permission-name { color: #3B82F6; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; font-family: 'SF Mono', Consolas, monospace; }
+    .permission-desc { color: #888; font-size: 0.82rem; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.3 — Module 5: AI Integration</div>
+      <h1>Connecting <span>Software to Meta API</span></h1>
+      <div class="subtitle">
+        <span class="tag">Step-by-Step</span>
+        <span class="tag">~20 min</span>
+        <span class="tag">Needs: Meta Business Manager (Module 3)</span>
+      </div>
+    </div>
+
+    <div class="summary-box">We're connecting the software to your Facebook ad account. Kind of tedious but you only do it once. ~20 minutes.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: WHAT IS AN API             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> What Is an API?</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        An <strong style="color: #fff;">API</strong> is basically a secret tunnel between the software and Facebook. Instead of you clicking buttons on Facebook to create ads, the software uses this tunnel to do it for you.
+      </p>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        You set it up once. After that the software can create ads, check results, turn stuff off — without you touching Facebook.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BEFORE YOU START CHECKLIST            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> Before You Start — Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Connection Progress</span>
+          <span style="color: #888; font-size: 14px;" id="apiProgressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="apiProgressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="apiChecklist">
+        <li>
+          <input type="checkbox" id="a1">
+          <label class="check-content" for="a1">
+            <strong>✅ Meta Business Manager set up (from Module 3)</strong>
+            <span>You need this before anything else</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="a2">
+          <label class="check-content" for="a2">
+            <strong>✅ Facebook Page connected to that Business Manager</strong>
+            <span>Your page needs to be linked</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="a3">
+          <label class="check-content" for="a3">
+            <strong>Step 1: Go to Meta Developers</strong>
+            <span>developers.facebook.com → Log In → My Apps → Create App</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="a4">
+          <label class="check-content" for="a4">
+            <strong>Step 2: Create Your App</strong>
+            <span>Select Business type, name it, connect your Business Manager</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="a5">
+          <label class="check-content" for="a5">
+            <strong>Step 3: Get Your Access Token</strong>
+            <span>Graph API Explorer → Add permissions → Generate token</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="a6">
+          <label class="check-content" for="a6">
+            <strong>Step 4: Paste Into the Software</strong>
+            <span>Settings → Meta Connection → paste token + Ad Account ID</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="a7">
+          <label class="check-content" for="a7">
+            <strong>Step 5: Test the Connection</strong>
+            <span>You should see your campaigns (or an empty list with no errors)</span>
+          </label>
+        </li>
+      </ul>
+
+      <div class="warning-box">
+        <p><strong>⚠️ If you're managing a client's account,</strong> THEY need to give you access through their Business Manager. Don't skip this. If you're missing anything, pause and go back to Module 3.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 1: META DEVELOPERS               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🌐</span> Step 1: Go to Meta Developers</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px;">
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 0; padding-left: 20px;">
+          <li>Open your browser → go to <strong style="color: #fff;">developers.facebook.com</strong></li>
+          <li>Click <strong style="color: #fff;">Log In</strong> (top right) — use the same Facebook account linked to your Business Manager</li>
+          <li>You'll land on the Meta for Developers dashboard</li>
+          <li>Click <strong style="color: #fff;">My Apps</strong> (top right)</li>
+          <li>Click <strong style="color: #3B82F6;">Create App</strong> (green button)</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 2: CREATE APP                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚙️</span> Step 2: Create Your App</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; margin-bottom: 16px;">
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 0; padding-left: 20px;">
+          <li>App type: select <strong style="color: #fff;">Business</strong></li>
+          <li>App name: something like <code>My Agency Ads Tool</code> (doesn't matter, only you see this)</li>
+          <li>Contact email: your email</li>
+          <li>Business portfolio: select your <strong style="color: #fff;">Business Manager</strong></li>
+          <li>Click <strong style="color: #3B82F6;">Create App</strong></li>
+          <li>You might get a security check (captcha) — just complete it</li>
+        </ol>
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin: 12px 0;">"App" sounds scary — it's not. It's just a container that holds your connection keys. You're not building anything.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 3: ACCESS TOKEN                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔑</span> Step 3: Get Your Access Token</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; margin-bottom: 16px;">
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 0; padding-left: 20px;">
+          <li>In your app dashboard, go to <strong style="color: #fff;">Tools</strong> in the left menu</li>
+          <li>Click <strong style="color: #fff;">Graph API Explorer</strong></li>
+          <li>On the right side, you'll see a dropdown for <strong style="color: #fff;">User or Page</strong> — select <strong style="color: #fff;">User Token</strong></li>
+          <li>Click <strong style="color: #fff;">Add a Permission</strong> → search and add these <strong style="color: #fff;">one by one:</strong></li>
+        </ol>
+      </div>
+
+      <div class="permission-grid">
+        <div class="permission-card">
+          <div class="permission-name">ads_management</div>
+          <div class="permission-desc">Lets the software <strong>create and edit</strong> ads</div>
+        </div>
+        <div class="permission-card">
+          <div class="permission-name">ads_read</div>
+          <div class="permission-desc">Lets the software <strong>see</strong> your ad results</div>
+        </div>
+        <div class="permission-card">
+          <div class="permission-name">business_management</div>
+          <div class="permission-desc">Lets it access your Business Manager</div>
+        </div>
+        <div class="permission-card">
+          <div class="permission-name">pages_read_engagement</div>
+          <div class="permission-desc">Lets it read your Page info</div>
+        </div>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; margin-bottom: 16px;">
+        <ol start="5" style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 0; padding-left: 20px;">
+          <li>Click <strong style="color: #3B82F6;">Generate Access Token</strong> (blue button)</li>
+          <li>A popup asks you to authorize — click <strong style="color: #fff;">Continue</strong> through it</li>
+          <li><strong style="color: #fff;">Copy that long token</strong> (the string of random letters and numbers)</li>
+        </ol>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🔴 NEVER share this token with anyone.</strong> Treat it like your bank password. Anyone with this token can control your ad account.</p>
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin: 12px 0;">Heads up: this token expires after ~1 hour. The software will walk you through getting a long-lived one (lasts 60 days).</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 4: PASTE INTO SOFTWARE           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> Step 4: Paste Into the Software</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px;">
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 0; padding-left: 20px;">
+          <li>Open the software</li>
+          <li>Go to <strong style="color: #fff;">Settings → Meta Connection</strong> (or API Settings)</li>
+          <li>Paste your <strong style="color: #fff;">access token</strong></li>
+          <li>Enter your <strong style="color: #fff;">Ad Account ID</strong> — find this in Business Manager → Ad Accounts → the number that starts with <code>act_</code></li>
+          <li>Click <strong style="color: #3B82F6;">Connect</strong> or <strong style="color: #3B82F6;">Save</strong></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STEP 5: TEST CONNECTION               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧪</span> Step 5: Test the Connection</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; margin-bottom: 16px;">
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 0; padding-left: 20px;">
+          <li>In the software, go to <strong style="color: #fff;">Campaigns</strong> or <strong style="color: #fff;">Dashboard</strong></li>
+          <li>If the connection works, you'll see your <strong style="color: #fff;">existing campaigns</strong> show up</li>
+          <li>If you don't have any campaigns yet, you'll see an empty list — that's fine, it means it connected</li>
+        </ol>
+      </div>
+
+      <p style="color: #888; font-size: 0.85rem; margin: 12px 0;">If you see your campaigns (or an empty list with no errors) — you're good. Connection works.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TROUBLESHOOTING                       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔧</span> ⚠️ Troubleshooting</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 20px; margin: 16px 0;">
+        <h4 style="color: #ef4444; margin: 0 0 12px 0; font-size: 0.95rem;">1. "Invalid token"</h4>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">Token expired. Go back to Graph API Explorer, generate a new one.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(234,179,8,0.2); border-radius: 10px; padding: 20px; margin: 16px 0;">
+        <h4 style="color: #eab308; margin: 0 0 12px 0; font-size: 0.95rem;">2. "No ad account found"</h4>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">Double-check your Ad Account ID. Make sure it starts with <code>act_</code>.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(234,179,8,0.2); border-radius: 10px; padding: 20px; margin: 16px 0;">
+        <h4 style="color: #eab308; margin: 0 0 12px 0; font-size: 0.95rem;">3. "Permissions error"</h4>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">Go back and make sure you added ALL 4 permissions listed in Step 3.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(234,179,8,0.2); border-radius: 10px; padding: 20px; margin: 16px 0;">
+        <h4 style="color: #eab308; margin: 0 0 12px 0; font-size: 0.95rem;">4. "Business not found"</h4>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">You need to be an <strong>admin</strong> on the Business Manager, not just an employee.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT'S NEXT                           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚀</span> What's Next</h2>
+
+      <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; padding: 20px;">
+        <div style="color: #ccc; font-size: 0.92rem; line-height: 1.8;">
+          <div>✅ <strong style="color: #22c55e;">Brain</strong> (Claude Code) — connected</div>
+          <div>✅ <strong style="color: #22c55e;">Hands</strong> (Software → Facebook) — connected</div>
+          <div style="margin-top: 12px;">➡️ <strong style="color: #fff;">Lesson 5.4:</strong> We set up the automation rules — the part that actually makes this thing run on autopilot.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>meta-api</span><span>access-token</span><span>permissions</span><span>software-setup</span><span>connection</span><span>step-by-step</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.2-claude-code-setup.html" class="nav-link">← Claude Code Setup</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.4-ai-media-buying-agent.html" class="nav-link">AI Agent Setup →</a>
+    </div>
+  </div>
+
+  <script>
+    const API_STORAGE_KEY = 'ai-adv-5.3-api-setup-v2';
+    const apiCbs = document.querySelectorAll('#apiChecklist input[type="checkbox"]');
+    const apiTotal = apiCbs.length;
+    const apiFill = document.getElementById('apiProgressFill');
+    const apiCount = document.getElementById('apiProgressCount');
+    const apiSaved = JSON.parse(localStorage.getItem(API_STORAGE_KEY) || '{}');
+    apiCbs.forEach(cb => { if (apiSaved[cb.id]) cb.checked = true; });
+    function updateApiProgress() {
+      const n = document.querySelectorAll('#apiChecklist input:checked').length;
+      apiFill.style.width = Math.round((n/apiTotal)*100)+'%';
+      apiCount.textContent = n+' / '+apiTotal+' complete';
+      const s = {}; apiCbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(API_STORAGE_KEY, JSON.stringify(s));
+    }
+    apiCbs.forEach(cb => cb.addEventListener('change', updateApiProgress));
+    updateApiProgress();
+  </script>
+</body>
+</html>

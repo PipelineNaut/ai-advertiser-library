@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.5: The Pixel — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .click-step .click-path { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; font-family: 'SF Mono', monospace; font-size: 0.85rem; color: #3B82F6; margin-bottom: 12px; display: inline-block; }
+    .click-step .click-path span { color: #666; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .analogy-box { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08)); border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 24px; margin: 16px 0; }
+    .analogy-box h4 { color: #3B82F6; margin: 0 0 10px 0; }
+    .analogy-box p { color: #ccc; font-size: 0.92rem; line-height: 1.7; margin: 0; }
+    .event-card { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px; text-align: center; }
+    .event-card .ev-icon { font-size: 2rem; margin-bottom: 8px; }
+    .event-card .ev-name { color: #fff; font-weight: 700; font-size: 0.9rem; }
+    .event-card .ev-code { font-family: 'SF Mono', monospace; font-size: 0.78rem; color: #3B82F6; background: rgba(59,130,246,0.08); padding: 4px 10px; border-radius: 6px; margin-top: 8px; display: inline-block; }
+    .event-card .ev-desc { color: #888; font-size: 0.82rem; margin-top: 8px; line-height: 1.5; }
+    .flow-diagram { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 24px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; margin: 16px 0; }
+    .flow-box { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 14px 18px; text-align: center; min-width: 120px; }
+    .flow-box .fb-icon { font-size: 1.5rem; }
+    .flow-box .fb-label { color: #fff; font-size: 0.82rem; font-weight: 700; margin-top: 4px; }
+    .flow-box .fb-sub { color: #888; font-size: 0.75rem; }
+    .flow-arrow { color: #3B82F6; font-size: 1.5rem; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.5 — Module 3: Fulfillment</div>
+      <h1>The Pixel — <span>How You Track Results</span></h1>
+      <div class="subtitle">
+        <span class="tag">Tracking</span>
+        <span class="tag">Meta Pixel</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">The pixel is the most important thing you'll set up after the ad account. Without it, you're spending your client's money with no way to know what's working. This lesson explains what it is, why it matters, and how to install it — no coding required.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: WHAT IS IT                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔍</span> 1. What Is the Pixel?</h2>
+
+      <div class="analogy-box">
+        <h4>🍕 The Pizza Shop Version</h4>
+        <p>Imagine Tony hands out flyers at the mall. 100 people take a flyer. But Tony has no idea how many of them actually walked into his pizza shop, how many ordered, or how many just threw the flyer away. He's spending money on flyers with zero feedback.</p>
+        <p style="margin-top: 12px;">Now imagine Tony puts a <strong style="color: #fff;">tiny invisible camera at his front door</strong> that recognizes people who got a flyer. Now he knows: 30 people walked in, 20 ordered, 10 became regulars. He knows his flyers work — and he knows WHICH street corner produced the best customers.</p>
+        <p style="margin-top: 12px;"><strong style="color: #3B82F6;">That invisible camera is the pixel.</strong> It's a tiny piece of code you put on the client's website that tells Meta what happens after someone clicks an ad.</p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6;">
+        Technically, the Meta Pixel is a small snippet of JavaScript code. You copy it from Meta, paste it on the client's website, and it starts tracking. You don't need to understand code. You just need to know where to paste it.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: WHY IT MATTERS             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 2. Why the Pixel Is Non-Negotiable</h2>
+
+      <div class="flow-diagram">
+        <div class="flow-box">
+          <div class="fb-icon">📱</div>
+          <div class="fb-label">Person sees ad</div>
+          <div class="fb-sub">On Facebook/IG</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">
+          <div class="fb-icon">👆</div>
+          <div class="fb-label">Clicks the ad</div>
+          <div class="fb-sub">Goes to website</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="border-color: #3B82F6;">
+          <div class="fb-icon">📡</div>
+          <div class="fb-label">Pixel fires</div>
+          <div class="fb-sub">Tracks the visit</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box">
+          <div class="fb-icon">📋</div>
+          <div class="fb-label">Fills out form</div>
+          <div class="fb-sub">Becomes a lead</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="border-color: #22c55e;">
+          <div class="fb-icon">🧠</div>
+          <div class="fb-label">Meta learns</div>
+          <div class="fb-sub">Finds more like them</div>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">The pixel does three critical things:</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 20px;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">📊</div>
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.95rem; margin-bottom: 6px;">1. Tracks Conversions</div>
+          <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">Tells you exactly how many leads, calls, or purchases your ad generated. Without this, you're guessing.</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">🧠</div>
+          <div style="color: #3B82F6; font-weight: 700; font-size: 0.95rem; margin-bottom: 6px;">2. Feeds the Algorithm</div>
+          <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">Every conversion teaches Meta's AI what your ideal customer looks like. More data = smarter delivery = cheaper leads over time.</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(139,92,246,0.2); border-radius: 10px; padding: 20px;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">🎯</div>
+          <div style="color: #a78bfa; font-weight: 700; font-size: 0.95rem; margin-bottom: 6px;">3. Enables Retargeting</div>
+          <div style="color: #ccc; font-size: 0.85rem; line-height: 1.5;">Someone visited the website but didn't book? The pixel remembers them. You can show them a follow-up ad. This is how you recover lost leads.</div>
+        </div>
+      </div>
+
+      <div class="danger-box" style="margin-top: 16px;">
+        <p><strong>🔴 No pixel = no tracking = no optimization = wasting money.</strong> If a client's website doesn't have the pixel and you start running ads, every dollar is a gamble. Install the pixel BEFORE you turn on a single ad.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: PIXEL EVENTS               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📡</span> 3. Pixel Events — What It Actually Tracks</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        The pixel doesn't just track "someone visited the website." It tracks specific actions called <strong style="color: #fff;">events</strong>. Here are the ones you'll actually use:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px;">
+        <div class="event-card">
+          <div class="ev-icon">👁️</div>
+          <div class="ev-name">PageView</div>
+          <div class="ev-code">PageView</div>
+          <div class="ev-desc">Someone landed on any page. Fires automatically once pixel is installed.</div>
+        </div>
+        <div class="event-card" style="border-color: rgba(59,130,246,0.3);">
+          <div class="ev-icon">📋</div>
+          <div class="ev-name">Lead</div>
+          <div class="ev-code">Lead</div>
+          <div class="ev-desc">Someone submitted a form. This is your #1 event for local businesses.</div>
+        </div>
+        <div class="event-card">
+          <div class="ev-icon">📞</div>
+          <div class="ev-name">Contact</div>
+          <div class="ev-code">Contact</div>
+          <div class="ev-desc">Someone clicked a phone number or "Contact Us" button.</div>
+        </div>
+        <div class="event-card">
+          <div class="ev-icon">📅</div>
+          <div class="ev-name">Schedule</div>
+          <div class="ev-code">Schedule</div>
+          <div class="ev-desc">Someone booked an appointment. Great for dentists, salons, med spas.</div>
+        </div>
+        <div class="event-card">
+          <div class="ev-icon">🛒</div>
+          <div class="ev-name">Purchase</div>
+          <div class="ev-code">Purchase</div>
+          <div class="ev-desc">Someone bought something. For ecommerce clients only.</div>
+        </div>
+        <div class="event-card">
+          <div class="ev-icon">📄</div>
+          <div class="ev-name">ViewContent</div>
+          <div class="ev-code">ViewContent</div>
+          <div class="ev-desc">Someone viewed a specific page (like a service page or menu).</div>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 16px;">
+        <p><strong>💡 For 90% of your clients, you only need two events:</strong> PageView (automatic) and Lead (when they submit a form). Don't overcomplicate it. Start with those two. Add more later if needed.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: INSTALL THE PIXEL          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔧</span> 4. Installing the Pixel — Pick Your Path</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        First, ask yourself: <strong style="color: #fff;">does this client have a website?</strong>
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+        <div style="background: #161616; border: 2px solid rgba(34,197,94,0.4); border-radius: 12px; padding: 24px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🚫</div>
+          <div style="color: #22c55e; font-weight: 800; font-size: 1rem; margin-bottom: 8px;">No Website</div>
+          <div style="color: #ccc; font-size: 0.88rem; line-height: 1.5;">Use <strong style="color: #fff;">Meta Lead Forms</strong> (lesson 3.9). No pixel needed. Meta tracks everything automatically. This is where most local business clients start.</div>
+          <div style="color: #22c55e; font-size: 0.82rem; margin-top: 12px; font-weight: 600;">→ Skip to Section 6</div>
+        </div>
+        <div style="background: #161616; border: 2px solid rgba(59,130,246,0.4); border-radius: 12px; padding: 24px; text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">🌐</div>
+          <div style="color: #3B82F6; font-weight: 800; font-size: 1rem; margin-bottom: 8px;">Has a Website</div>
+          <div style="color: #ccc; font-size: 0.88rem; line-height: 1.5;">Install the pixel using <strong style="color: #fff;">Google Tag Manager</strong>. One-time setup, then you never touch the client's website code again. Keep reading below.</div>
+          <div style="color: #3B82F6; font-size: 0.82rem; margin-top: 12px; font-weight: 600;">→ Follow Steps 1-5 below</div>
+        </div>
+      </div>
+
+      <h3 style="color: #3B82F6; font-size: 1rem; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid rgba(59,130,246,0.2);">The Google Tag Manager Method (Recommended)</h3>
+
+      <div class="analogy-box" style="margin-bottom: 20px;">
+        <h4>🧰 Why Google Tag Manager?</h4>
+        <p>Think of GTM as a <strong style="color: #fff;">universal remote</strong> for your client's website. Instead of opening the TV (website code) every time you want to add a new channel (Meta pixel, Google Analytics, TikTok pixel), you program the remote once and control everything from there. The client's web developer installs GTM one time. After that, you add and manage ALL tracking from the GTM dashboard — no developer needed, no website code touching, ever.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Create a GTM account</h4>
+        <div class="click-path">tagmanager.google.com <span>→</span> Create Account</div>
+        <p>Free Google account required. Create one container per client website. Name it after the client (e.g., "Tony's Pizza").</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Install GTM on the client's website (one-time)</h4>
+        <p>GTM gives you two small code snippets. Send them to the client or their web developer with this message:</p>
+        <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 14px 18px; margin-top: 12px;">
+          <p style="margin: 0; color: #fff; font-style: italic; font-size: 0.88rem;">"Hey! I need you to add two small code snippets to your website — one in the &lt;head&gt; and one after the &lt;body&gt; tag. This is a one-time thing. After this I can manage all tracking without bugging you again. Here are the codes: [paste both snippets]"</p>
+        </div>
+        <div class="tip-box" style="margin-top: 12px;">
+          <p><strong>💡 Shopify / Wix / Squarespace / WordPress:</strong> These platforms have a "Custom Code" or "Header Scripts" section in their settings. The client can paste it themselves in 30 seconds. No developer needed.</p>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Create the Meta pixel in Events Manager</h4>
+        <div class="click-path">Events Manager <span>→</span> Connect Data Sources <span>→</span> Web <span>→</span> Meta Pixel <span>→</span> Connect</div>
+        <p>Name it after the client (e.g., "Tony's Pizza Pixel"). Click "Create Pixel." When it asks how to install, choose <strong>"Install code manually"</strong> and <strong>copy your Pixel ID</strong> (a long number like 123456789012345). You'll need this for the next step.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 4">
+        <h4>Add Meta Pixel to GTM (no more code touching)</h4>
+        <div class="click-path">GTM Dashboard <span>→</span> Tags <span>→</span> New <span>→</span> Tag Configuration</div>
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 8px 0; padding-left: 20px;">
+          <li>Click <strong style="color: #fff;">"New Tag"</strong></li>
+          <li>Tag type: choose <strong style="color: #fff;">"Custom HTML"</strong></li>
+          <li>Paste the Meta Pixel base code (from Events Manager) into the HTML field</li>
+          <li>Trigger: select <strong style="color: #fff;">"All Pages"</strong> — this fires the pixel on every page automatically</li>
+          <li>Name it "Meta Pixel - Base" and click Save</li>
+        </ol>
+        <p>To add the <strong>Lead event</strong>, create a second tag:</p>
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; margin: 8px 0; padding-left: 20px;">
+          <li>New Tag → Custom HTML</li>
+          <li>Paste: <code style="color: #3B82F6; background: rgba(59,130,246,0.08); padding: 2px 8px; border-radius: 4px;">&lt;script&gt;fbq('track', 'Lead');&lt;/script&gt;</code></li>
+          <li>Trigger: create a new trigger → <strong style="color: #fff;">"Page View"</strong> → "Some Page Views" → Page URL contains <code style="color: #3B82F6;">/thank-you</code></li>
+          <li>Name it "Meta Pixel - Lead Event" and click Save</li>
+        </ol>
+      </div>
+
+      <div class="click-step" data-step="Step 5">
+        <h4>Publish your GTM container</h4>
+        <div class="click-path">GTM Dashboard <span>→</span> Submit <span>→</span> Publish</div>
+        <p>Nothing goes live until you hit Publish. Once you do, the pixel starts tracking immediately. Every time you need to add or change tracking in the future, you do it here — not on the client's website.</p>
+        <div class="tip-box">
+          <p><strong>💡 This is why GTM is the agency standard.</strong> Next month when you add Google Ads tracking? Just add a new tag in GTM. TikTok pixel? New tag. You never ask the client's developer for anything again. One-time setup, lifetime control.</p>
+        </div>
+      </div>
+
+      <div class="warning-box" style="margin-top: 16px;">
+        <p><strong>⚠️ Alternative: Direct Integration (even simpler for Shopify/WordPress)</strong><br>If the client uses Shopify, WordPress (with WooCommerce), or Squarespace, Meta has a direct "Partner Integration" in Events Manager. Select their platform, click Connect, authorize — pixel installed in 60 seconds, no GTM needed. Use this when the client has one of these platforms AND you only need Meta tracking. Use GTM when you want to manage multiple tracking codes.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: VERIFY IT WORKS            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 5. Verify the Pixel Is Working</h2>
+
+      <div class="click-step" data-step="Step 5">
+        <h4>Install Meta Pixel Helper (Chrome extension)</h4>
+        <p>Search "Meta Pixel Helper" in the Chrome Web Store. Install it. It adds a small icon in your browser toolbar. Visit the client's website — if the pixel is working, the icon turns <strong style="color: #22c55e;">green</strong> and shows which events are firing.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 6">
+        <h4>Use Test Events in Events Manager</h4>
+        <div class="click-path">Events Manager <span>→</span> Data Sources <span>→</span> Your Pixel <span>→</span> Test Events</div>
+        <p>Enter the website URL. Open the site in another tab. Browse around, submit a test form. You should see events appearing in real time in the Test Events tab. If you see "PageView" and "Lead" — you're golden.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden; margin-top: 16px;">
+        <div style="background: rgba(239,68,68,0.06); padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+          <strong style="color: #ef4444; font-size: 0.9rem;">🔧 Troubleshooting: Pixel Not Firing?</strong>
+        </div>
+        <div style="padding: 20px;">
+          <div style="display: grid; gap: 12px;">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="color: #ef4444; font-weight: 700; min-width: 24px;">1.</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.88rem;">Clear your browser cache</strong>
+                <div style="color: #888; font-size: 0.82rem;">Old cached version of the page might not have the pixel code. Try incognito mode.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="color: #ef4444; font-weight: 700; min-width: 24px;">2.</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.88rem;">Check the code is in the &lt;head&gt;, not the &lt;body&gt;</strong>
+                <div style="color: #888; font-size: 0.82rem;">Some website builders put custom code in the body by default. It needs to be in the head section.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="color: #ef4444; font-weight: 700; min-width: 24px;">3.</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.88rem;">Make sure the pixel ID matches</strong>
+                <div style="color: #888; font-size: 0.82rem;">Copy the pixel ID from Events Manager and compare it to the one in the code. If they don't match, you pasted the wrong pixel.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="color: #ef4444; font-weight: 700; min-width: 24px;">4.</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.88rem;">Ad blocker is blocking it</strong>
+                <div style="color: #888; font-size: 0.82rem;">Disable any ad blockers. They block tracking scripts including the Meta Pixel.</div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <span style="color: #ef4444; font-weight: 700; min-width: 24px;">5.</span>
+              <div>
+                <strong style="color: #fff; font-size: 0.88rem;">Still nothing? Re-paste the code.</strong>
+                <div style="color: #888; font-size: 0.82rem;">Delete it, go back to Events Manager, copy fresh, paste again. Sometimes extra characters sneak in.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: WHAT ABOUT LEAD FORMS?     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🤔</span> 6. "But What If My Client Doesn't Have a Website?"</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Good news: many local business campaigns don't need a website at all. Meta has built-in <strong style="color: #fff;">Lead Forms</strong> (also called Instant Forms) that live inside Facebook/Instagram. The person fills out the form without ever leaving the app.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.25); border-radius: 10px; padding: 20px;">
+          <h4 style="color: #22c55e; margin: 0 0 8px 0;">✅ Meta Lead Forms (No website needed)</h4>
+          <ul style="color: #ccc; font-size: 0.85rem; line-height: 1.6; padding-left: 16px; margin: 0;">
+            <li>No pixel needed — Meta tracks everything automatically</li>
+            <li>Higher conversion rate (fewer steps for the user)</li>
+            <li>Auto-fills name, email, phone from their Facebook profile</li>
+            <li>Perfect for restaurants, salons, home services</li>
+          </ul>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; padding: 20px;">
+          <h4 style="color: #3B82F6; margin: 0 0 8px 0;">🌐 Website Landing Page (Pixel needed)</h4>
+          <ul style="color: #ccc; font-size: 0.85rem; line-height: 1.6; padding-left: 16px; margin: 0;">
+            <li>Pixel required for tracking</li>
+            <li>Higher quality leads (more friction = more serious people)</li>
+            <li>Better for higher-ticket services ($500+)</li>
+            <li>Needed for retargeting and lookalike audiences</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-box" style="margin-top: 16px;">
+        <p><strong>💡 Start most local clients on Lead Forms.</strong> They don't need a website, conversion rates are higher, and setup is faster. Switch to a landing page + pixel when you want to retarget visitors or build lookalike audiences. You'll learn Lead Forms in lesson 3.9.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 7. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Explain the pixel to a client in one sentence</strong>
+            <span>"It's a tiny piece of tracking code on your website that tells us which ads are bringing in leads — without it we're guessing."</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Know the three things the pixel does</strong>
+            <span>Tracks conversions, feeds the algorithm to find better leads, enables retargeting of website visitors.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Know which two events you need for most clients</strong>
+            <span>PageView (automatic) + Lead (fires on form submission / thank-you page). That's it for local businesses.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Install Meta Pixel Helper Chrome extension</strong>
+            <span>Go to Chrome Web Store, search "Meta Pixel Helper", install it. Use it to verify every pixel installation.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Know when you DON'T need a pixel</strong>
+            <span>When using Meta Lead Forms (Instant Forms). The form lives inside Facebook — no website, no pixel needed. Most local businesses start here.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Know the 5 troubleshooting steps if the pixel doesn't fire</strong>
+            <span>Clear cache → check head vs body → verify pixel ID → disable ad blocker → re-paste fresh code.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>pixel</span><span>tracking</span><span>meta-pixel</span><span>events-manager</span><span>lead-forms</span><span>retargeting</span><span>beginner</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.4-meta-business-manager.html" class="nav-link">← Meta Business Manager</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.6-campaign-structure.html" class="nav-link">Campaign Structure →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-3.5-pixel-v2';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

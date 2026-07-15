@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.15: AI Agents Livestream — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .agent-card { background: var(--card); border-radius: 14px; overflow: hidden; margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.07); }
+    .agent-header { padding: 24px 28px; display: flex; align-items: center; gap: 18px; }
+    .agent-icon { font-size: 40px; flex-shrink: 0; }
+    .agent-title { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .agent-subtitle { font-size: 0.88rem; color: #888; }
+    .agent-body { padding: 0 28px 28px; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .output-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; margin-right: 10px; }
+    .step-row { display: flex; align-items: flex-start; gap: 4px; margin-bottom: 14px; }
+    .step-text { flex: 1; font-size: 0.92rem; color: #ccc; line-height: 1.6; padding-top: 2px; }
+
+    /* Agent accent colors */
+    .accent-blue .agent-header { background: rgba(59,130,246,0.08); border-bottom: 1px solid rgba(59,130,246,0.15); }
+    .accent-blue .agent-title { color: #60a5fa; }
+    .accent-blue .step-num { background: #3B82F6; color: #fff; }
+    .accent-blue .output-label { color: #3B82F6; }
+
+    .accent-purple .agent-header { background: rgba(168,85,247,0.08); border-bottom: 1px solid rgba(168,85,247,0.15); }
+    .accent-purple .agent-title { color: #c084fc; }
+    .accent-purple .step-num { background: #a855f7; color: #fff; }
+    .accent-purple .output-label { color: #a855f7; }
+
+    .accent-orange .agent-header { background: rgba(249,115,22,0.08); border-bottom: 1px solid rgba(249,115,22,0.15); }
+    .accent-orange .agent-title { color: #fb923c; }
+    .accent-orange .step-num { background: #f97316; color: #fff; }
+    .accent-orange .output-label { color: #f97316; }
+
+    .accent-green .agent-header { background: rgba(34,197,94,0.08); border-bottom: 1px solid rgba(34,197,94,0.15); }
+    .accent-green .agent-title { color: #4ade80; }
+    .accent-green .step-num { background: #22c55e; color: #fff; }
+    .accent-green .output-label { color: #22c55e; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">MODULE 5 — Lesson 5.15 — Livestream</div>
+      <h1><span>AI Agents: Lead Scraper, Web Designer & Copywriter</span></h1>
+      <div class="subtitle">
+        <span class="tag">Claude Code</span>
+        <span class="tag">AI Agents</span>
+        <span class="tag">Live Class</span>
+        <span class="tag">~60 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      Four real AI agents you install into Claude Code once and use forever. Not prompts in a doc. Actual installable skill files with slash commands. The Lead Scraper finds qualified local businesses. The Web Designer builds complete client sites. The Copywriter writes everything in your client's voice. The Data Analyst turns raw ad data into client reports. Download the zips below and install with one command.
+    </div>
+
+    <!-- DOWNLOAD SECTION -->
+    <div class="section">
+      <h2><span class="icon">📦</span> Download the Agents</h2>
+      <p style="color:#888;font-size:0.9rem;margin-bottom:20px;">download each zip, unzip it, copy the folder to <code style="background:#111;padding:2px 6px;border-radius:4px;color:#ccc;">~/.claude/skills/</code>, and restart Claude Code. that's it.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px;">
+        <a href="../downloads/lead-scraper-agent.zip" download style="background:var(--card);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:20px 24px;text-decoration:none;display:flex;align-items:center;gap:16px;">
+          <span style="font-size:32px;">🔍</span>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#60a5fa;">Lead Scraper Agent</div>
+            <div style="font-size:12px;color:#888;margin-top:3px;">lead-scraper-agent.zip</div>
+          </div>
+          <span style="margin-left:auto;font-size:12px;font-weight:700;color:#3B82F6;">↓ Download</span>
+        </a>
+        <a href="../downloads/web-designer-agent.zip" download style="background:var(--card);border:1px solid rgba(168,85,247,0.3);border-radius:12px;padding:20px 24px;text-decoration:none;display:flex;align-items:center;gap:16px;">
+          <span style="font-size:32px;">🌐</span>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#c084fc;">Web Designer Agent</div>
+            <div style="font-size:12px;color:#888;margin-top:3px;">web-designer-agent.zip</div>
+          </div>
+          <span style="margin-left:auto;font-size:12px;font-weight:700;color:#a855f7;">↓ Download</span>
+        </a>
+        <a href="../downloads/copywriter-agent.zip" download style="background:var(--card);border:1px solid rgba(249,115,22,0.3);border-radius:12px;padding:20px 24px;text-decoration:none;display:flex;align-items:center;gap:16px;">
+          <span style="font-size:32px;">✍️</span>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#fb923c;">Copywriter Agent</div>
+            <div style="font-size:12px;color:#888;margin-top:3px;">copywriter-agent.zip</div>
+          </div>
+          <span style="margin-left:auto;font-size:12px;font-weight:700;color:#f97316;">↓ Download</span>
+        </a>
+        <a href="../downloads/data-analyst-agent.zip" download style="background:var(--card);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:20px 24px;text-decoration:none;display:flex;align-items:center;gap:16px;">
+          <span style="font-size:32px;">📊</span>
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#4ade80;">Data Analyst Agent</div>
+            <div style="font-size:12px;color:#888;margin-top:3px;">data-analyst-agent.zip</div>
+          </div>
+          <span style="margin-left:auto;font-size:12px;font-weight:700;color:#22c55e;">↓ Download</span>
+        </a>
+      </div>
+
+      <div style="background:#0d0d0d;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:18px 20px;margin-top:16px;">
+        <div style="font-size:11px;font-weight:700;color:#888;letter-spacing:1px;margin-bottom:8px;">INSTALL COMMAND (run once per agent)</div>
+        <pre style="color:#ccc;font-family:monospace;font-size:0.88rem;margin:0;">unzip lead-scraper-agent.zip && cp -r lead-scraper ~/.claude/skills/
+unzip web-designer-agent.zip && cp -r web-designer ~/.claude/skills/
+unzip copywriter-agent.zip && cp -r copywriter ~/.claude/skills/
+unzip data-analyst-agent.zip && cp -r data-analyst ~/.claude/skills/</pre>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- AGENT 1: LEAD SCRAPER                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Agent 1: The Lead Scraper</h2>
+
+      <div class="agent-card accent-blue">
+        <div class="agent-header">
+          <div class="agent-icon">🔍</div>
+          <div>
+            <div class="agent-title">Lead Scraper Agent</div>
+            <div class="agent-subtitle">find 50 qualified local businesses in any niche, any city, in under 10 minutes</div>
+          </div>
+        </div>
+        <div class="agent-body">
+          <p style="color:#ccc;font-size:0.92rem;line-height:1.6;margin-bottom:20px;">
+            this agent searches google, pulls business info, and scores each lead by how likely they are to need you. it outputs a clean spreadsheet with name, phone, website, rating, and a qualification score. no API key needed. paste the prompt, fill in your niche and city, and let it run.
+          </p>
+
+          <div class="output-label">what it outputs</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px;">
+            <div style="background:#111;border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:20px;margin-bottom:4px;">📋</div>
+              <div style="font-size:0.8rem;color:#ccc;">business name</div>
+            </div>
+            <div style="background:#111;border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:20px;margin-bottom:4px;">📞</div>
+              <div style="font-size:0.8rem;color:#ccc;">phone number</div>
+            </div>
+            <div style="background:#111;border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:20px;margin-bottom:4px;">🌐</div>
+              <div style="font-size:0.8rem;color:#ccc;">website URL</div>
+            </div>
+            <div style="background:#111;border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:20px;margin-bottom:4px;">⭐</div>
+              <div style="font-size:0.8rem;color:#ccc;">google rating</div>
+            </div>
+            <div style="background:#111;border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:20px;margin-bottom:4px;">🎯</div>
+              <div style="font-size:0.8rem;color:#ccc;">qualification score</div>
+            </div>
+          </div>
+
+          <div class="output-label">the prompt</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>You are a lead generation specialist for a marketing agency.
+
+Your task: Find 30 qualified local businesses in the [NICHE] space in [CITY, STATE] that would benefit from professional paid advertising services.
+
+Do this step by step:
+
+1. Search for [NICHE] businesses in [CITY, STATE] on Google
+2. For each business collect:
+   - Business name
+   - Phone number
+   - Website URL (if they have one)
+   - Google rating and number of reviews
+   - Whether they are currently running Facebook/Instagram ads (check Meta Ad Library)
+   - Website quality: rate as Modern, Outdated, or None
+
+3. Score each lead 1-5:
+   - Score 5: Has a website, running ads but ads look bad quality
+   - Score 4: Has a website, running ads with decent quality (could use better results)
+   - Score 3: Has a website but NOT running any ads (needs to start)
+   - Score 2: No website but good Google reviews (harder sell, higher potential)
+   - Score 1: No online presence at all (skip these)
+
+4. Filter: only include businesses with 4.0+ stars and 20+ reviews
+5. Sort by score (5 first), then by number of reviews
+
+Output format: a clean markdown table first, then save as leads-[city]-[niche]-[date].csv
+
+Focus on businesses that look like they have real revenue but are underinvesting in marketing.</pre>
+          </div>
+
+          <div class="tip-box">
+            <p><strong>💡 best niches to start with:</strong> dentists, gyms, med spas, HVAC, plumbers, chiropractors, restaurants, auto detailing, real estate agents, cleaning companies. pick your own city first — local businesses trust local people.</p>
+          </div>
+
+          <div class="output-label">bonus: the outreach prompt</div>
+          <p style="color:#888;font-size:0.85rem;margin-bottom:8px;">after you have your leads list, use this to generate personalized outreach messages:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>I have this list of local businesses I want to reach out to about running ads for them.
+
+[paste your leads table here]
+
+For each business, write a short personalized DM (2-3 sentences max) that:
+- References something specific about their business
+- Points out a gap or opportunity (bad website, no ads, etc.)
+- Ends with a soft ask to jump on a quick call
+
+Keep it casual and conversational, not salesy. Sound like a real person who genuinely noticed something about their business, not like a template blast.
+
+Output as a table: Business Name | Platform (Instagram/Email/SMS) | Message</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- AGENT 2: WEB DESIGN AGENT               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Agent 2: The Web Design Agent</h2>
+
+      <div class="agent-card accent-purple">
+        <div class="agent-header">
+          <div class="agent-icon">🌐</div>
+          <div>
+            <div class="agent-title">Web Design Agent</div>
+            <div class="agent-subtitle">build complete client websites from scratch in under 2 minutes</div>
+          </div>
+        </div>
+        <div class="agent-body">
+          <p style="color:#ccc;font-size:0.92rem;line-height:1.6;margin-bottom:20px;">
+            give it a client's name, niche, city, and any existing info you have, and it builds a complete responsive landing page. hero section, services, about, testimonials, contact form, everything. you can use this as a lead magnet ("i rebuilt your site for free, want to see it?") or as a deliverable for a paid website project.
+          </p>
+
+          <div class="output-label">two ways to use it</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+            <div style="background:#111;border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:16px;">
+              <div style="font-size:0.8rem;font-weight:700;color:#c084fc;margin-bottom:6px;">OUTREACH WEAPON</div>
+              <div style="font-size:0.85rem;color:#ccc;line-height:1.5;">build a mockup of a prospect's site for free, send it as the cold DM. "hey i rebuilt your site, want to see it?" gets 10x more responses than a regular cold message.</div>
+            </div>
+            <div style="background:#111;border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:16px;">
+              <div style="font-size:0.8rem;font-weight:700;color:#c084fc;margin-bottom:6px;">PAID DELIVERABLE</div>
+              <div style="font-size:0.85rem;color:#ccc;line-height:1.5;">charge $500-$2,000 for a full website build. takes you 2 minutes to generate, 30 minutes to polish and deploy. massive margin.</div>
+            </div>
+          </div>
+
+          <div class="output-label">the core prompt</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>You are a professional web developer building a high-converting landing page for a local business.
+
+Client info:
+- Business name: [NAME]
+- Type of business: [NICHE]
+- Location: [CITY, STATE]
+- Phone: [PHONE]
+- Existing website to reference (if any): [URL or "none"]
+- Key services they offer: [LIST IF KNOWN, otherwise research]
+
+Build a complete, modern, single-page website that includes:
+
+1. HERO SECTION: compelling headline focused on the outcome they deliver (not just their name), subheadline, primary CTA button ("Book Free Consultation" or relevant CTA), background gradient or dark overlay
+
+2. SERVICES SECTION: 3-4 service cards with icons, short descriptions, and benefits (not features)
+
+3. WHY US / TRUST SECTION: 3 trust signals (years in business, satisfied clients, guarantee, etc.)
+
+4. TESTIMONIALS: 3 placeholder testimonials with realistic names, ratings, and specific outcomes mentioned
+
+5. ABOUT: brief paragraph in first person, friendly and local, 2-3 sentences max
+
+6. CONTACT SECTION: contact form (name, email, phone, message), phone number, address, Google Maps embed placeholder
+
+7. FOOTER: business name, quick links, social icons, copyright
+
+Design requirements:
+- Dark modern aesthetic (dark background #0a0a0a or similar)
+- Primary accent color: [pick one that fits the niche, e.g. blue for dental, green for fitness]
+- Mobile responsive (use flexbox/grid)
+- Clean Inter or Poppins font via Google Fonts
+- Subtle animations on scroll if possible
+- Professional, not corporate
+
+Save as: [businessname]-website.html
+
+Make it look like it cost $5,000. Every section should have real copy, not "Lorem ipsum".</pre>
+          </div>
+
+          <div class="output-label">the revamp prompt (for existing ugly sites)</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>I need you to rebuild this local business website from scratch.
+
+Business: [NAME]
+Current site URL: [URL]
+Niche: [NICHE]
+City: [CITY]
+
+Step 1: Scrape their current website for all real information (business name, actual services, real phone number, address, hours, any testimonials).
+
+Step 2: Build a brand new single-page website using that real information. Do NOT use their old design. Build something completely modern and premium.
+
+Follow all the same design requirements as a professional web build:
+- Dark modern design, mobile responsive
+- Hero with strong headline and CTA
+- Services section, about, testimonials, contact
+- Real copy throughout, zero placeholders
+
+Save as: [businessname]-revamp.html
+
+This revamp should look like a $5,000 website next to their current site.</pre>
+          </div>
+
+          <div class="tip-box">
+            <p><strong>💡 after building:</strong> open both the old site and the revamp in split screen, take a screenshot of the before/after, and send that screenshot as your cold DM. the contrast does the selling for you.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- AGENT 3: COPYWRITER AGENT               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Agent 3: The Copywriter Agent</h2>
+
+      <div class="agent-card accent-orange">
+        <div class="agent-header">
+          <div class="agent-icon">✍️</div>
+          <div>
+            <div class="agent-title">Copywriter Agent</div>
+            <div class="agent-subtitle">write ads, emails, hooks, and scripts in your client's exact voice</div>
+          </div>
+        </div>
+        <div class="agent-body">
+          <p style="color:#ccc;font-size:0.92rem;line-height:1.6;margin-bottom:20px;">
+            this agent learns your client's voice from existing content, then writes any kind of copy you need: ad scripts, email sequences, DM templates, social posts, VSL hooks. the key is feeding it real examples first so the output doesn't sound generic.
+          </p>
+
+          <div class="output-label">step 1: build the voice profile</div>
+          <p style="color:#888;font-size:0.85rem;margin-bottom:8px;">run this first, before asking for any copy:</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>You are a brand voice analyst. I'm going to give you examples of content from a local business, and I need you to extract their brand voice so we can replicate it perfectly in future marketing copy.
+
+Client: [BUSINESS NAME]
+Niche: [NICHE]
+Target audience: [WHO THEY SELL TO]
+
+Here are examples of their existing content:
+[paste their social media captions, website copy, reviews they've written, any text you can find]
+
+Based on these examples, analyze and document:
+1. Tone (formal/casual/friendly/authoritative?)
+2. Vocabulary level and common phrases they use
+3. How they talk about their customers
+4. What they emphasize most (price, quality, speed, trust?)
+5. Any phrases or words they use repeatedly
+6. What they NEVER say (things that would sound off-brand)
+
+Output this as a "Voice Profile" document I can reference for all future copy.</pre>
+          </div>
+
+          <div class="output-label">step 2: write the ads</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>Using the voice profile above, write 5 Facebook/Instagram ad scripts for [BUSINESS NAME].
+
+Product/service being advertised: [SPECIFIC SERVICE]
+Target audience: [WHO WE'RE TARGETING]
+Goal: [book a call / visit the website / send a DM]
+Format: talking head video script (what the person says on camera)
+
+Requirements for each script:
+- Start with a hook that stops the scroll in the first 3 seconds (no "hey guys" openers)
+- 45-90 seconds total when spoken naturally
+- Include a specific result or transformation, not just features
+- End with a clear CTA telling them exactly what to do
+- Sound like a real person talking, not an ad
+- Use specific numbers when possible ($, %, days/weeks)
+
+Write all 5 scripts, each with a different hook angle:
+1. Problem-focused hook
+2. Result/transformation hook  
+3. Curiosity/question hook
+4. Bold claim hook
+5. Story hook ("I was talking to a client the other day...")
+
+Label each script clearly. After the scripts, give each a hook strength score 1-10.</pre>
+          </div>
+
+          <div class="output-label">step 3: write the email sequence</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>Using the voice profile above, write a 5-email follow-up sequence for [BUSINESS NAME].
+
+These emails go to leads who booked a consultation but haven't confirmed or are likely to no-show.
+
+Sequence goal: get them to show up to the call or rebook if they missed it.
+
+Email structure:
+- Email 1 (immediately after booking): confirmation + what to expect + one piece of value
+- Email 2 (24 hours before): reminder + social proof + anticipation builder
+- Email 3 (1 hour before): final reminder + quick win tip relevant to their situation
+- Email 4 (if no-show, same day): empathetic reschedule ask
+- Email 5 (48 hours after no-show): last chance + what they're missing
+
+Requirements:
+- Subject lines that actually get opened (no "Reminder: Your Appointment")
+- Short paragraphs, scannable on mobile
+- At least one piece of genuine value in each email
+- Personal tone, not corporate
+- Match the voice profile exactly
+
+Output each email with: Subject Line | Preview Text | Email Body</pre>
+          </div>
+
+          <div class="tip-box">
+            <p><strong>💡 pro tip:</strong> the more real examples you give in the voice profile step, the better the output. pull their Google review responses, their Instagram captions, their website about page. 10 examples beats 2 examples every time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BONUS AGENT: REPORTING AGENT            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Bonus Agent: The Reporting Agent</h2>
+
+      <div class="agent-card accent-green">
+        <div class="agent-header">
+          <div class="agent-icon">📊</div>
+          <div>
+            <div class="agent-title">Reporting Agent</div>
+            <div class="agent-subtitle">turn your raw ad data into a clean client report in 2 minutes</div>
+          </div>
+        </div>
+        <div class="agent-body">
+          <p style="color:#ccc;font-size:0.92rem;line-height:1.6;margin-bottom:20px;">
+            export your ad account data as a CSV from Meta Ads Manager, drop it in your workspace, and this agent analyzes it and writes the full client report for you. what used to take 2 hours now takes 2 minutes.
+          </p>
+
+          <div class="output-label">how to export from Meta</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+            <div class="step-row">
+              <span class="step-num" style="background:#22c55e;color:#fff;">1</span>
+              <div class="step-text">go to Ads Manager → select your campaign → click "Export" in the top right → choose "Export Table Data" → CSV</div>
+            </div>
+            <div class="step-row">
+              <span class="step-num" style="background:#22c55e;color:#fff;">2</span>
+              <div class="step-text">save the CSV file in your Claude Code workspace folder</div>
+            </div>
+            <div class="step-row">
+              <span class="step-num" style="background:#22c55e;color:#fff;">3</span>
+              <div class="step-text">paste the prompt below and reference the file name</div>
+            </div>
+          </div>
+
+          <div class="output-label">the prompt</div>
+          <div class="code-block">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent)">Copy</button>
+            <pre>You are a performance marketing analyst. I need you to analyze this ad campaign data and write a professional client report.
+
+Read the file: [your-export-file.csv]
+
+Client: [CLIENT NAME]
+Reporting period: [DATE RANGE]
+Campaign goal: [leads / calls / purchases / etc.]
+
+Analysis tasks:
+1. Top 3 performing ads (by cost per result)
+2. Bottom 3 ads to pause or kill
+3. Best performing audience or placement
+4. Overall campaign health (good/needs attention/critical)
+5. One key insight the client should know
+6. Recommended next action for next week
+
+Write this as a clean client-facing report with:
+- Executive summary (3 sentences, non-technical)
+- Key metrics snapshot (table format: spend, impressions, clicks, CTR, cost per result, ROAS if available)
+- What's working
+- What to fix
+- Recommended next steps
+
+Tone: professional but friendly. The client is a local business owner, not a marketer. Avoid jargon. Explain everything in plain English.
+
+Save the report as: [clientname]-report-[month].md</pre>
+          </div>
+
+          <div class="warning-box">
+            <p><strong>⚠️ important:</strong> always review the report before sending it to the client. AI can misread data or draw wrong conclusions. the report is a first draft, not a final product. check the numbers yourself before it goes out.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HOW TO USE THESE TOGETHER              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> The Full System: How to Use All Four Together</h2>
+
+      <div style="background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:28px;margin-bottom:24px;">
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <div style="display:flex;gap:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="width:36px;height:36px;border-radius:50%;background:#3B82F6;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;color:#fff;flex-shrink:0;">1</div>
+            <div>
+              <div style="font-weight:700;color:#60a5fa;margin-bottom:4px;">Lead Scraper</div>
+              <div style="font-size:0.88rem;color:#888;">find 30 qualified businesses in your niche and city. filter to the top 10 with outdated websites or no ads.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:20px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="width:36px;height:36px;border-radius:50%;background:#a855f7;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;color:#fff;flex-shrink:0;">2</div>
+            <div>
+              <div style="font-weight:700;color:#c084fc;margin-bottom:4px;">Web Design Agent</div>
+              <div style="font-size:0.88rem;color:#888;">pick the 3 ugliest websites. revamp each one in 2 minutes. screenshot the before/after.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:20px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="width:36px;height:36px;border-radius:50%;background:#f97316;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;color:#fff;flex-shrink:0;">3</div>
+            <div>
+              <div style="font-weight:700;color:#fb923c;margin-bottom:4px;">Copywriter Agent (outreach)</div>
+              <div style="font-size:0.88rem;color:#888;">use the outreach prompt from the lead scraper to write personalized DMs for each business. attach the before/after screenshot. send.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:20px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="width:36px;height:36px;border-radius:50%;background:#f97316;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;color:#fff;flex-shrink:0;">4</div>
+            <div>
+              <div style="font-weight:700;color:#fb923c;margin-bottom:4px;">Copywriter Agent (delivery)</div>
+              <div style="font-size:0.88rem;color:#888;">once you land a client, build their voice profile and write their ad scripts, email sequences, and social content using the copywriter prompts.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:20px;padding:20px 0;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.9rem;color:#fff;flex-shrink:0;">5</div>
+            <div>
+              <div style="font-weight:700;color:#4ade80;margin-bottom:4px;">Reporting Agent</div>
+              <div style="font-size:0.88rem;color:#888;">every month, export the ad data and generate the client report. 2 minutes vs 2 hours. this is what keeps clients around.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div style="background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:20px;text-align:center;">
+          <div style="font-size:28px;font-weight:900;color:var(--orange);">20/day</div>
+          <div style="font-size:0.8rem;color:#888;margin-top:4px;">outreach target</div>
+        </div>
+        <div style="background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:20px;text-align:center;">
+          <div style="font-size:28px;font-weight:900;color:var(--orange);">30 min</div>
+          <div style="font-size:0.8rem;color:#888;margin-top:4px;">total time</div>
+        </div>
+        <div style="background:var(--card);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:20px;text-align:center;">
+          <div style="font-size:28px;font-weight:900;color:var(--orange);">20-40%</div>
+          <div style="font-size:0.8rem;color:#888;margin-top:4px;">response rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BONUS: BELIEF EXCAVATION TOOL           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Bonus: Break Any Limiting Belief with AI</h2>
+
+      <div class="agent-card" style="border-color:rgba(168,85,247,0.25);">
+        <div class="agent-header" style="background:rgba(168,85,247,0.08);border-bottom:1px solid rgba(168,85,247,0.15);">
+          <div class="agent-icon">🧠</div>
+          <div>
+            <div class="agent-title" style="color:#c084fc;">Belief Excavation Prompt</div>
+            <div class="agent-subtitle">find the root belief that's creating an unwanted pattern in your life or business, then flip it</div>
+          </div>
+        </div>
+        <div class="agent-body">
+          <p style="color:#ccc;font-size:0.92rem;line-height:1.6;margin-bottom:16px;">
+            most people try to fix surface-level problems without ever finding the belief underneath that's creating them. this prompt makes Claude act as a belief excavation guide. it keeps digging until it finds the one sponsoring thought that, if it were true, would explain why the bad pattern keeps happening. then it flips it into an identity statement you can actually practice.
+          </p>
+          <p style="color:#ccc;font-size:0.92rem;line-height:1.6;margin-bottom:20px;">
+            paste this into Claude (any version, doesn't need to be Code) and answer whatever it asks you. do not skip ahead. let it push you.
+          </p>
+
+          <div class="output-label" style="color:#a855f7;">the prompt</div>
+          <div class="code-block" style="border-color:rgba(168,85,247,0.2);">
+            <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)">Copy</button>
+            <pre>I want you to act as a belief excavation guide. Your job is to help me uncover the sponsoring thought that is creating an unwanted reality in my life.
+
+Here's how I want you to guide me:
+
+1. Ask me to describe one repeating frustration or problem in my life or business. (Something that keeps happening that I don't want.)
+
+2. Then your main job is Step 2: Dig.
+
+- Keep asking me questions like:
+- "Why do you think that keeps happening?"
+- "If that's true, what does it mean about you?"
+- "If that's true, what does it mean about money / people / life / God?"
+- "If your thoughts are creating this, what belief must be underneath it?"
+- If my answers are short, shallow, or just circumstantial ("I didn't try hard enough"), push me deeper.
+- Keep repeating and circling with new "why" or "what does that mean" questions until we land on the sponsoring thought — the one belief that, if it were true, would guarantee this bad reality.
+
+3. When you hear a sponsoring thought, call it out clearly. Example:
+
+- "Most things don't work."
+- "I only ever scrape by."
+- "I'm not valuable without results."
+
+4. Once the limiting sponsoring thought is exposed, ask me to flip it.
+
+- Help me restate the opposite empowering belief that, if it were true, would guarantee the life I actually want.
+
+5. Then help me phrase it as an identity statement I can practice daily.
+
+- Example: "I am the Midas touch — everything I create turns to gold."
+
+Stay in Step 2 until you really pin down the sponsoring thought. Don't rush me forward if I haven't gone deep enough yet.</pre>
+          </div>
+
+          <div style="background:rgba(168,85,247,0.06);border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:16px 20px;margin-top:12px;">
+            <p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0;"><strong style="color:#c084fc;">how to use it:</strong> paste the prompt into any Claude chat. when it asks you the first question, answer honestly. if it tries to move on before you've gone deep, tell it to keep pushing. the conversation usually takes 10-20 minutes. the sponsoring thought it finds is the thing worth keeping — write it down and flip it into your identity statement.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon">◆</span> Tags</h2>
+      <div class="tags">
+        <span>claude-code</span>
+        <span>ai-agents</span>
+        <span>lead-scraping</span>
+        <span>web-design</span>
+        <span>copywriting</span>
+        <span>reporting</span>
+        <span>mindset</span>
+      </div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.14-claude-code-daily-use.html" class="nav-link">← Claude Code in Real Life</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <span></span>
+    </div>
+  </div>
+
+  <script>
+    // Copy button functionality
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.background = 'rgba(34,197,94,0.2)';
+        btn.style.borderColor = 'rgba(34,197,94,0.4)';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+          btn.style.borderColor = '';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>

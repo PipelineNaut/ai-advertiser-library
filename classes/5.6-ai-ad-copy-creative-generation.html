@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.6: AI Ad Copy & Creative Generation — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; color: #ccc; line-height: 1.7; white-space: pre-wrap; overflow-x: auto; }
+    .step-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 12px; padding: 20px; margin: 16px 0; }
+    .step-number { display: inline-block; background: rgba(59,130,246,0.2); color: #3B82F6; font-weight: 800; font-size: 0.8rem; padding: 4px 10px; border-radius: 6px; margin-bottom: 10px; }
+    .step-title { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 8px; }
+    .step-desc { color: #ccc; font-size: 0.88rem; line-height: 1.6; }
+    .hook-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .hook-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; }
+    .hook-num { color: #3B82F6; font-weight: 700; font-size: 0.8rem; margin-bottom: 6px; }
+    .hook-name { color: #fff; font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
+    .hook-example { color: #888; font-size: 0.82rem; font-style: italic; }
+    .iteration-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+    .iteration-step { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; color: #fff; font-size: 0.85rem; font-weight: 600; }
+    .iteration-arrow { color: #3B82F6; font-size: 1.2rem; }
+    .quote-block { background: rgba(59,130,246,0.06); border-left: 3px solid #3B82F6; border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; color: #ccc; font-size: 0.85rem; line-height: 1.7; font-style: italic; white-space: pre-wrap; }
+    .checklist { list-style: none; padding: 0; margin: 16px 0; }
+    .checklist li { color: #ccc; font-size: 0.88rem; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 10px; }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon { color: #3B82F6; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.6 — Module 5: AI Integration</div>
+      <h1>AI Ad Copy & <span>Creative Generation</span></h1>
+      <div class="subtitle">
+        <span class="tag">Copywriting</span>
+        <span class="tag">Claude Code</span>
+        <span class="tag">~6 min read</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Build a copy agent inside Claude Code that's trained to write ads for local businesses. Not generic ChatGPT slop — a properly trained agent that knows your client's voice, their audience, and what converts on Meta. Say "write me 10 hooks for this pizza shop" and get usable copy in 30 seconds.</div>
+
+    <!-- STEP 1: BUILD YOUR COPY AGENT -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> Step 1: Build Your Copy Agent</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Open your CLAUDE.md file and add this section. Now every time you ask Claude for copy, it follows these rules automatically:</p>
+
+      <div class="code-block">## Ad Copy Rules
+
+### How I Write Ads
+- Sound like a real person talking, never like a marketing textbook
+- Short sentences. Punchy. Easy to read on a phone while scrolling
+- Lead with the problem or the desire, never with the business name
+- Every ad needs a hook in the first line that stops the scroll
+- Write at a 6th grade reading level. No jargon.
+- Include a clear CTA. Tell them exactly what to do next.
+
+### What I Never Do
+- No fake urgency ("ONLY 3 SPOTS LEFT" when there's unlimited spots)
+- No income claims or guarantees unless the client can back it up
+- No clickbait that doesn't deliver
+- No walls of text. Max 5-7 lines for primary text.
+- Nothing that would get flagged by Meta ad policies</div>
+
+      <h3 style="color: #fff; font-size: 0.95rem; margin: 20px 0 12px;">Hook Formulas</h3>
+      <div class="hook-grid">
+        <div class="hook-card">
+          <div class="hook-num">#1</div>
+          <div class="hook-name">Problem-Agitate</div>
+          <div class="hook-example">"Tired of [problem]? Here's why it keeps happening..."</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-num">#2</div>
+          <div class="hook-name">Result-Lead</div>
+          <div class="hook-example">"[Specific result] in [timeframe]. Here's how."</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-num">#3</div>
+          <div class="hook-name">Question</div>
+          <div class="hook-example">"What would you do with [desirable outcome]?"</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-num">#4</div>
+          <div class="hook-name">Pattern Interrupt</div>
+          <div class="hook-example">Start with something unexpected</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-num">#5</div>
+          <div class="hook-name">Social Proof</div>
+          <div class="hook-example">"[Number] people in [location] already did this..."</div>
+        </div>
+        <div class="hook-card">
+          <div class="hook-num">#6</div>
+          <div class="hook-name">Us vs Them</div>
+          <div class="hook-example">"Most [businesses] do X. We do Y."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: CLIENT COPY BRIEF -->
+    <div class="section">
+      <h2><span class="icon">📋</span> Step 2: Set Up a Client Copy Brief</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Before you generate any copy, Claude needs to know about the client. Create a file called <code style="color:#3B82F6;">clients/[client-name].md</code> in your project folder:</p>
+
+      <div class="code-block"># Client: [Business Name]
+
+## Business Info
+- Type: [pizza shop / dentist / gym / etc.]
+- Location: [city, state]
+- Target audience: [who are their customers]
+- Price range: [cheap / mid / premium]
+- What makes them different: [their unique angle]
+
+## Voice & Tone
+- [casual / professional / fun / serious]
+- How the owner talks: [give examples]
+- Words they use / Words to avoid
+
+## Current Offers
+- [Main offer they're running right now]
+
+## Past Winners
+- [Any ad copy or angles that worked before]
+
+## Competitors
+- [Main local competitors and what they say in ads]</div>
+
+      <div class="tip-box">
+        <p><strong>💡 This takes 10 minutes per client.</strong> Saves you hours later because Claude remembers everything in this file and writes copy that actually sounds like the business.</p>
+      </div>
+    </div>
+
+    <!-- STEP 3: GENERATE AD COPY -->
+    <div class="section">
+      <h2><span class="icon">✍️</span> Step 3: Generate Ad Copy</h2>
+
+      <h3 style="color: #fff; font-size: 0.95rem; margin: 20px 0 12px;">Basic Request</h3>
+      <div class="code-block">write 5 facebook ad variations for [client name].
+the goal is [leads / store visits / sales].
+the offer is [what they're promoting].
+give me the hook, primary text, headline, and CTA for each.</div>
+
+      <h3 style="color: #fff; font-size: 0.95rem; margin: 20px 0 12px;">Advanced Request</h3>
+      <div class="code-block">i need 10 scroll-stopping hooks for [client name]'s [offer].
+target audience: [who].
+angle: [problem-aware / solution-aware / unaware].
+make half question-based and half pattern interrupts.
+keep them under 15 words each.</div>
+
+      <h3 style="color: #fff; font-size: 0.95rem; margin: 20px 0 12px;">Creative Concept Request</h3>
+      <div class="code-block">give me 5 ad creative concepts for [client name].
+for each one describe:
+- the visual (what the image or video should show)
+- the hook text overlay
+- the primary text
+- the headline
+format it so i can hand this to a designer or film it myself.</div>
+    </div>
+
+    <!-- STEP 4: ITERATION LOOP -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> Step 4: The Iteration Loop</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">First drafts are rarely perfect. Here's how to go from zero to 9+ polished ad variations in under 10 minutes:</p>
+
+      <div class="iteration-flow">
+        <div class="iteration-step">Round 1: Generate 10 variations</div>
+        <span class="iteration-arrow">→</span>
+        <div class="iteration-step">Round 2: Pick top 3, make punchier</div>
+        <span class="iteration-arrow">→</span>
+        <div class="iteration-step">Round 3: 3 angles per winner</div>
+      </div>
+
+      <h3 style="color: #fff; font-size: 0.95rem; margin: 20px 0 12px;">Round 2 Prompt</h3>
+      <div class="code-block">these are my top 3. make each one punchier.
+shorter sentences. stronger hooks.
+remove anything that sounds like AI wrote it.</div>
+
+      <h3 style="color: #fff; font-size: 0.95rem; margin: 20px 0 12px;">Round 3 Prompt</h3>
+      <div class="code-block">now give me 3 different angles for each of these.
+same offer, different emotional triggers.
+one focused on fear of missing out.
+one focused on aspiration.
+one focused on solving a specific pain point.</div>
+    </div>
+
+    <!-- STEP 5: TRAIN OVER TIME -->
+    <div class="section">
+      <h2><span class="icon">📈</span> Step 5: Train Your Agent Over Time</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">This is what separates you from someone just using ChatGPT. Every time an ad performs well, add it to your client file:</p>
+
+      <div class="code-block">## Proven Winners
+- Hook: "Your neighbors are already ordering from us. You're missing out."
+  - CTR: 3.2%, Cost per lead: $8.40
+  - Why it worked: social proof + local angle
+
+- Hook: "We made 47 pizzas before noon today. Here's why."
+  - CTR: 4.1%, Cost per lead: $6.20
+  - Why it worked: specific number + curiosity
+
+## What Didn't Work
+- Generic "best pizza in town" angles: 0.4% CTR, killed after $50
+- Long-form storytelling: nobody reads it on mobile
+- Discount-only hooks: attracts cheap customers, bad LTV</div>
+
+      <div class="tip-box">
+        <p><strong>💡 After a month of this, your agent knows your client's audience better than most human copywriters would.</strong> It references what actually worked. Your agent gets smarter over time. That's the whole point.</p>
+      </div>
+    </div>
+
+    <!-- STEP 6: UGC SCRIPTS -->
+    <div class="section">
+      <h2><span class="icon">🎬</span> Step 6: UGC Script Generation</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">A lot of best performing ads are UGC (user-generated content) style videos. Claude can write those scripts too:</p>
+
+      <div class="code-block">write a 30-second UGC script for [client name].
+format: person talking to camera, casual, like a real testimonial.
+the hook has to work in the first 2 seconds.
+include camera directions in [brackets].
+the CTA should feel natural, not salesy.</div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-top: 12px;">Output looks like:</p>
+
+      <div class="quote-block">[close-up face, mid-sentence energy]
+"ok so i was literally about to order dominos again..."
+[pulls back to show the pizza]
+"...and then someone told me about [business name] and bro."
+[takes a bite]
+"i'm never going back. this is $12 and it's better than anything i've had."
+[shows the menu on phone]
+"they're on [street name]. just go. trust me."</div>
+
+      <p style="color: #888; font-size: 0.85rem; margin-top: 12px;">Hand that to a creator or film it yourself. Done.</p>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section">
+      <h2><span class="icon">✅</span> Checklist</h2>
+      <ul class="checklist">
+        <li><span class="check-icon">☐</span> Added Ad Copy Rules section to your CLAUDE.md</li>
+        <li><span class="check-icon">☐</span> Created a client brief file for at least one client</li>
+        <li><span class="check-icon">☐</span> Generated your first batch of ad copy variations</li>
+        <li><span class="check-icon">☐</span> Ran through the iteration loop (3 rounds)</li>
+        <li><span class="check-icon">☐</span> Added a "Proven Winners" section to your client file</li>
+        <li><span class="check-icon">☐</span> (Optional) Generated a UGC script</li>
+        <li><span class="check-icon">☐</span> (Optional) Generated creative concepts with visual descriptions</li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai</span><span>copywriting</span><span>ad-copy</span><span>claude-code</span><span>hooks</span><span>ugc</span><span>creative</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.5-reading-ad-data-with-ai.html" class="nav-link">← Reading Ad Data</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.7-image-generation-for-ads.html" class="nav-link">Image Generation →</a>
+    </div>
+  </div>
+</body>
+</html>

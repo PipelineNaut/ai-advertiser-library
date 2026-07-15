@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.11: Campaign Optimization — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .screen-link { display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; margin-bottom: 6px; }
+    .screen-link:hover { border-color: rgba(59,130,246,0.4); }
+    .metric-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 18px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .metric-card:hover { border-color: rgba(59,130,246,0.4); }
+    .metric-card .mc-value { font-weight: 800; font-size: 1.3rem; }
+    .metric-card .mc-name { color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 6px; }
+    .metric-card .mc-desc { color: #666; font-size: 0.72rem; margin-top: 2px; }
+    .rule-card { display: flex; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .rule-card:last-child { border-bottom: none; }
+    .rule-badge { width: 60px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; color: #fff; flex-shrink: 0; }
+    .timer-block { display: flex; gap: 0; border-radius: 10px; overflow: hidden; }
+    .timer-seg { padding: 16px; text-align: center; flex: 1; }
+    .timer-seg .ts-time { font-weight: 800; font-size: 1rem; }
+    .timer-seg .ts-label { font-size: 0.72rem; margin-top: 4px; font-weight: 600; }
+    .timer-seg .ts-desc { color: #888; font-size: 0.72rem; margin-top: 6px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.11 — Module 3: Fulfillment</div>
+      <h1>Campaign Optimization — <span>Your Daily 15 Minutes</span></h1>
+      <div class="subtitle">
+        <span class="tag">Optimization</span>
+        <span class="tag">Daily Routine</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Your campaigns are live. Now your job changes: you're not building anymore, you're <strong>maintaining</strong>. Every day, for every client, you spend 15 minutes reading the data and making decisions. No guessing. No feelings. Just numbers → rules → action. This is where you earn your retainer.</div>
+
+    <!-- SCREENS TO OPEN -->
+    <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 0.95rem;">🖥️ Screens to Open</h3>
+      <a href="https://adsmanager.facebook.com/adsmanager/manage/campaigns" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">1.</span>
+        <span><strong style="color: #fff;">Ads Manager — Campaign View</strong> — Where you'll spend most of your time</span>
+      </a>
+      <a href="https://adsmanager.facebook.com/adsmanager/manage/ads" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">2.</span>
+        <span><strong style="color: #fff;">Ads Manager — Ad Level</strong> — Where you see individual ad performance</span>
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE 15-MIN ROUTINE         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⏱️</span> 1. The 15-Minute Daily Routine</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This is the same routine every day. No thinking about what to do — just follow the steps. Set a timer if you have to. 15 minutes, no more.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open Ads Manager. Walk through each step of the routine in real time with Tony's Pizza as the example. Students need to see this takes 15 minutes, not 2 hours.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; overflow: hidden;">
+        <div class="timer-block">
+          <div class="timer-seg" style="background: rgba(59,130,246,0.08); border-right: 1px solid rgba(255,255,255,0.04);">
+            <div class="ts-time" style="color: #60a5fa;">0:00 – 3:00</div>
+            <div class="ts-label" style="color: #3B82F6;">👀 SCAN</div>
+            <div class="ts-desc">Open Ads Manager. Look at yesterday's numbers. What changed? Any big spikes or drops? Just observe — don't touch anything yet.</div>
+          </div>
+          <div class="timer-seg" style="background: rgba(59,130,246,0.05); border-right: 1px solid rgba(255,255,255,0.04);">
+            <div class="ts-time" style="color: #60a5fa;">3:00 – 7:00</div>
+            <div class="ts-label" style="color: #3B82F6;">🎯 DECIDE</div>
+            <div class="ts-desc">Go ad by ad. Apply the decision rules (Section 3). Label each one: KILL, WATCH, SCALE, or REFRESH. Write it down.</div>
+          </div>
+          <div class="timer-seg" style="background: rgba(59,130,246,0.03); border-right: 1px solid rgba(255,255,255,0.04);">
+            <div class="ts-time" style="color: #60a5fa;">7:00 – 12:00</div>
+            <div class="ts-label" style="color: #3B82F6;">⚡ EXECUTE</div>
+            <div class="ts-desc">Now make the changes. Kill losers. Bump winner budgets 20%. Add new creatives if frequency is high. Only do what you decided — nothing extra.</div>
+          </div>
+          <div class="timer-seg" style="background: rgba(59,130,246,0.02);">
+            <div class="ts-time" style="color: #60a5fa;">12:00 – 15:00</div>
+            <div class="ts-label" style="color: #3B82F6;">📝 LOG</div>
+            <div class="ts-desc">Write down what you changed and why. Keep a simple note — date, what you did, reason. This becomes your weekly client report.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #ef4444;">The #1 beginner mistake: spending 2 hours "optimizing" and making things worse.</strong> The learning phase needs ~50 conversions per week to stabilize. Every time you change something, it resets. Do LESS. Only change what the rules tell you to change.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE 4 METRICS              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> 2. The 4 Metrics That Matter</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Ads Manager shows you 50+ columns. Most of them are noise. These 4 are the only ones you check every day. Click each one to see the benchmarks:</p>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
+        <div class="metric-card" onclick="showMetric('cpl')">
+          <div class="mc-value" style="color: #22c55e;">CPL</div>
+          <div class="mc-name">Cost Per Lead</div>
+          <div class="mc-desc">⭐ Your north star</div>
+        </div>
+        <div class="metric-card" onclick="showMetric('ctr')">
+          <div class="mc-value" style="color: #3B82F6;">CTR</div>
+          <div class="mc-name">Click-Through Rate</div>
+          <div class="mc-desc">Creative quality</div>
+        </div>
+        <div class="metric-card" onclick="showMetric('cpm')">
+          <div class="mc-value" style="color: #a78bfa;">CPM</div>
+          <div class="mc-name">Cost Per 1,000</div>
+          <div class="mc-desc">Delivery cost</div>
+        </div>
+        <div class="metric-card" onclick="showMetric('freq')">
+          <div class="mc-value" style="color: #eab308;">FREQ</div>
+          <div class="mc-name">Frequency</div>
+          <div class="mc-desc">Fatigue detector</div>
+        </div>
+      </div>
+
+      <div id="metric-detail" style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 20px; display: none;">
+        <div id="metric-content"></div>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-top: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: In Ads Manager → Columns → Customize Columns. Add: Cost per result, CTR, CPM, Frequency. Remove everything else. Save as "Daily Check" preset. Show them this removes the noise.</span>
+      </div>
+
+      <!-- Pizza example -->
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-top: 16px;">
+        <div style="color: #fff; font-weight: 800; font-size: 0.95rem; margin-bottom: 14px;">🍕 Example: Tony's Pizza — Day 7 Check</div>
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <th style="text-align: left; padding: 10px; color: #888; font-weight: 600;">Ad Name</th>
+                <th style="text-align: center; padding: 10px; color: #888; font-weight: 600;">Spend</th>
+                <th style="text-align: center; padding: 10px; color: #22c55e; font-weight: 600;">CPL</th>
+                <th style="text-align: center; padding: 10px; color: #3B82F6; font-weight: 600;">CTR</th>
+                <th style="text-align: center; padding: 10px; color: #a78bfa; font-weight: 600;">CPM</th>
+                <th style="text-align: center; padding: 10px; color: #eab308; font-weight: 600;">Freq</th>
+                <th style="text-align: center; padding: 10px; color: #fff; font-weight: 600;">Decision</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 10px; color: #ccc;">Family Dinner - Video</td>
+                <td style="padding: 10px; text-align: center; color: #888;">$42</td>
+                <td style="padding: 10px; text-align: center; color: #22c55e; font-weight: 700;">$7</td>
+                <td style="padding: 10px; text-align: center; color: #22c55e;">3.2%</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">$8</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">1.4</td>
+                <td style="padding: 10px; text-align: center;"><span style="background: #22c55e; color: #000; padding: 3px 10px; border-radius: 4px; font-weight: 800; font-size: 0.7rem;">SCALE</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 10px; color: #ccc;">Late Night Deal - Static</td>
+                <td style="padding: 10px; text-align: center; color: #888;">$38</td>
+                <td style="padding: 10px; text-align: center; color: #22c55e; font-weight: 700;">$9.50</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">1.8%</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">$11</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">1.8</td>
+                <td style="padding: 10px; text-align: center;"><span style="background: #22c55e; color: #000; padding: 3px 10px; border-radius: 4px; font-weight: 800; font-size: 0.7rem;">SCALE</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 10px; color: #ccc;">Lunch Special - Carousel</td>
+                <td style="padding: 10px; text-align: center; color: #888;">$35</td>
+                <td style="padding: 10px; text-align: center; color: #eab308; font-weight: 700;">$17.50</td>
+                <td style="padding: 10px; text-align: center; color: #eab308;">1.1%</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">$14</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">2.1</td>
+                <td style="padding: 10px; text-align: center;"><span style="background: #eab308; color: #000; padding: 3px 10px; border-radius: 4px; font-weight: 800; font-size: 0.7rem;">WATCH</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                <td style="padding: 10px; color: #ccc;">Party Catering - Video</td>
+                <td style="padding: 10px; text-align: center; color: #888;">$45</td>
+                <td style="padding: 10px; text-align: center; color: #ef4444; font-weight: 700;">$45</td>
+                <td style="padding: 10px; text-align: center; color: #ef4444;">0.4%</td>
+                <td style="padding: 10px; text-align: center; color: #eab308;">$22</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">1.6</td>
+                <td style="padding: 10px; text-align: center;"><span style="background: #ef4444; color: #fff; padding: 3px 10px; border-radius: 4px; font-weight: 800; font-size: 0.7rem;">KILL</span></td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; color: #ccc;">Grand Opening - Static</td>
+                <td style="padding: 10px; text-align: center; color: #888;">$52</td>
+                <td style="padding: 10px; text-align: center; color: #22c55e; font-weight: 700;">$10.40</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">1.6%</td>
+                <td style="padding: 10px; text-align: center; color: #ccc;">$9</td>
+                <td style="padding: 10px; text-align: center; color: #eab308;">3.2</td>
+                <td style="padding: 10px; text-align: center;"><span style="background: #8b5cf6; color: #fff; padding: 3px 10px; border-radius: 4px; font-weight: 800; font-size: 0.7rem;">REFRESH</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); color: #888; font-size: 0.82rem; line-height: 1.6;">
+          <strong style="color: #fff;">Tony's target CPL: $10.</strong> Family Dinner is crushing it at $7 → scale budget +20%. Party Catering spent $45 for 1 lead → 4.5x target → kill immediately. Grand Opening has great CPL but frequency 3.2 → people seeing it too often → add new creatives.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: DECISION RULES             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 3. The 4 Decision Rules</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every ad gets ONE of four labels. No "maybe." No "let me think about it." These rules remove emotion from your decisions:</p>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden;">
+        <div class="rule-card">
+          <div class="rule-badge" style="background: #ef4444;">KILL</div>
+          <div style="flex: 1;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">CPA is 3x+ your target</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">This ad is bleeding money. Turn it off immediately. Don't hope it gets better — it won't. You need at least 2-3x your target CPA in spend before judging (so the data is real).</div>
+          </div>
+          <div style="color: #ef4444; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">Target $10 → Kill at $30+</div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-badge" style="background: #eab308;">WATCH</div>
+          <div style="flex: 1;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">CPA is 1.5x-3x your target</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">Not great, not terrible. Give it 2-3 more days of data. If it doesn't improve → kill. If it drops below target → scale.</div>
+          </div>
+          <div style="color: #eab308; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">Target $10 → Watch at $15-30</div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-badge" style="background: #22c55e;">SCALE</div>
+          <div style="flex: 1;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">CPA is at or below target</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">Winner. Increase budget by 20-30%. Don't double it overnight — gradual scaling prevents the learning phase from resetting.</div>
+          </div>
+          <div style="color: #22c55e; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">Target $10 → Scale at ≤$10</div>
+        </div>
+        <div class="rule-card">
+          <div class="rule-badge" style="background: #8b5cf6;">REFRESH</div>
+          <div style="flex: 1;">
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Frequency hits 3.0+</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">People are seeing the same ad too many times. Performance will drop soon. Add 3-5 new creatives to the ad set. Don't pause the old ones yet — let Meta redistribute.</div>
+          </div>
+          <div style="color: #8b5cf6; font-size: 0.78rem; font-weight: 700; flex-shrink: 0;">Freq 3.0+ → Add creatives</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">Print these rules. Stick them next to your monitor.</strong> When you're tempted to make a "gut feeling" change — look at the rules. If the data doesn't say to change it, don't change it. The algorithm is smarter than your gut. Always.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: DAILY TRACKER              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 4. Your Daily Tracking Sheet</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every day, after your 15-minute check, you log the numbers. This is how you track trends, spot problems early, and build your weekly client report. We built you a tracker — use it or copy the structure into Google Sheets.</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open the Google Sheet template. Show the Tony's Pizza example tab with color-coded CPL and decisions. Then show how to make a copy (File → Make a copy) and duplicate tabs for new clients.</span>
+      </div>
+
+      <a href="https://docs.google.com/spreadsheets/d/1zKJ65VA5QDBbPJDLOMJyJBVXzCrps97NlrW_txB5ynY/copy" target="_blank" style="display: block; background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(59,130,246,0.03)); border: 1px solid rgba(59,130,246,0.3); border-radius: 14px; padding: 24px; text-decoration: none; transition: all 0.2s; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="font-size: 2rem;">📊</div>
+          <div style="flex: 1;">
+            <div style="color: #3B82F6; font-weight: 800; font-size: 1rem;">Copy the Daily Campaign Tracker (Google Sheet) →</div>
+            <div style="color: #888; font-size: 0.85rem; margin-top: 4px;">Click to make your own copy. One tab per client. CPL auto-calculates. Color-coded: green = good, yellow = watch, red = kill. Comes with example data + blank template.</div>
+          </div>
+          <div style="color: #3B82F6; font-size: 1.5rem;">→</div>
+        </div>
+      </a>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+        <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-size: 1.2rem;">🍕</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">Tab 1: Example</div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 2px;">Tony's Pizza with 9 days of real data, weekly summary, and all formulas</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-size: 1.2rem;">📋</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">Tab 2: Blank Template</div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 2px;">Duplicate this tab for each new client. CPL formula pre-loaded.</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-size: 1.2rem;">📖</div>
+          <div style="color: #fff; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">Tab 3: How To Use</div>
+          <div style="color: #888; font-size: 0.72rem; margin-top: 2px;">Step-by-step instructions + decision rules reference.</div>
+        </div>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px;">
+        <div style="color: #fff; font-weight: 700; font-size: 0.88rem; margin-bottom: 12px;">What You Log Every Day</div>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; font-size: 0.78rem;">
+          <div style="background: #161616; border-radius: 6px; padding: 10px; text-align: center;">
+            <div style="color: #3B82F6; font-weight: 700;">Date</div>
+            <div style="color: #666; margin-top: 2px;">When</div>
+          </div>
+          <div style="background: #161616; border-radius: 6px; padding: 10px; text-align: center;">
+            <div style="color: #3B82F6; font-weight: 700;">Spend + Leads</div>
+            <div style="color: #666; margin-top: 2px;">CPL auto-calcs</div>
+          </div>
+          <div style="background: #161616; border-radius: 6px; padding: 10px; text-align: center;">
+            <div style="color: #3B82F6; font-weight: 700;">CTR + CPM + Freq</div>
+            <div style="color: #666; margin-top: 2px;">Health metrics</div>
+          </div>
+          <div style="background: #161616; border-radius: 6px; padding: 10px; text-align: center;">
+            <div style="color: #3B82F6; font-weight: 700;">Decision</div>
+            <div style="color: #666; margin-top: 2px;">KILL/WATCH/SCALE</div>
+          </div>
+          <div style="background: #161616; border-radius: 6px; padding: 10px; text-align: center;">
+            <div style="color: #3B82F6; font-weight: 700;">Notes</div>
+            <div style="color: #666; margin-top: 2px;">What you changed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: WHAT NOT TO DO            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚫</span> 5. The 5 Optimization Killers</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">These mistakes will cost your clients money and reset the learning phase. Every beginner makes at least one of these. Don't be that person:</p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #161616; border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 16px 20px; display: flex; gap: 14px; align-items: start;">
+          <div style="color: #ef4444; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">1</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Changing things during learning phase</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Meta's algorithm needs ~50 conversions per week to figure out who to show your ads to. If you edit budget, targeting, or creative before that — it resets to zero and starts learning all over again. Wait.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 16px 20px; display: flex; gap: 14px; align-items: start;">
+          <div style="color: #ef4444; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">2</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Doubling budget overnight</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">$15/day → $30/day = learning phase resets. The algorithm panics when you change too much at once. Scale 20-30% at a time: $15 → $18 → $22 → $27. Be patient.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 16px 20px; display: flex; gap: 14px; align-items: start;">
+          <div style="color: #ef4444; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">3</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Panic-killing ads after 24 hours</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">Day 1 data means nothing. You need the ad to spend at least 2-3x your target CPA before judging. If target CPL is $10, let the ad spend at least $20-30 before you decide it's a loser.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 16px 20px; display: flex; gap: 14px; align-items: start;">
+          <div style="color: #ef4444; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">4</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Editing the winning ad</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">An ad is performing well → "let me tweak the copy to make it even better" → you just killed it. NEVER edit a winner. If you want to test a variation, create a NEW ad. Leave the winner completely alone.</div>
+          </div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 16px 20px; display: flex; gap: 14px; align-items: start;">
+          <div style="color: #ef4444; font-weight: 800; font-size: 1.1rem; flex-shrink: 0;">5</div>
+          <div>
+            <div style="color: #fff; font-weight: 700; font-size: 0.9rem;">Optimizing based on feelings</div>
+            <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">"I don't like this ad" doesn't matter. "This ad has 3x CPA after $30 spend" matters. You are not the target audience. Your client is not the target audience. Only the data decides what stays and what goes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: SCALING LADDER             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📈</span> 6. The Scaling Ladder</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">When an ad is winning (CPA at or below target for 3+ days), scale it gradually. Never jump more than 20-30% at a time:</p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: In Ads Manager, click on a campaign budget. Show how to edit it. Change $15 → $18. Explain why you're not going to $30.</span>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(34,197,94,0.2); border-radius: 14px; padding: 24px;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 10px 16px;">
+              <div style="color: #22c55e; font-weight: 800;">$15</div>
+            </div>
+            <div style="color: #666; font-size: 0.68rem; margin-top: 4px;">Start</div>
+          </div>
+          <div style="color: #444;">→</div>
+          <div style="text-align: center;">
+            <div style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 10px 16px;">
+              <div style="color: #22c55e; font-weight: 800;">$18</div>
+            </div>
+            <div style="color: #666; font-size: 0.68rem; margin-top: 4px;">+20%</div>
+          </div>
+          <div style="color: #444;">→</div>
+          <div style="text-align: center;">
+            <div style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 10px 16px;">
+              <div style="color: #22c55e; font-weight: 800;">$22</div>
+            </div>
+            <div style="color: #666; font-size: 0.68rem; margin-top: 4px;">+22%</div>
+          </div>
+          <div style="color: #444;">→</div>
+          <div style="text-align: center;">
+            <div style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 10px 16px;">
+              <div style="color: #22c55e; font-weight: 800;">$27</div>
+            </div>
+            <div style="color: #666; font-size: 0.68rem; margin-top: 4px;">+23%</div>
+          </div>
+          <div style="color: #444;">→</div>
+          <div style="text-align: center;">
+            <div style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 10px 16px;">
+              <div style="color: #22c55e; font-weight: 800;">$33</div>
+            </div>
+            <div style="color: #666; font-size: 0.68rem; margin-top: 4px;">+22%</div>
+          </div>
+          <div style="color: #444;">→</div>
+          <div style="text-align: center;">
+            <div style="background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.4); border-radius: 8px; padding: 10px 16px;">
+              <div style="color: #22c55e; font-weight: 800;">$40</div>
+            </div>
+            <div style="color: #666; font-size: 0.68rem; margin-top: 4px;">+21%</div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 16px; color: #888; font-size: 0.82rem;">
+          Wait <strong style="color: #fff;">2-3 days</strong> between each step. Only increase if CPA stays at or below target.<br>If CPA spikes after a bump → go back to the previous budget immediately.
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: WEEKLY REPORT              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 7. The Weekly Client Report</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every week, send your client a simple update. Not a 10-page document — just the numbers that matter and what you did. Copy this template:</p>
+
+      <div style="background: #0a0a0a; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 20px; position: relative;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <span style="color: #3B82F6; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">📋 Weekly Report Template</span>
+          <button onclick="copyReport()" id="copyReportBtn" style="margin-left: auto; background: #3B82F6; color: #fff; border: none; border-radius: 6px; padding: 5px 12px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">COPY</button>
+        </div>
+        <div id="reportTemplate" style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; line-height: 1.7; color: #ccc; white-space: pre-wrap;">Hey [Client Name]! Here's your weekly ads update:
+
+📊 THIS WEEK'S NUMBERS
+• Total Spend: $___
+• Total Leads: ___
+• Cost Per Lead: $___
+• Best Performing Ad: [name] — $[CPL]
+
+🟢 WHAT'S WORKING
+• [Top ad and WHY it's winning — angle, creative type]
+• [Any trends you noticed]
+
+🔴 WHAT WE CHANGED
+• Paused [X] underperforming ads (too expensive)
+• Increased budget on [Y] — best performer
+• Added [Z] new creatives to keep things fresh
+
+📅 NEXT WEEK'S PLAN
+• [What you'll do next — new creatives, scaling, etc.]
+
+Questions? Let me know!</div>
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">Send this every Monday.</strong> Clients don't care about CPM or CTR — they care about "how many leads did I get and how much did it cost?" Keep it simple. This one message keeps clients happy and paying every month.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 8. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Do the 15-min routine from memory</strong>
+            <span>Scan (3 min) → Decide (4 min) → Execute (5 min) → Log (3 min). Set a timer.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Set up your "Daily Check" column preset in Ads Manager</strong>
+            <span>CPL + CTR + CPM + Frequency + Spend + Results. Save it. Use it every day.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Label 5 ads using only the decision rules</strong>
+            <span>Use the Tony's Pizza example or your own campaigns. KILL / WATCH / SCALE / REFRESH — no gut feelings.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Name all 5 optimization killers</strong>
+            <span>Changing during learning phase, doubling budget, panic-killing, editing winners, optimizing on feelings.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Fill out and send your first weekly report</strong>
+            <span>Use the template. Send every Monday. Keep it simple — leads, cost, what you did, what's next.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>optimization</span><span>daily-routine</span><span>kill-scale-watch-refresh</span><span>scaling</span><span>learning-phase</span><span>CPL</span><span>CTR</span><span>CPM</span><span>client-reporting</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.10-ai-audience-finder.html" class="nav-link">← Targeting (Andromeda)</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.12-niche-templates.html" class="nav-link">Niche Templates →</a>
+    </div>
+  </div>
+
+  <script>
+    // === METRIC DETAIL ===
+    const metricData = {
+      cpl: {
+        color: '#22c55e',
+        title: 'CPL — Cost Per Lead (Your North Star)',
+        content: `<p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0 0 10px 0;">This is the ONE number that matters most. How much does it cost to get one lead (form fill, phone call, message)? Everything else supports this metric. If CPL is good, you're good.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;">
+          <div style="background:rgba(34,197,94,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#22c55e;font-weight:800;">Good</div><div style="color:#888;font-size:0.78rem;">At or below target</div></div>
+          <div style="background:rgba(234,179,8,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#eab308;font-weight:800;">Watch</div><div style="color:#888;font-size:0.78rem;">1.5-3x target</div></div>
+          <div style="background:rgba(239,68,68,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#ef4444;font-weight:800;">Kill</div><div style="color:#888;font-size:0.78rem;">3x+ target</div></div>
+        </div>`
+      },
+      ctr: {
+        color: '#3B82F6',
+        title: 'CTR — Click-Through Rate (Creative Quality)',
+        content: `<p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0 0 10px 0;">What percentage of people who SAW your ad CLICKED it. Low CTR = boring ad, wrong angle, or weak hook. This tells you if your creative needs work.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;">
+          <div style="background:rgba(34,197,94,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#22c55e;font-weight:800;">Good</div><div style="color:#888;font-size:0.78rem;">2%+ (local biz)</div></div>
+          <div style="background:rgba(234,179,8,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#eab308;font-weight:800;">Okay</div><div style="color:#888;font-size:0.78rem;">1-2%</div></div>
+          <div style="background:rgba(239,68,68,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#ef4444;font-weight:800;">Bad</div><div style="color:#888;font-size:0.78rem;">Under 1%</div></div>
+        </div>`
+      },
+      cpm: {
+        color: '#a78bfa',
+        title: 'CPM — Cost Per 1,000 Impressions (Delivery Cost)',
+        content: `<p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0 0 10px 0;">How much Meta charges to show your ad 1,000 times. High CPM usually means not enough creative diversity — the algorithm can't find good matches. Fix: add more diverse creatives.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;">
+          <div style="background:rgba(34,197,94,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#22c55e;font-weight:800;">Good</div><div style="color:#888;font-size:0.78rem;">$5-15 (local)</div></div>
+          <div style="background:rgba(234,179,8,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#eab308;font-weight:800;">High</div><div style="color:#888;font-size:0.78rem;">$15-30</div></div>
+          <div style="background:rgba(239,68,68,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#ef4444;font-weight:800;">Problem</div><div style="color:#888;font-size:0.78rem;">$30+</div></div>
+        </div>`
+      },
+      freq: {
+        color: '#eab308',
+        title: 'Frequency — Average Times Each Person Saw Your Ad',
+        content: `<p style="color:#ccc;font-size:0.88rem;line-height:1.6;margin:0 0 10px 0;">When the same person sees your ad too many times, they stop noticing it — this is creative fatigue. The fix is always the same: add fresh creatives to the ad set.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;">
+          <div style="background:rgba(34,197,94,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#22c55e;font-weight:800;">Good</div><div style="color:#888;font-size:0.78rem;">Under 2.0</div></div>
+          <div style="background:rgba(234,179,8,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#eab308;font-weight:800;">Monitor</div><div style="color:#888;font-size:0.78rem;">2.0-3.0</div></div>
+          <div style="background:rgba(239,68,68,0.08);border-radius:6px;padding:10px;text-align:center;"><div style="color:#ef4444;font-weight:800;">Refresh NOW</div><div style="color:#888;font-size:0.78rem;">3.0+</div></div>
+        </div>`
+      }
+    };
+
+    function showMetric(id) {
+      const d = metricData[id];
+      const el = document.getElementById('metric-detail');
+      const c = document.getElementById('metric-content');
+      c.innerHTML = '<div style="color:' + d.color + ';font-weight:800;font-size:0.95rem;margin-bottom:10px;">' + d.title + '</div>' + d.content;
+      el.style.display = 'block';
+      el.style.borderColor = d.color + '33';
+    }
+
+    // === COPY REPORT ===
+    function copyReport() {
+      const text = document.getElementById('reportTemplate').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyReportBtn');
+        btn.textContent = 'COPIED ✓';
+        btn.style.background = '#22c55e';
+        setTimeout(() => { btn.textContent = 'COPY'; btn.style.background = '#3B82F6'; }, 2000);
+      });
+    }
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.11-optimizer-v3';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

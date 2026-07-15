@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.9b: AI Ad Creative Design — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .tool-link { display: flex; align-items: center; gap: 14px; background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 20px; margin-bottom: 12px; text-decoration: none; transition: border-color 0.2s; }
+    .tool-link:hover { border-color: rgba(59,130,246,0.5); }
+    .tool-link .tl-icon { font-size: 2rem; min-width: 50px; text-align: center; }
+    .tool-link .tl-name { color: #fff; font-weight: 700; font-size: 1rem; }
+    .tool-link .tl-desc { color: #888; font-size: 0.82rem; margin-top: 2px; line-height: 1.4; }
+    .tool-link .tl-url { color: #3B82F6; font-size: 0.78rem; margin-top: 4px; }
+    .angle-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+    .angle-card h4 { color: #3B82F6; margin: 0 0 6px 0; font-size: 0.95rem; }
+    .angle-card .example { color: #888; font-size: 0.85rem; font-style: italic; margin-top: 8px; }
+    .angle-card .works-for { color: #666; font-size: 0.78rem; margin-top: 6px; }
+    .niche-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; margin: 16px 0; }
+    .niche-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px 16px; }
+    .niche-card .nc-name { color: #fff; font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+    .niche-card .nc-visual { color: #888; font-size: 0.82rem; }
+    .niche-card .nc-hook { color: #3B82F6; font-size: 0.82rem; font-style: italic; margin-top: 6px; }
+    .screenshot-placeholder { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px 20px; margin: 16px 0; text-align: center; }
+    .screenshot-placeholder p { color: #555; font-size: 0.8rem; margin: 0; }
+    .screenshot-placeholder .label { color: #888; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.9b — Module 3: Fulfillment</div>
+      <h1>AI Ad Creative <span>Design</span></h1>
+      <div class="subtitle">
+        <span class="tag">Creatives</span>
+        <span class="tag">Hands-On</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Your client has zero professional photos. No designer. No budget for a photoshoot. This lesson shows you how to create professional ad images for any local business in under 10 minutes using two free tools.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHY THIS MATTERS                       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> Why This Matters</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Creative is the #1 lever in Meta ads right now. Under Meta's Andromeda system, targeting matters less than it used to. Meta's AI finds the right people. YOUR job is to make something good enough that people stop scrolling.
+      </p>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6;">
+        For local businesses, the creative has to feel real. Not corporate stock photo real. Like someone in your neighborhood took that picture. The good news: AI tools can generate exactly that in about 60 seconds.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- YOUR TWO TOOLS                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> Your Two Tools</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">You only need two. Don't overcomplicate this.</p>
+
+      <a href="https://stitch.withgoogle.com" target="_blank" class="tool-link">
+        <div class="tl-icon">🎨</div>
+        <div>
+          <div class="tl-name">Google Stitch</div>
+          <div class="tl-desc">Describe your ad in plain English. Stitch generates the full design. Iterate with text or voice. Export as image.</div>
+          <div class="tl-url">stitch.withgoogle.com — Free via Google Labs</div>
+        </div>
+      </a>
+
+      <a href="https://canva.com" target="_blank" class="tool-link">
+        <div class="tl-icon">✏️</div>
+        <div>
+          <div class="tl-name">Canva</div>
+          <div class="tl-desc">Add the client's logo, adjust colors, final polish. Templates for every ad format. Drag and drop.</div>
+          <div class="tl-url">canva.com — Free tier works fine</div>
+        </div>
+      </a>
+
+      <div class="tip-box">
+        <p><strong>💡 That's it.</strong> Stitch designs it, Canva polishes it. Two tools, one workflow, every client.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE WORKFLOW                           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> The Workflow: Create an Ad in 10 Minutes</h2>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Know What You're Making</h4>
+        <p>Before you open anything, answer 3 questions:</p>
+        <ul style="color: #ccc; font-size: 0.88rem; line-height: 1.8; padding-left: 20px;">
+          <li><strong style="color: #fff;">What does the client do?</strong> (roofing, dental, HVAC, etc.)</li>
+          <li><strong style="color: #fff;">What's the offer?</strong> (free inspection, 20% off, free consultation)</li>
+          <li><strong style="color: #fff;">Who's seeing this?</strong> (homeowners 30-55 in Dallas)</li>
+        </ul>
+        <p>Also grab the client's logo and brand color from their website. Takes 30 seconds.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Generate the Design in Google Stitch</h4>
+        <p>Go to <a href="https://stitch.withgoogle.com" target="_blank" style="color: #3B82F6;">stitch.withgoogle.com</a> and describe your ad in plain English:</p>
+      </div>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad image for a roofing company in Dallas. Show a clean, modern house with a new roof. Bright lighting, professional look. Include text that says "Free Roof Inspection" in bold at the top. Use dark blue as the primary color. Add a "Call Now" button at the bottom. 1080x1080 format.</pre>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 12px 0;">Stitch generates the layout. If you don't like something, just tell it:</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin: 12px 0;">
+        <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; padding: 10px 14px; color: #3B82F6; font-size: 0.82rem;">"Make the text bigger"</div>
+        <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; padding: 10px 14px; color: #3B82F6; font-size: 0.82rem;">"Add a before-and-after split"</div>
+        <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; padding: 10px 14px; color: #3B82F6; font-size: 0.82rem;">"Use warmer colors"</div>
+        <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; padding: 10px 14px; color: #3B82F6; font-size: 0.82rem;">"Make it more professional"</div>
+      </div>
+
+      <p style="color: #888; font-size: 0.82rem;">It updates in real time. When you're happy, export the image.</p>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Google Stitch generating an ad design from a prompt</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Polish in Canva (2 minutes)</h4>
+        <p>Open <a href="https://canva.com" target="_blank" style="color: #3B82F6;">canva.com</a>. Upload the Stitch export. Then:</p>
+        <ol style="color: #ccc; font-size: 0.88rem; line-height: 1.8; padding-left: 20px;">
+          <li>Drop in the client's actual logo</li>
+          <li>Adjust any text if needed</li>
+          <li>Pinch to preview at phone size (this is how 95% of people will see it)</li>
+          <li>Download as PNG</li>
+        </ol>
+        <p>Done. One ad creative ready to upload to Meta.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Canva with the Stitch export + client logo added</div>
+        <p>Screenshot will be added here</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- 5 AD ANGLES                            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 5 Ad Angles That Work for Every Local Business</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">You don't need to reinvent the wheel. These 5 cover 90% of local business ads. For each one, open Stitch, describe it, export, polish in Canva.</p>
+
+      <div class="angle-card">
+        <h4>1. The Direct Offer</h4>
+        <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Clean image of the service result. Offer front and center. No tricks.</p>
+        <div class="example">"Free Roof Inspection — Book Today"</div>
+        <div class="works-for">Works for: every niche</div>
+      </div>
+
+      <div class="angle-card">
+        <h4>2. The Before/After</h4>
+        <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Split screen. Left: the problem. Right: the fix. Most powerful format for service businesses.</p>
+        <div class="example">Left: old damaged roof → Right: brand new clean roof</div>
+        <div class="works-for">Works for: roofing, dental, landscaping, cleaning, renovation, salon</div>
+      </div>
+
+      <div class="angle-card">
+        <h4>3. The Social Proof</h4>
+        <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Star rating + review quote + professional image. Builds trust instantly.</p>
+        <div class="example">"4,200+ Dallas Homeowners Trust Us" ⭐⭐⭐⭐⭐</div>
+        <div class="works-for">Works for: any established business with reviews</div>
+      </div>
+
+      <div class="angle-card">
+        <h4>4. The Problem Call-Out</h4>
+        <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Image shows the problem. Ad copy offers the solution. Gets attention through pain.</p>
+        <div class="example">"Your AC Bill Doesn't Have to Be This High"</div>
+        <div class="works-for">Works for: HVAC, plumbing, auto repair, pest control</div>
+      </div>
+
+      <div class="angle-card">
+        <h4>5. The Urgency / Seasonal</h4>
+        <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Limited time + seasonal relevance. Creates FOMO without being cheesy.</p>
+        <div class="example">"Spring Special — 20% Off Before April 15"</div>
+        <div class="works-for">Works for: every niche (just match the season)</div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Pro tip:</strong> When testing ads, create one image for each of these 5 angles and let Meta figure out which one wins. Don't guess — test.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STITCH PROMPTS BY NICHE                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> Copy-Paste Stitch Prompts by Niche</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Replace the brackets with your client's info. Copy, paste into Stitch, done.</p>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">Roofing</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for a roofing company in [CITY]. Show a beautiful home with a brand new roof, bright natural lighting, suburban neighborhood. Text says "Free Roof Inspection" in bold white letters. Dark blue brand color. Professional, clean, trustworthy feel. 1080x1080.</pre>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">Dental</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for a dental clinic in [CITY]. Show a bright, modern dental office with a patient smiling confidently. Text says "When Was Your Last Cleaning?" in clean white font. Light teal brand color. Warm, welcoming, professional. 1080x1080.</pre>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">HVAC</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for an HVAC company in [CITY]. Show a comfortable family relaxing at home on a hot day, cool and happy. Text says "$49 AC Tune-Up — Stay Cool This Summer" in bold. Brand color: [COLOR]. Clean, modern layout. 1080x1080.</pre>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">Plumbing</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for a plumbing company in [CITY]. Show a clean, modern kitchen with no water damage, everything working perfectly. Text says "Don't Wait for the Flood — Call Now" in bold. Brand color: [COLOR]. Professional and urgent feel. 1080x1080.</pre>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">Gym / Fitness</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for a local gym in [CITY]. Show an energetic group fitness class with diverse people working out, bright lighting, positive energy. Text says "First Week Free — No Catch" in bold white. Brand color: [COLOR]. Motivating and welcoming. 1080x1080.</pre>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">Restaurant</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for a restaurant in [CITY]. Show a beautifully plated dish, close-up food photography, warm ambient lighting, inviting atmosphere. Text says "Tonight's Special Won't Last" in elegant white font. Brand color: [COLOR]. Premium and appetizing. 1080x1080.</pre>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">Salon / Barber</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for a hair salon in [CITY]. Show a stylish, modern salon interior with a client looking confident after a fresh cut. Text says "Walk In Good. Walk Out Great." in bold. Brand color: [COLOR]. Trendy and inviting. 1080x1080.</pre>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 20px 0 8px;">Landscaping</h3>
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Design a Facebook ad for a landscaping company in [CITY]. Show a beautiful, manicured front yard with green grass, trimmed hedges, and flowers. Before-and-after split layout. Text says "Your Yard Could Look Like This" in bold. Brand color: [COLOR]. 1080x1080.</pre>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- NICHE QUICK REFERENCE                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> Quick Reference: What Works by Niche</h2>
+      <div class="niche-grid">
+        <div class="niche-card">
+          <div class="nc-name">🏠 Roofing</div>
+          <div class="nc-visual">New roof, aerial shot, before/after</div>
+          <div class="nc-hook">"Your neighbors already called us"</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">🦷 Dental</div>
+          <div class="nc-visual">Bright smile, clean office, team</div>
+          <div class="nc-hook">"When was your last cleaning?"</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">❄️ HVAC</div>
+          <div class="nc-visual">Comfortable family, thermostat, seasonal</div>
+          <div class="nc-hook">"Your AC bill doesn't have to be this high"</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">🔧 Plumbing</div>
+          <div class="nc-visual">Clean kitchen, no damage, emergency</div>
+          <div class="nc-hook">"Don't wait for the flood"</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">💪 Gym</div>
+          <div class="nc-visual">Group class, energy, transformation</div>
+          <div class="nc-hook">"First week free — no catch"</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">🍽️ Restaurant</div>
+          <div class="nc-visual">Food close-up, warm lighting, ambiance</div>
+          <div class="nc-hook">"Tonight's special won't last"</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">💇 Salon</div>
+          <div class="nc-visual">Fresh cut, styled look, modern interior</div>
+          <div class="nc-hook">"Walk in good. Walk out great."</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">🌿 Landscaping</div>
+          <div class="nc-visual">Before/after yard, green grass, aerial</div>
+          <div class="nc-hook">"Your yard could look like this"</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">🔩 Auto Repair</div>
+          <div class="nc-visual">Clean shop, diagnostic screen, under hood</div>
+          <div class="nc-hook">"Check engine light? We'll check it free."</div>
+        </div>
+        <div class="niche-card">
+          <div class="nc-name">🏡 Real Estate</div>
+          <div class="nc-visual">Property tour, neighborhood aerial, staging</div>
+          <div class="nc-hook">"Just listed in [neighborhood]"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT NOT TO DO                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚫</span> What NOT to Do</h2>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't use stock photos that look fake.</strong> Nobody believes the smiling man in a suit is your client's plumber. Use Stitch to generate something that looks real.</p>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't put too much text on the image.</strong> 5-8 words max on the image itself. The rest goes in the ad copy above the image.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't skip the client's brand.</strong> Grab their logo and brand color from their website before you start. A great ad that doesn't match their brand feels off.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't forget mobile preview.</strong> 95% of people see the ad on their phone. If your text is too small to read on a phone, redo it.</p>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't use before/after health claims without a disclaimer.</strong> Dental, weight loss, skincare — Meta flags these. Add "Results may vary" if using before/after for health-related businesses.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHECKLIST                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> Homework Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Creative Design Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="designChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Pick a local business (real client or practice niche)</strong>
+            <span>Any niche from the list above works</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Grab their logo and brand color from their website</strong>
+            <span>Right-click logo → save. Use a color picker for the hex code.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Create 3 ad images in Google Stitch using 3 different angles</strong>
+            <span>Pick 3 of the 5 angles: direct offer, before/after, social proof, problem, urgency</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Polish each one in Canva (add logo, check mobile preview)</strong>
+            <span>2 minutes per image. Logo + final check.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Download all 3 as PNG and upload to your test campaign</strong>
+            <span>Let Meta decide which angle wins. Don't guess — test.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>creatives</span><span>google-stitch</span><span>canva</span><span>ad-design</span><span>ai-images</span><span>local-business</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.9-ai-creative-builder.html" class="nav-link">← AI Creative Builder</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.10-ai-audience-finder.html" class="nav-link">Targeting →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-3.9b-design-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

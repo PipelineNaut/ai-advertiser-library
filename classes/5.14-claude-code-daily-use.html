@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.14: Claude Code in Real Life — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .callout { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; }
+    .callout h4 { font-size: 16px; font-weight: 700; color: var(--orange); margin-bottom: 8px; }
+    .callout p { font-size: 15px; color: #ccc; line-height: 1.7; }
+    .prompt-box { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+    .prompt-label { font-size: 11px; font-weight: 700; color: var(--orange); margin-bottom: 10px; letter-spacing: 1px; }
+    .prompt-text { font-size: 14px; color: #ccc; font-family: monospace; line-height: 1.6; white-space: pre-wrap; }
+    .workflow-row { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding: 24px; background: var(--card); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; }
+    .wf-step { flex: 1; min-width: 100px; text-align: center; padding: 18px 12px; background: #111; border: 2px solid #222; border-radius: 12px; }
+    .wf-step-icon { font-size: 28px; margin-bottom: 6px; }
+    .wf-step-title { font-size: 12px; font-weight: 800; color: var(--orange); letter-spacing: 1px; }
+    .wf-step-desc { font-size: 11px; color: #888; margin-top: 2px; }
+    .wf-arrow { display: flex; align-items: center; color: var(--orange); font-size: 20px; font-weight: 900; flex-shrink: 0; }
+    @media (max-width: 640px) { .workflow-row { flex-direction: column; } .wf-arrow { transform: rotate(90deg); align-self: center; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">MODULE 5 — Lesson 5.14</div>
+      <h1><span>Claude Code in Real Life</span></h1>
+      <div class="subtitle">
+        <span class="tag">AI Basics</span>
+        <span class="tag">Websites</span>
+        <span class="tag">Outreach</span>
+        <span class="tag">~40 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      three things: who you are in this game, how to set up your own AI operator, build a real website from scratch, and use it to land a client.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHO AM I                                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">◆</span> Who Am I</h2>
+
+      <div style="background: var(--card); border: 2px solid var(--orange); border-radius: 12px; padding: 28px; margin-bottom: 24px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="font-size: 64px;">🧠</div>
+        <div>
+          <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 6px;">i'm your AI coach inside this program.</div>
+          <div style="font-size: 15px; color: #ccc; line-height: 1.7;">i'm here to show you exactly how to use AI tools to make money. not theory. not "prompt engineering" fluff. actual stuff you can do TODAY that gets you clients and puts money in your pocket. everything i show you, i use myself. if it doesn't make money, i'm not teaching it.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT'S YOUR ROLE                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">◆</span> What's Your Role</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+        <div style="background: var(--card); border: 2px solid #34C759; border-radius: 12px; padding: 28px; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 12px;">💼</div>
+          <div style="font-size: 16px; font-weight: 800; color: #34C759; margin-bottom: 8px;">you are the operator</div>
+          <div style="font-size: 14px; color: #ccc; line-height: 1.6;">you tell the AI what to do. it does the work. you don't need to code. you don't need to design. you don't need a degree. you just need to know what to ask for.</div>
+        </div>
+        <div style="background: var(--card); border: 2px solid var(--orange); border-radius: 12px; padding: 28px; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 12px;">🤖</div>
+          <div style="font-size: 16px; font-weight: 800; color: var(--orange); margin-bottom: 8px;">AI is the worker</div>
+          <div style="font-size: 14px; color: #ccc; line-height: 1.6;">it builds websites, writes emails, finds leads, analyzes data, creates content. it does in 30 seconds what used to take 3 hours. your job is giving it clear instructions.</div>
+        </div>
+      </div>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center;">
+        <div style="font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 12px;">think of it like this:</div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <div style="background: var(--card); border-radius: 10px; padding: 16px 24px;">
+            <div style="font-size: 28px; margin-bottom: 4px;">👤</div>
+            <div style="font-size: 13px; font-weight: 700; color: #fff;">you</div>
+            <div style="font-size: 11px; color: #888;">the boss</div>
+          </div>
+          <div style="font-size: 24px; color: var(--orange); font-weight: 900;">→</div>
+          <div style="background: var(--card); border-radius: 10px; padding: 16px 24px;">
+            <div style="font-size: 28px; margin-bottom: 4px;">💬</div>
+            <div style="font-size: 13px; font-weight: 700; color: #fff;">you say what you need</div>
+            <div style="font-size: 11px; color: #888;">in plain english</div>
+          </div>
+          <div style="font-size: 24px; color: var(--orange); font-weight: 900;">→</div>
+          <div style="background: var(--card); border-radius: 10px; padding: 16px 24px;">
+            <div style="font-size: 28px; margin-bottom: 4px;">🤖</div>
+            <div style="font-size: 13px; font-weight: 700; color: #fff;">AI does it</div>
+            <div style="font-size: 11px; color: #888;">in 30 seconds</div>
+          </div>
+          <div style="font-size: 24px; color: var(--orange); font-weight: 900;">→</div>
+          <div style="background: var(--card); border-radius: 10px; padding: 16px 24px;">
+            <div style="font-size: 28px; margin-bottom: 4px;">💰</div>
+            <div style="font-size: 13px; font-weight: 700; color: #fff;">you get paid</div>
+            <div style="font-size: 11px; color: #888;">by the client</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <h4>you don't need to be smart. you need to be clear.</h4>
+        <p>the better you describe what you want, the better the output. that's literally the only skill. "build me a website for a dentist" gets you a website. "build me a modern dark landing page for a family dentist in miami with a hero section, services, testimonials, and a booking button" gets you a $5,000 website. same tool. better instructions.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT YOU CAN DO                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">◆</span> What You Can Do Right Now</h2>
+
+      <!-- USE CASE 1 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid var(--orange); border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">🌐</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">build websites and landing pages</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">describe what you want, claude builds it. landing pages, portfolios, client sites. "build me a dark modern landing page for a dentist in miami with a hero, services, testimonials, and a booking button." you get a full working page in 30 seconds.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "build a landing page for a [niche] in [city]. hero, services, testimonials, contact form. dark design."</div>
+      </div>
+
+      <!-- USE CASE 2 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #06B6D4; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">🔍</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">find leads in any city</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">claude searches google and pulls business info for you. names, phone numbers, websites, ratings. no API key needed. "find me 20 plumbers in austin texas and tell me which ones have ugly websites." you get a ready-to-contact list.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "find 20 [niche] businesses in [city]. get their name, website, phone, and google rating."</div>
+      </div>
+
+      <!-- USE CASE 3 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #34C759; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">📧</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">write entire email sequences</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">stop writing one email at a time. "write a 5-email follow-up sequence for someone who booked a call but didn't show. mix value, social proof, and urgency." you get 5 ready-to-paste emails in 30 seconds. works for cold outreach, onboarding, nurture, re-engagement.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "write a 5-email sequence for [situation]. casual tone, include social proof."</div>
+      </div>
+
+      <!-- USE CASE 4 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #A855F7; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">📋</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">generate client proposals</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">after a discovery call, dump your notes into claude. "here's what the client told me: [notes]. write a proposal with 3 pricing tiers, what's included, timeline, and next steps." you get a professional proposal in 2 minutes instead of 2 hours.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "here are my call notes: [paste]. write a proposal with 3 tiers and a clear next step."</div>
+      </div>
+
+      <!-- USE CASE 5 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #FF2D55; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">🎙️</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">handle any sales objection</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">mid-call or after a call, type the exact objection. "they said 'i need to think about it' for a $2,000/month service. give me 5 different responses." you get a logical one, an emotional one, one with a payment plan, one that reframes cost, and one with urgency. never get stuck again.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "they said '[objection]' for a $[price] service. give me 5 different ways to handle it."</div>
+      </div>
+
+      <!-- USE CASE 6 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid var(--orange); border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">📊</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">analyze ad performance</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">export your ad data from meta as a CSV. drop it in your workspace. "look at this data and tell me which ads are winning, which should i kill, and write a client report." no spreadsheet skills needed. claude reads the data and gives you the insights in plain english.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "read this CSV. top 3 winners, bottom 3 to kill, patterns you see. format as a client report."</div>
+      </div>
+
+      <!-- USE CASE 7 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #06B6D4; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">📱</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">plan a week of social media</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">stop staring at a blank screen. "create 7 instagram posts for a marketing agency. mix: value tips, behind-the-scenes, client results, and one hot take. casual tone." your whole week is planned in under 5 minutes.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "7 days of posts for [business]. 2 tips, 2 behind-the-scenes, 2 results, 1 hot take."</div>
+      </div>
+
+      <!-- USE CASE 8 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #34C759; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">📖</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">write SOPs so you can delegate</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">explain how you do something (use voice-to-text if you want), then tell claude to organize it. "here's how i onboard a new client: [messy notes]. turn this into a step-by-step SOP with checkboxes that a VA could follow without asking me questions." now you can hire someone and hand them the SOP.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "here's how i [process]: [notes]. turn into numbered SOP with checkboxes."</div>
+      </div>
+
+      <!-- USE CASE 9 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #A855F7; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">📝</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">draft contracts and agreements</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">need a client contract? a freelancer agreement? claude writes solid first drafts. "write a service agreement for marketing services at $2,000/month. include scope, payment terms, 30-day cancellation, liability limits." get a lawyer for the final version, but 90% of the work is done.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "write a service agreement for [service] at $[price]/month. scope, payment, cancellation."</div>
+      </div>
+
+      <!-- USE CASE 10 -->
+      <div style="background: var(--card); border: 1px solid #222; border-left: 4px solid #FF2D55; border-radius: 0 12px 12px 0; padding: 24px; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 10px;">
+          <div style="font-size: 32px;">🔍</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">research competitors</div>
+        </div>
+        <div style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 10px;">paste a competitor's landing page or ad copy. "break down this page. what's the hook? what's the offer? what objections are they handling? how could i beat them?" instant competitive analysis. use this before pitching a prospect to show up more prepared than anyone else.</div>
+        <div style="background: #0d0d0d; border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; color: #999;">try: "here's a competitor page: [paste]. break down hook, offer, CTA. what's weak? how do i beat them?"</div>
+      </div>
+
+      <div class="callout">
+        <h4>the rule</h4>
+        <p>if you're doing something more than twice, claude should be doing it. every repetitive task is a candidate.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SET UP YOUR OPERATOR                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">◆</span> Set Up Your AI Operator</h2>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+        <div style="background: var(--card); border: 2px solid var(--orange); border-radius: 12px; padding: 28px; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 12px;">📁</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">1. create a folder</div>
+          <div style="font-size: 13px; color: #888; margin-top: 6px;">call it "my-agency" or whatever you want. open it in VS Code.</div>
+        </div>
+        <div style="background: var(--card); border: 2px solid var(--orange); border-radius: 12px; padding: 28px; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 12px;">📝</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">2. create CLAUDE.md</div>
+          <div style="font-size: 13px; color: #888; margin-top: 6px;">copy the template below. fill in your info. that's your operator's brain.</div>
+        </div>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-label">COPY → PASTE INTO CLAUDE.md → FILL IN YOUR INFO</div>
+        <div class="prompt-text"># my AI operator
+
+**operator name:** [pick a name — Atlas, Nova, Friday, whatever you want]
+
+# about me
+
+**my name:** [your name]
+**what i do:** marketing agency, local business ads + websites
+**my niche:** [dentists / contractors / restaurants / etc.]
+**my city:** [your city]
+**my pricing:** [e.g. $1,500/month for ads]
+
+## how i talk
+- casual, direct, no corporate speak
+
+## rules
+- never make up stats or testimonials
+- keep things simple
+- when i say "find leads" i mean local businesses in my niche and city</div>
+      </div>
+
+      <div style="background: rgba(52,199,89,0.06); border: 1px solid rgba(52,199,89,0.2); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;">
+        <p style="font-size: 15px; color: #ccc; margin: 0;"><strong style="color: #22c55e;">that's it.</strong> claude reads this file every time you open the workspace. your output goes from generic to personalized instantly. name your AI whatever you want. this is your operator.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BUILD A WEBSITE                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">◆</span> Build a Website (One Prompt)</h2>
+
+      <div class="prompt-box">
+        <div class="prompt-label">PASTE THIS INTO CLAUDE CODE</div>
+        <div class="prompt-text">build me a modern landing page for a local [NICHE] business called [NAME] in [CITY].
+
+include:
+- hero section with headline and "book now" button
+- services section (3-4 services with icons)
+- about section
+- testimonials (placeholder for now)
+- contact section with phone, address, form
+- footer
+
+dark modern design. mobile responsive.
+save as index.html</div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+        <div style="background: var(--card); border: 1px solid #222; border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="font-size: 32px; margin-bottom: 8px;">⏱️</div>
+          <div style="font-size: 24px; font-weight: 900; color: var(--orange);">30s</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">build time</div>
+        </div>
+        <div style="background: var(--card); border: 1px solid #222; border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="font-size: 32px; margin-bottom: 8px;">💰</div>
+          <div style="font-size: 24px; font-weight: 900; color: var(--orange);">$0</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">cost to build</div>
+        </div>
+        <div style="background: var(--card); border: 1px solid #222; border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="font-size: 32px; margin-bottom: 8px;">🏷️</div>
+          <div style="font-size: 24px; font-weight: 900; color: var(--orange);">$2K</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">what you charge</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+        <a href="https://stitch.withgoogle.com" target="_blank" style="background: var(--card); border: 1px solid #222; border-radius: 10px; padding: 18px 20px; text-decoration: none; display: block;">
+          <div style="font-size: 14px; font-weight: 700; color: #fff;">Google Stitch</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">describe a website, get the full design + code</div>
+        </a>
+        <a href="https://21st.dev" target="_blank" style="background: var(--card); border: 1px solid #222; border-radius: 10px; padding: 18px 20px; text-decoration: none; display: block;">
+          <div style="font-size: 14px; font-weight: 700; color: #fff;">21st.dev</div>
+          <div style="font-size: 12px; color: #888; margin-top: 4px;">beautiful pre-built components for your builds</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE OUTREACH PLAY                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">◆</span> Use It to Land Clients</h2>
+
+      <div class="workflow-row">
+        <div class="wf-step">
+          <div class="wf-step-icon">🔍</div>
+          <div class="wf-step-title">FIND</div>
+          <div class="wf-step-desc">scrape leads</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">👀</div>
+          <div class="wf-step-title">CHECK</div>
+          <div class="wf-step-desc">ugly website?</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">⚡</div>
+          <div class="wf-step-title">REVAMP</div>
+          <div class="wf-step-desc">rebuild in 30s</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">📸</div>
+          <div class="wf-step-title">SCREENSHOT</div>
+          <div class="wf-step-desc">before / after</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">📩</div>
+          <div class="wf-step-title">SEND</div>
+          <div class="wf-step-desc">DM the owner</div>
+        </div>
+      </div>
+
+      <!-- SCRAPE -->
+      <div class="prompt-box">
+        <div class="prompt-label">FIND LEADS (no API needed)</div>
+        <div class="prompt-text">search google for 20 [NICHE] businesses in [CITY].
+
+for each one get:
+- business name
+- website URL
+- phone number
+- google rating
+- whether their website looks outdated or modern
+
+focus on the ones with ugly websites.
+show me a table, then save as leads.csv</div>
+      </div>
+
+      <!-- REVAMP -->
+      <div class="prompt-box">
+        <div class="prompt-label">REVAMP THEIR SITE</div>
+        <div class="prompt-text">rebuild this local business website as a modern landing page.
+
+business: [NAME]
+current site: [URL]
+niche: [what they do]
+city: [where they are]
+
+scrape their real info from the current site.
+dark modern design, mobile responsive.
+hero + CTA, services, about, testimonials, contact.
+save as revamp.html</div>
+      </div>
+
+      <!-- DMs -->
+      <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 14px;">send one of these (attach the before/after screenshot)</h3>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+        <div style="background: var(--card); border: 1px solid #222; border-top: 3px solid var(--orange); border-radius: 10px; padding: 20px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--orange); margin-bottom: 8px;">📱 DM</div>
+          <div style="font-size: 13px; color: #ccc; line-height: 1.5; font-style: italic;">"hey [name], i came across [business] and mocked up a quick redesign, no charge. what do you think?"</div>
+        </div>
+        <div style="background: var(--card); border: 1px solid #222; border-top: 3px solid #34C759; border-radius: 10px; padding: 20px;">
+          <div style="font-size: 12px; font-weight: 700; color: #34C759; margin-bottom: 8px;">🎥 LOOM</div>
+          <div style="font-size: 13px; color: #ccc; line-height: 1.5; font-style: italic;">"hey [name], made a 60s video walking through a redesign for [business]. want the full thing?"</div>
+        </div>
+        <div style="background: var(--card); border: 1px solid #222; border-top: 3px solid #06B6D4; border-radius: 10px; padding: 20px;">
+          <div style="font-size: 12px; font-weight: 700; color: #06B6D4; margin-bottom: 8px;">📧 EMAIL</div>
+          <div style="font-size: 13px; color: #ccc; line-height: 1.5; font-style: italic;">"hi [name], put together a quick mockup for [business]. no obligation, just wanted to share."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE NUMBERS                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">◆</span> The Numbers</h2>
+
+      <div class="stats-grid" style="margin-bottom: 20px;">
+        <div class="stat-box"><div class="stat-value">10</div><div class="stat-label">outreach / week</div></div>
+        <div class="stat-box"><div class="stat-value">30 min</div><div class="stat-label">total time</div></div>
+        <div class="stat-box"><div class="stat-value">20-40%</div><div class="stat-label">response rate</div></div>
+        <div class="stat-box"><div class="stat-value">1-3</div><div class="stat-label">calls / week</div></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px;">
+        <div style="background: var(--card); border: 1px solid #222; border-top: 3px solid #06B6D4; border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="font-size: 20px; font-weight: 900; color: #06B6D4;">$500-$2K</div>
+          <div style="font-size: 12px; color: #888; margin-top: 6px;">website only (one time)</div>
+        </div>
+        <div style="background: var(--card); border: 1px solid #222; border-top: 3px solid #34C759; border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="font-size: 20px; font-weight: 900; color: #34C759;">$1.5-3K/mo</div>
+          <div style="font-size: 12px; color: #888; margin-top: 6px;">website + ads</div>
+        </div>
+        <div style="background: var(--card); border: 2px solid var(--orange); border-radius: 10px; padding: 20px; text-align: center;">
+          <div style="font-size: 20px; font-weight: 900; color: var(--orange);">FREE site</div>
+          <div style="font-size: 12px; color: #888; margin-top: 6px;">→ lock in monthly ads</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAKEAWAYS -->
+    <div class="section">
+      <h2><span class="icon">◆</span> Key Takeaways</h2>
+      <div class="steps">
+        <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>set up your operator.</strong> folder + CLAUDE.md. 5 minutes. everything gets better.</div></div>
+        <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>you can build websites.</strong> one prompt, 30 seconds, looks like $5,000.</div></div>
+        <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>don't pitch. give.</strong> free mockup > cold DM. every time.</div></div>
+        <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>the website is the foot in the door.</strong> monthly ads is the real money.</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2><span class="icon">◆</span> Tags</h2>
+      <div class="tags">
+        <span>claude-code</span>
+        <span>ai-operator</span>
+        <span>websites</span>
+        <span>outreach</span>
+        <span>client-acquisition</span>
+      </div>
+    </div>
+    
+    <div class="nav-bottom">
+      <a href="5.13-building-sops.html" class="nav-link">← Building SOPs with AI</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <span></span>
+    </div>
+  </div>
+</body>
+</html>

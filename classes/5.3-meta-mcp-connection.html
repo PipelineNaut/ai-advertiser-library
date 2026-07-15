@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.3: Connect Claude Code to Meta (Official MCP) — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .click-step .click-path { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; font-family: 'SF Mono', monospace; font-size: 0.85rem; color: #3B82F6; margin-bottom: 12px; display: inline-block; }
+    .click-step .click-path span { color: #666; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .code-block { background: #0a0a0a; border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; padding: 18px 22px; margin: 14px 0; position: relative; overflow-x: auto; }
+    .code-block::before { content: 'Terminal'; position: absolute; top: 0; left: 0; background: #3B82F6; color: #fff; font-size: 0.7rem; padding: 4px 12px; border-radius: 10px 0 8px 0; font-weight: 700; letter-spacing: 0.5px; }
+    .code-block pre { margin: 0; padding-top: 8px; color: #e6e6e6; font-family: 'SF Mono', 'Menlo', monospace; font-size: 0.88rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+    .code-block .comment { color: #5a5a5a; }
+    .code-block .accent { color: #3B82F6; }
+    .code-block .green { color: #22c55e; }
+    .copy-btn { position: absolute; top: 8px; right: 10px; background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: #3B82F6; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+    .copy-btn:hover { background: rgba(59,130,246,0.3); }
+    .copy-btn.copied { background: #22c55e; color: #fff; border-color: #22c55e; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    @media (max-width: 720px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card { padding: 20px; border-radius: 12px; }
+    .compare-card.old { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); }
+    .compare-card.new { background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.25); }
+    .compare-card h4 { margin: 0 0 10px 0; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .compare-card.old h4 { color: #ef4444; }
+    .compare-card.new h4 { color: #22c55e; }
+    .compare-card ul { margin: 0; padding-left: 20px; color: #bbb; font-size: 0.88rem; line-height: 1.7; }
+    .compare-card.old ul li { color: #aaa; }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+    .tool-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 16px; }
+    .tool-card .count { color: #3B82F6; font-weight: 800; font-size: 1.4rem; line-height: 1; }
+    .tool-card .label { color: #fff; font-weight: 600; font-size: 0.92rem; margin-top: 4px; }
+    .tool-card .desc { color: #888; font-size: 0.82rem; line-height: 1.5; margin-top: 6px; }
+    .prompt-block { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.05)); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 20px 22px; margin: 14px 0; position: relative; }
+    .prompt-block::before { content: '💬 PASTE IN CLAUDE CODE'; position: absolute; top: -10px; left: 16px; background: #3B82F6; color: #fff; font-size: 0.7rem; padding: 3px 12px; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px; }
+    .prompt-block pre { margin: 8px 0 0 0; color: #e6e6e6; font-family: 'SF Mono', 'Menlo', monospace; font-size: 0.88rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.3 — Module 5: AI Integration</div>
+      <h1>Connect Claude Code to <span>Meta (Official MCP)</span></h1>
+      <div class="subtitle">
+        <span class="tag">~5 min</span>
+        <span class="tag">No tokens</span>
+        <span class="tag">No code</span>
+        <span class="tag">Updated April 2026</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      Big update. Meta dropped the official MCP server in late April 2026. The old way (manual access tokens, refresh every 2 hours, Dev App approval, custom API code) is dead. Now you paste one prompt into Claude Code inside VS Code, log in with Facebook once, and you're connected forever. No terminal commands. No setup wizards. This lesson takes ~5 minutes.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT CHANGED -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚨</span> What Changed (Read This First)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        If you've been in the program for a while, you remember the painful old way: generate a long-lived access token, paste it into a config file, pray it doesn't expire, regenerate it every 2 hours when it did. That whole flow is gone.
+      </p>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        On <strong style="color: #fff;">April 29, 2026</strong>, Meta released the official <strong style="color: #3B82F6;">Meta Ads MCP server</strong>. It's first-party Meta software (not built by a community), and it does the boring auth stuff for you.
+      </p>
+
+      <div class="compare-grid">
+        <div class="compare-card old">
+          <h4>❌ Old way (dead)</h4>
+          <ul>
+            <li>Create a Facebook Dev App</li>
+            <li>Wait for Marketing API approval</li>
+            <li>Generate long-lived access token</li>
+            <li>Paste into a config file</li>
+            <li>Token expires every ~2 hours</li>
+            <li>Re-generate constantly</li>
+            <li>Write custom API code for every action</li>
+          </ul>
+        </div>
+        <div class="compare-card new">
+          <h4>✅ New way (this lesson)</h4>
+          <ul>
+            <li>Paste 1 prompt into Claude Code in VS Code</li>
+            <li>Log in with Facebook (OAuth) once</li>
+            <li>Done. Forever.</li>
+            <li>No terminal commands</li>
+            <li>No tokens to manage, no expiry</li>
+            <li>29 prebuilt tools ready to use</li>
+            <li>Just talk to Claude in plain English</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Translation:</strong> The thing that used to take 20 minutes and break every other day now takes 5 minutes and never breaks. This is one of the biggest quality-of-life upgrades since we started this program.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BEFORE YOU START -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> Before You Start — Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Setup Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 5 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="prereqs">
+        <li>
+          <input type="checkbox" id="c1">
+          <label for="c1" class="check-content">
+            <strong>Claude Code is installed and working</strong>
+            <span>If you skipped it, go finish <a href="5.2-claude-code-setup.html" style="color: #3B82F6;">Lesson 5.2 — Claude Code Setup</a> first. You need the <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">claude</code> command working in your terminal.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label for="c2" class="check-content">
+            <strong>Meta Business Manager is set up</strong>
+            <span>You need a BM with at least one ad account. See <a href="3.4-meta-business-manager.html" style="color: #3B82F6;">Lesson 3.4</a> if you haven't done this.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label for="c3" class="check-content">
+            <strong>You can log into Facebook on this computer</strong>
+            <span>The OAuth flow opens Facebook in your browser. Make sure you're either already logged in or know your password.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label for="c4" class="check-content">
+            <strong>You have admin or advertiser access to the ad account you want to control</strong>
+            <span>If you're managing a client's account, the access must already be granted to your personal Facebook profile (the one you'll log in with). Check this in BM → Business Settings → Ad Accounts.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label for="c5" class="check-content">
+            <strong>You're using Claude Code inside VS Code — not Claude Desktop or ChatGPT</strong>
+            <span>This lesson uses the Claude Code extension in VS Code (left sidebar). If you ever want to wire the same MCP into Claude Desktop, it's even simpler — Settings → Connectors → "+" → paste the URL. We cover VS Code here because that's where you'll build your agent workflows.</span>
+          </label>
+        </li>
+      </ul>
+
+      <div class="warning-box">
+        <p><strong>⚠️ One gotcha:</strong> The MCP gives Claude access to <em>every</em> ad account your Facebook profile can see. If you're connected to 12 clients, Claude can see all 12. That's powerful but also dangerous — always confirm the ad account ID before running anything that spends money.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE SETUP (VS CODE PROMPT) -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> The Whole Setup (Paste 1 Prompt in VS Code)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        This entire install happens inside VS Code. You don't open Terminal. You don't run setup wizards. You paste one prompt into Claude Code and the assistant handles the install, the verification, and the Facebook authorization flow for you.
+      </p>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Open Claude Code inside VS Code</h4>
+        <div class="click-path">VS Code <span>→</span> open your project folder <span>→</span> click the Claude icon (left sidebar)</div>
+        <p>Open your agency project folder in VS Code. On the left sidebar, click the Claude Code icon to open the chat panel. If you don't have a project folder yet, just open any folder in <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">~/Documents</code> — Claude needs to be running inside a folder.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Paste this prompt into the Claude Code chat</h4>
+        <p>Copy the full prompt below and paste it into the Claude Code chat box. Hit enter.</p>
+        <div class="prompt-block">
+          <button class="copy-btn" data-copy="install the meta ads mcp server for me.
+
+run this command in the terminal:
+claude mcp add --transport http meta-ads &quot;https://mcp.facebook.com/ads&quot;
+
+then run `claude mcp list` and show me the result.
+
+after that, call a meta ads tool — try listing my ad accounts. when you do, vs code is going to pop up a login prompt asking me to authorize with facebook. i'll click through it.
+
+once i'm authenticated, fetch my ad accounts and confirm everything's connected.">Copy</button>
+<pre>install the meta ads mcp server for me.
+
+run this command in the terminal:
+claude mcp add --transport http meta-ads "https://mcp.facebook.com/ads"
+
+then run `claude mcp list` and show me the result.
+
+after that, call a meta ads tool — try listing my ad accounts. when you do, vs code is going to pop up a login prompt asking me to authorize with facebook. i'll click through it.
+
+once i'm authenticated, fetch my ad accounts and confirm everything's connected.</pre>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Watch Claude run the install — then click "Allow" when prompts appear</h4>
+        <p>Claude will run two commands for you in sequence. VS Code will show permission prompts before each one — click <strong style="color: #fff;">Allow</strong> on both:</p>
+        <div class="code-block">
+<pre><span class="green">✓</span> Added MCP server <span class="accent">meta-ads</span> (http)
+  URL: https://mcp.facebook.com/ads
+  Authentication required on first use.</pre>
+        </div>
+        <p style="margin-top: 12px;">Then Claude will try to call a Meta Ads tool. That triggers the OAuth flow.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 4">
+        <h4>Authorize with Facebook in the browser</h4>
+        <p>VS Code pops open a Meta OAuth screen in your default browser. You'll see the permissions Meta is granting:</p>
+        <ul style="color: #ccc; font-size: 0.92rem; line-height: 1.7; padding-left: 22px;">
+          <li><code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">ads_management</code> — create & edit campaigns</li>
+          <li><code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">ads_read</code> — read performance data</li>
+          <li><code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">business_management</code> — see ad accounts inside your BM</li>
+          <li><code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">catalog_management</code> — for e-comm catalog ads (optional)</li>
+        </ul>
+        <p style="margin-top: 12px;">Click <strong style="color: #fff;">"Continue as [Your Name]"</strong>. Pick which businesses/ad accounts to grant access to (just yours if you're solo, all of them if you manage clients). Click <strong style="color: #fff;">"Save"</strong>. The browser tab will say "Connection successful, you can close this tab."</p>
+      </div>
+
+      <div class="click-step" data-step="Step 5">
+        <h4>Back in Claude Code — see your accounts listed</h4>
+        <p>Switch back to VS Code. Within a few seconds Claude will respond with your ad accounts in a table:</p>
+        <div class="code-block">
+<pre><span class="comment">Found 3 ad accounts:</span>
+
+<span class="accent">Account ID</span>           <span class="accent">Name</span>                     <span class="accent">Currency</span>   <span class="accent">Spend Cap</span>
+act_1202800550735727  Brez Marketing           USD        $50,000
+act_8847291004529631  Joe's HVAC               USD        $15,000
+act_5512899037164422  AI Advertiser Main       USD        unlimited</pre>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 You're done.</strong> No token. No expiry. No config file. No terminal commands you had to type yourself. Claude can now read and act on every account on that list. The OAuth handshake is stored securely on Meta's side — your next Claude Code session will just work, no re-authorization needed.</p>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>⚠️ Don't share screenshots of this output.</strong> Your ad account IDs are sensitive. Treat them like passwords if you're posting in the community or asking for help.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT YOU CAN DO -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> What You Can Do Now (29 Tools Unlocked)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        The official MCP exposes <strong style="color: #fff;">29 tools</strong> across 5 categories. You don't need to memorize them. Claude picks the right one based on what you ask. But here's the map so you know what's possible:
+      </p>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="count">5</div>
+          <div class="label">Campaign Management</div>
+          <div class="desc">Create campaigns, ad sets, ads. Pause, activate, edit budgets, change bidding.</div>
+        </div>
+        <div class="tool-card">
+          <div class="count">10</div>
+          <div class="label">Product Catalog</div>
+          <div class="desc">Read catalogs, product feeds, product sets. For DPA / catalog ads.</div>
+        </div>
+        <div class="tool-card">
+          <div class="count">3</div>
+          <div class="label">Accounts & Pages</div>
+          <div class="desc">List ad accounts, list Pages, check ad account permissions and limits.</div>
+        </div>
+        <div class="tool-card">
+          <div class="count">4</div>
+          <div class="label">Datasets & Tracking</div>
+          <div class="desc">Pixel/CAPI dataset details, event match quality, attribution health.</div>
+        </div>
+        <div class="tool-card">
+          <div class="count">7</div>
+          <div class="label">Insights & Performance</div>
+          <div class="desc">Read campaign metrics, audience overlap, opportunity scores, benchmarks, trends.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- FIRST PROMPTS -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💬</span> Your First Real Prompts (Copy & Paste)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Don't read about it. Use it. Paste these into Claude Code one at a time and watch what happens.
+      </p>
+
+      <div class="prompt-block">
+        <button class="copy-btn" data-copy="Show me the last 7 days of performance for every active campaign in ad account [PASTE ACCOUNT ID]. Sort by ROAS descending. Flag any campaign with CPA above $50 or ROAS below 1.5.">Copy</button>
+<pre>Show me the last 7 days of performance for every active campaign in ad account [PASTE ACCOUNT ID]. Sort by ROAS descending. Flag any campaign with CPA above $50 or ROAS below 1.5.</pre>
+      </div>
+
+      <div class="prompt-block">
+        <button class="copy-btn" data-copy="Look at ad account [PASTE ACCOUNT ID]. Find the top 3 ad creatives from the last 30 days based on ROAS. Tell me what they have in common (format, hook style, CTA) and suggest 5 new creative angles based on what's working.">Copy</button>
+<pre>Look at ad account [PASTE ACCOUNT ID]. Find the top 3 ad creatives from the last 30 days based on ROAS. Tell me what they have in common (format, hook style, CTA) and suggest 5 new creative angles based on what's working.</pre>
+      </div>
+
+      <div class="prompt-block">
+        <button class="copy-btn" data-copy="Pause every ad set in account [PASTE ACCOUNT ID] that has spent more than $100 in the last 3 days with a ROAS below 1.0. Show me the list first and wait for my confirmation before pausing.">Copy</button>
+<pre>Pause every ad set in account [PASTE ACCOUNT ID] that has spent more than $100 in the last 3 days with a ROAS below 1.0. Show me the list first and wait for my confirmation before pausing.</pre>
+      </div>
+
+      <div class="prompt-block">
+        <button class="copy-btn" data-copy="Create a new campaign in ad account [PASTE ACCOUNT ID] for client [CLIENT NAME]. Objective: leads. Daily budget: $50. Audience: US, age 25-55, interested in home services. Use the existing Page [PAGE ID] and pixel [PIXEL ID]. Set it to status PAUSED so I can review before activating.">Copy</button>
+<pre>Create a new campaign in ad account [PASTE ACCOUNT ID] for client [CLIENT NAME]. Objective: leads. Daily budget: $50. Audience: US, age 25-55, interested in home services. Use the existing Page [PAGE ID] and pixel [PIXEL ID]. Set it to status PAUSED so I can review before activating.</pre>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Always tell Claude to "set it to PAUSED" or "show me the list first and wait for confirmation"</strong> when you're making changes that affect spend. The MCP can move real money. Treat it like a junior media buyer with API access — capable, fast, but you check the work before it goes live.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TROUBLESHOOTING -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔧</span> Troubleshooting</h2>
+
+      <div class="click-step" data-step="Issue 1">
+        <h4>No Facebook login window popped up</h4>
+        <p>The OAuth prompt only fires when Claude actually calls a Meta Ads tool. If Claude finished the install and then stopped, paste this follow-up into the chat:</p>
+        <div class="prompt-block">
+          <button class="copy-btn" data-copy="please call a meta ads tool right now to trigger the facebook authentication prompt. list my ad accounts.">Copy</button>
+<pre>please call a meta ads tool right now to trigger the facebook authentication prompt. list my ad accounts.</pre>
+        </div>
+        <p style="margin-top: 12px;">The auth window should pop up immediately after.</p>
+      </div>
+
+      <div class="click-step" data-step="Issue 2">
+        <h4>"MCP server meta-ads already exists" or status stays "Failed to connect"</h4>
+        <p>You may have installed it before. Tell Claude to reset it — paste this into the chat:</p>
+        <div class="prompt-block">
+          <button class="copy-btn" data-copy="remove and reinstall the meta ads mcp server. run:
+claude mcp remove meta-ads -s local
+claude mcp add --transport http meta-ads &quot;https://mcp.facebook.com/ads&quot;
+
+then trigger authentication by listing my ad accounts.">Copy</button>
+<pre>remove and reinstall the meta ads mcp server. run:
+claude mcp remove meta-ads -s local
+claude mcp add --transport http meta-ads "https://mcp.facebook.com/ads"
+
+then trigger authentication by listing my ad accounts.</pre>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Issue 3">
+        <h4>"claude: command not found" (when Claude tries to run the install)</h4>
+        <p>The Claude Code CLI isn't installed or isn't on your PATH. Go back to <a href="5.2-claude-code-setup.html" style="color: #3B82F6;">Lesson 5.2</a> and finish the install. If you already installed it, close VS Code completely and reopen it — sometimes the PATH doesn't refresh in the integrated terminal until VS Code is restarted.</p>
+      </div>
+
+      <div class="click-step" data-step="Issue 4">
+        <h4>"This Facebook account doesn't have access to any Business"</h4>
+        <p>You logged in with a personal Facebook profile that isn't tied to a Business Manager. Either log out and log in with the right profile, or go to <a href="https://business.facebook.com" target="_blank" style="color: #3B82F6;">business.facebook.com</a> and create a BM first (see <a href="3.4-meta-business-manager.html" style="color: #3B82F6;">Lesson 3.4</a>).</p>
+      </div>
+
+      <div class="click-step" data-step="Issue 5">
+        <h4>"Insufficient permissions" when Claude tries to do something</h4>
+        <p>Most likely: during OAuth you unchecked a permission you actually need, or the Facebook profile you authorized doesn't have admin/advertiser role on the ad account in question. Re-authorize by pasting this into Claude Code:</p>
+        <div class="prompt-block">
+          <button class="copy-btn" data-copy="reconnect the meta ads mcp. run:
+claude mcp remove meta-ads -s local
+claude mcp add --transport http meta-ads &quot;https://mcp.facebook.com/ads&quot;
+
+then list my ad accounts to trigger the facebook authorization screen again. this time i'll make sure all permission boxes are checked.">Copy</button>
+<pre>reconnect the meta ads mcp. run:
+claude mcp remove meta-ads -s local
+claude mcp add --transport http meta-ads "https://mcp.facebook.com/ads"
+
+then list my ad accounts to trigger the facebook authorization screen again. this time i'll make sure all permission boxes are checked.</pre>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Issue 6">
+        <h4>Claude doesn't seem to know the MCP exists</h4>
+        <p>Ask Claude to verify the registration — paste this into the chat:</p>
+        <div class="prompt-block">
+          <button class="copy-btn" data-copy="run `claude mcp list` and show me whether meta-ads is registered. also list the meta-ads tools you currently have available.">Copy</button>
+<pre>run `claude mcp list` and show me whether meta-ads is registered. also list the meta-ads tools you currently have available.</pre>
+        </div>
+        <p style="margin-top: 12px;">If <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">meta-ads</code> isn't in the list, paste the install prompt from Step 2 again. If it's there but tools aren't loaded, close and reopen the Claude Code panel in VS Code.</p>
+      </div>
+
+      <div class="click-step" data-step="Fallback">
+        <h4>Want to do it the old terminal way?</h4>
+        <p>If you'd rather skip the chat prompt and run things directly in the terminal — open the VS Code integrated terminal (<code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">View → Terminal</code> or <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">Ctrl + `</code>) and run:</p>
+        <div class="code-block">
+          <button class="copy-btn" data-copy="claude mcp add --transport http meta-ads &quot;https://mcp.facebook.com/ads&quot;">Copy</button>
+<pre><span class="green">$</span> claude mcp add <span class="accent">--transport http meta-ads</span> <span style="color:#fbbf24;">"https://mcp.facebook.com/ads"</span></pre>
+        </div>
+        <p>Then start the CLI with <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">claude</code> and type <code style="background:#1a1a1a;padding:1px 5px;border-radius:3px;color:#3B82F6;">/mcp</code> to authenticate. This is the manual path — the paste-prompt method above is what we recommend for everyone else.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WRAP UP -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> You're In</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Claude Code is now wired into Meta's ad platform. No tokens to babysit, no Dev App approval, no custom code, no terminal voodoo. From here, every other lesson in Module 5 assumes this connection is live — pulling reports, building campaigns, automating optimization, everything runs through the single prompt you just pasted.
+      </p>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Next up: <a href="5.4-first-ai-campaign.html" style="color: #3B82F6;">Lesson 5.4 — Launching Your First AI-Built Campaign</a>.
+      </p>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="../index.html" style="color: #3B82F6; text-decoration: none; font-weight: 600;">← Back to all lessons</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Checklist progress
+    const checkboxes = document.querySelectorAll('#prereqs input[type="checkbox"]');
+    const progressCount = document.getElementById('progressCount');
+    const progressFill = document.getElementById('progressFill');
+    const total = checkboxes.length;
+
+    function updateProgress() {
+      const done = Array.from(checkboxes).filter(c => c.checked).length;
+      progressCount.textContent = `${done} / ${total} complete`;
+      progressFill.style.width = `${(done / total) * 100}%`;
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-copy') || btn.parentElement.querySelector('pre').innerText;
+        navigator.clipboard.writeText(text);
+        const original = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1400);
+      });
+    });
+  </script>
+</body>
+</html>

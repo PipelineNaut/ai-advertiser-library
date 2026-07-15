@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Class: Meta Ads MCP + Claude Design + Freepik — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* CLASS-SPECIFIC STYLES */
+    .niche-section { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 16px 20px; margin: 10px 0; position: relative; }
+    .niche-title { color: #3B82F6; font-weight: 700; font-size: 0.92rem; margin-bottom: 8px; padding-right: 60px; }
+    .niche-section.dent .niche-title { color: #5DD3B3; }
+    .niche-section.gym .niche-title { color: #9CFF6B; }
+    .niche-section.rest .niche-title { color: #FFB85C; }
+    .niche-section.real .niche-title { color: #C9A961; }
+    .niche-section.hair .niche-title { color: #F4A6B7; }
+    .niche-section.plumb .niche-title { color: #FF6B6B; }
+    .niche-section.meta .niche-title { color: #4267B2; }
+
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 20px; margin: 8px 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; color: #ccc; line-height: 1.7; white-space: pre-wrap; overflow-x: auto; position: relative; }
+    .code-block.shell { background: #050505; border-color: rgba(76,175,80,0.18); }
+    .code-block.shell .shell-prompt { color: #4CAF50; user-select: none; }
+    .code-block.json { background: #050505; border-color: rgba(66,103,178,0.2); }
+
+    .copy-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,107,0,0.12); color: #FF6B00; border: 1px solid rgba(255,107,0,0.3); border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+    .copy-btn:hover { background: rgba(255,107,0,0.2); }
+    .copy-btn.copied { background: rgba(52,199,89,0.15); color: #34C759; border-color: rgba(52,199,89,0.3); }
+
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0 24px; }
+    .compare-box { padding: 22px 24px; border-radius: 10px; border: 1px solid #222; }
+    .compare-box.old { background: rgba(255,45,85,0.05); border-color: rgba(255,45,85,0.25); }
+    .compare-box.new { background: rgba(52,199,89,0.05); border-color: rgba(52,199,89,0.25); }
+    .compare-box .compare-label { font-size: 11px; font-weight: 800; letter-spacing: 2px; margin-bottom: 12px; }
+    .compare-box.old .compare-label { color: #FF2D55; }
+    .compare-box.new .compare-label { color: #34C759; }
+    .compare-box h4 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 14px; line-height: 1.35; }
+    .compare-box ul { list-style: none; padding: 0; margin: 0; }
+    .compare-box li { font-size: 13.5px; color: #ccc; padding: 5px 0 5px 16px; line-height: 1.55; position: relative; }
+    .compare-box li::before { content: '•'; position: absolute; left: 0; }
+    .compare-box.old li::before { color: #FF2D55; }
+    .compare-box.new li::before { color: #34C759; }
+
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 16px 0; }
+    .tool-card { background: rgba(255,107,0,0.04); border: 1px solid rgba(255,107,0,0.15); border-radius: 12px; padding: 18px 20px; }
+    .tool-card .tool-tag { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #FF6B00; margin-bottom: 6px; }
+    .tool-card .tool-name { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
+    .tool-card .tool-desc { color: #aaa; font-size: 0.83rem; line-height: 1.55; }
+
+    .news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+    .news-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px 22px; }
+    .news-card.huge { background: rgba(66,103,178,0.05); border-color: rgba(66,103,178,0.3); }
+    .news-card h4 { color: #fff; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .news-card .new-tag { background: rgba(59,130,246,0.15); color: #3B82F6; font-size: 9px; font-weight: 800; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; }
+    .news-card .new-tag.huge { background: rgba(255,45,85,0.18); color: #FF2D55; }
+    .news-card p { color: #bbb; font-size: 0.85rem; line-height: 1.6; margin-bottom: 12px; }
+    .news-card .use-label { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #888; margin-bottom: 6px; }
+    .news-card ul { list-style: none; padding: 0; }
+    .news-card li { color: #ccc; font-size: 0.83rem; padding: 3px 0 3px 16px; position: relative; line-height: 1.5; }
+    .news-card li::before { content: '→'; position: absolute; left: 0; color: #FF6B00; }
+
+    .recipe-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
+    .recipe-step { background: rgba(255,107,0,0.04); border: 1px solid rgba(255,107,0,0.15); border-radius: 10px; padding: 16px 14px; text-align: left; }
+    .recipe-step .recipe-num { font-family: 'SF Mono', monospace; font-size: 1.3rem; font-weight: 900; color: #FF6B00; }
+    .recipe-step .recipe-title { color: #fff; font-weight: 700; font-size: 0.92rem; margin: 4px 0; }
+    .recipe-step .recipe-desc { color: #888; font-size: 0.78rem; line-height: 1.45; }
+
+    .video-prompt-pair { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 20px; margin: 12px 0; }
+    .video-prompt-pair .vp-niche { color: #3B82F6; font-weight: 700; font-size: 1rem; margin-bottom: 14px; }
+    .video-prompt-pair .vp-step-label { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #888; margin: 10px 0 6px; }
+    .video-prompt-pair .vp-step-label.banana { color: #FFB85C; }
+    .video-prompt-pair .vp-step-label.dance { color: #C792EA; }
+
+    .stack-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: 10px; overflow: hidden; margin: 16px 0; border: 1px solid rgba(255,255,255,0.08); }
+    .stack-table th { background: rgba(255,107,0,0.1); color: #FF6B00; font-size: 11px; font-weight: 800; padding: 12px 14px; text-align: left; letter-spacing: 1.5px; }
+    .stack-table td { background: rgba(255,255,255,0.015); border-top: 1px solid rgba(255,255,255,0.05); padding: 12px 14px; font-size: 0.86rem; color: #ccc; vertical-align: top; }
+    .stack-table td.num { font-family: 'SF Mono', monospace; color: #FF6B00; font-weight: 700; width: 40px; }
+    .stack-table td.time { font-family: 'SF Mono', monospace; color: #888; width: 70px; }
+
+    .totals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    .total-card { background: rgba(255,107,0,0.06); border: 1px solid rgba(255,107,0,0.25); border-radius: 12px; padding: 18px 20px; text-align: center; }
+    .total-card .total-label { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #888; margin-bottom: 8px; }
+    .total-card .total-value { font-size: 2.1rem; font-weight: 900; color: #FF6B00; line-height: 1; }
+    .total-card .total-desc { font-size: 0.78rem; color: #999; margin-top: 8px; line-height: 1.45; }
+
+    .callout-cta { background: rgba(255,107,0,0.08); border: 1px solid rgba(255,107,0,0.3); border-radius: 12px; padding: 24px 28px; margin: 24px 0; }
+    .callout-cta h3 { color: #fff; font-size: 1.25rem; font-weight: 800; margin-bottom: 14px; line-height: 1.35; }
+    .callout-cta ol { padding-left: 0; list-style: none; counter-reset: assign; }
+    .callout-cta li { counter-increment: assign; padding: 8px 0 8px 36px; position: relative; color: #ddd; font-size: 0.92rem; line-height: 1.6; }
+    .callout-cta li::before { content: counter(assign); position: absolute; left: 0; top: 8px; width: 24px; height: 24px; background: rgba(255,107,0,0.2); color: #FF6B00; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.78rem; }
+
+    /* META INSTALL SOP — VISUAL */
+    .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+    .install-card { background: linear-gradient(180deg, rgba(66,103,178,0.08) 0%, rgba(66,103,178,0.02) 100%); border: 1px solid rgba(66,103,178,0.25); border-radius: 14px; padding: 22px 24px; position: relative; overflow: hidden; }
+    .install-card .step-bignum { position: absolute; top: 16px; right: 22px; font-family: 'SF Mono', monospace; font-size: 3.2rem; font-weight: 900; color: rgba(66,103,178,0.18); line-height: 1; letter-spacing: -2px; }
+    .install-card h4 { color: #fff; font-size: 1.1rem; font-weight: 800; margin-bottom: 10px; padding-right: 60px; line-height: 1.3; }
+    .install-card p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-bottom: 10px; }
+    .install-card .key-action { color: #fff; font-weight: 700; }
+
+    /* MOCKUP: Claude UI screenshots in pure HTML */
+    .ui-mock { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px; padding: 0; margin: 12px 0 4px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .ui-mock .mock-bar { background: #0f0f0f; padding: 10px 14px; border-bottom: 1px solid #2a2a2a; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #888; font-weight: 600; }
+    .ui-mock .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .ui-mock .mock-dot.r { background: #ff5f57; }
+    .ui-mock .mock-dot.y { background: #febc2e; }
+    .ui-mock .mock-dot.g { background: #28c840; }
+    .ui-mock .mock-body { padding: 16px 18px; }
+    .ui-mock .mock-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin: 4px 0; border-radius: 6px; font-size: 13px; color: #ddd; }
+    .ui-mock .mock-row.hover { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
+    .ui-mock .mock-row.click { background: rgba(255,107,0,0.15); border: 1px solid rgba(255,107,0,0.4); color: #FF6B00; font-weight: 700; }
+    .ui-mock .mock-icon { width: 18px; height: 18px; border-radius: 4px; background: rgba(255,255,255,0.08); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; }
+    .ui-mock .mock-arrow { color: #FF6B00; font-weight: 800; margin-left: auto; }
+    .ui-mock .mock-input { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 9px 12px; font-size: 12px; color: #fff; font-family: 'SF Mono', monospace; margin: 4px 0; display: block; }
+    .ui-mock .mock-input.highlight { border-color: rgba(66,103,178,0.6); background: rgba(66,103,178,0.08); color: #adc6ff; }
+    .ui-mock .mock-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; margin-top: 8px; }
+    .ui-mock .mock-btn { background: #FF6B00; color: #000; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; display: inline-block; margin-top: 12px; }
+    .ui-mock .mock-success { background: rgba(52,199,89,0.12); border: 1px solid rgba(52,199,89,0.3); color: #34C759; padding: 10px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; margin: 6px 0; }
+
+    .quick-path { background: linear-gradient(135deg, rgba(255,107,0,0.08) 0%, rgba(255,107,0,0.02) 100%); border: 1px solid rgba(255,107,0,0.3); border-radius: 12px; padding: 20px 24px; margin: 16px 0; }
+    .quick-path h4 { color: #FF6B00; font-size: 0.85rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+    .quick-path-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.92rem; }
+    .quick-path-pill { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 6px; color: #fff; font-weight: 600; font-family: 'SF Mono', monospace; font-size: 0.82rem; }
+    .quick-path-arrow { color: #FF6B00; font-weight: 800; }
+
+    .tools-29 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin: 14px 0; }
+    .tools-29-cat { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px 16px; }
+    .tools-29-cat h5 { color: #4267B2; font-size: 0.78rem; font-weight: 800; letter-spacing: 1px; margin-bottom: 8px; }
+    .tools-29-cat .tools-count { color: #FF6B00; font-weight: 800; }
+    .tools-29-cat ul { list-style: none; padding: 0; }
+    .tools-29-cat li { color: #bbb; font-size: 0.78rem; padding: 2px 0; line-height: 1.5; }
+
+    .verify-warning { background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.25); border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-size: 0.82rem; color: #ccc; line-height: 1.55; }
+    .verify-warning strong { color: #eab308; }
+
+    @media (max-width: 720px) {
+      .compare-grid, .news-grid, .totals-grid { grid-template-columns: 1fr; }
+      .recipe-steps { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <div class="class-number">Bonus Live Class — May 1, 2026</div>
+      <h1>Meta Ads MCP <span>+ AI Creative Stack</span> for Local Biz Agencies</h1>
+      <div class="subtitle">
+        <span class="tag">Live Class</span>
+        <span class="tag">Meta Ads MCP</span>
+        <span class="tag">Claude Design</span>
+        <span class="tag">Freepik</span>
+        <span class="tag">Nano Banana</span>
+        <span class="tag">Seedance</span>
+        <span class="tag">~60 min</span>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="summary-box">
+      Two stacks. One class. <strong style="color:#FF6B00">First half:</strong> install Meta's brand-new official Ads MCP + CLI on your Claude Desktop and Claude Code so Claude can pull, analyze, and report on your client's Meta Ads on demand. <strong style="color:#FF6B00">Second half:</strong> ship statics, landing pages, pitch decks, and AI video ads using Claude Design + Freepik (Nano Banana → Seedance). Built for agency owners selling ad services to local biz.
+    </div>
+
+    <!-- SECTION 01 — THE NEW AGENCY MATH -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 01 · The New Agency Math</h2>
+      <p style="color:#bbb;font-size:0.92rem;line-height:1.65;margin-bottom:8px;">
+        If your local-biz clients pay $1.5K–$5K/mo, every hour spent in Photoshop or Looker Studio is bleeding margin. This is the wedge.
+      </p>
+
+      <div class="compare-grid">
+        <div class="compare-box old">
+          <div class="compare-label">❌ OLD WAY</div>
+          <h4>Brief → designer → 5 days → 2 ad variants. Manual reports → Looker Studio → 3 hours/week.</h4>
+          <ul>
+            <li>Designer at $75–$150/hr, 3–5 day rounds</li>
+            <li>Hand-built dashboards each Friday</li>
+            <li>Ship 2–3 variants. Fatigue in 6 days</li>
+            <li>Margin: 22–35% if disciplined</li>
+          </ul>
+        </div>
+        <div class="compare-box new">
+          <div class="compare-label">✅ NEW WAY</div>
+          <h4>Brief → Claude Design + Freepik → 60 min → 8 variants + LP + deck. Reports auto-pulled by Meta MCP.</h4>
+          <ul>
+            <li>Brief written once</li>
+            <li>Claude pulls Meta data on demand — no Looker</li>
+            <li>6 statics + 2 video ads in 60 min</li>
+            <li>Margin: 65%+ on the same retainer</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-box" style="background:rgba(255,107,0,0.06);border:1px solid rgba(255,107,0,0.25);border-radius:10px;padding:16px 20px;">
+        <p style="color:#ccc;font-size:0.88rem;line-height:1.65;margin:0;">
+          <strong style="color:#FF6B00">Why this is the wedge for local biz:</strong> their budgets can't justify $5K creative production OR a full reporting analyst. They need <em>volume + freshness + clarity</em> on a tight retainer. The agency in town that's 10x faster wins the next 5 years.
+        </p>
+      </div>
+    </div>
+
+    <!-- SECTION 02 — WHAT'S NEW IN AI -->
+    <div class="section">
+      <h2><span class="icon">📡</span> 02 · What's New in AI — This Week</h2>
+      <p style="color:#bbb;font-size:0.92rem;line-height:1.65;margin-bottom:8px;">
+        Two drops you need to know about. Both are tools you'll actually subscribe to and use this week.
+      </p>
+
+      <div class="news-grid">
+        <div class="news-card huge">
+          <h4>
+            <span class="new-tag huge">JUST SHIPPED · APR 29</span>
+            Meta Ads MCP + CLI (official)
+          </h4>
+          <p>Meta released its <strong style="color:#fff">first-party</strong> AI-agent connectors. Open beta. Connect your Meta Business → get a unique MCP URL → paste into Claude Desktop or Claude Code → Claude can now pull data, create campaigns, manage catalogs, and run diagnostics directly on your ad accounts. <strong style="color:#fff">No Meta Dev App. No Marketing API approval wait.</strong></p>
+          <div class="use-label">WHAT'S IN IT</div>
+          <ul>
+            <li>29 tools across 5 families (campaigns, catalogs, accounts, datasets, insights)</li>
+            <li>Read + write — query AND create campaigns, update budgets</li>
+            <li>OAuth via Meta Business — works in 2 minutes</li>
+            <li>HTTP-based MCP for Claude Desktop · CLI for Claude Code / Codex</li>
+          </ul>
+        </div>
+        <div class="news-card">
+          <h4><span class="new-tag" style="background:rgba(199,146,234,0.18);color:#C792EA">YOUR PLAN</span> Freepik (Nano Banana + Seedance)</h4>
+          <p>Freepik wraps two of the strongest AI generation models in one subscription: <strong style="color:#fff">Nano Banana</strong> (Google's Gemini 2.5 Flash Image — photoreal images edited with words) and <strong style="color:#fff">Seedance</strong> (ByteDance's video model — best natural human motion + lip-sync available). One login, one workspace, one bill.</p>
+          <div class="use-label">WHY YOU SUBSCRIBE</div>
+          <ul>
+            <li>Ditch separate Midjourney + Runway accounts</li>
+            <li>Image-to-video bridge built in — generate → animate in one flow</li>
+            <li>Batch exports for client retainers</li>
+            <li>Same API behind TikTok's video R&amp;D</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="speaker-note" style="background:rgba(255,107,0,0.04);border:1px dashed rgba(255,107,0,0.2);border-radius:8px;padding:14px 18px;margin:14px 0;font-size:0.85rem;color:#aaa;font-style:italic;">
+        <strong style="color:#FF6B00;font-style:normal">How to think about the stack:</strong> Meta MCP = the <strong style="color:#fff;font-style:normal">data layer</strong> (analyze, report, manage campaigns). Claude Design = the <strong style="color:#fff;font-style:normal">design layer</strong> (statics, LPs, decks). Freepik = the <strong style="color:#fff;font-style:normal">media layer</strong> (photoreal images and video). Different jobs — stack them.
+      </div>
+    </div>
+
+    <!-- SECTION 03 — META ADS MCP / CLI -->
+    <div class="section">
+      <h2><span class="icon">🔌</span> 03 · Meta Ads MCP + CLI — Install &amp; Use</h2>
+      <p style="color:#bbb;font-size:0.92rem;line-height:1.65;margin-bottom:14px;">
+        This is the biggest AI-marketing news of 2026 so far. Half this class is on installing it correctly and squeezing value out of it. The other half is on creative.
+      </p>
+
+      <!-- 3.1 WHAT IT IS + 29 TOOLS -->
+      <h3 style="color:#fff;font-size:1.15rem;font-weight:800;margin:24px 0 6px;">3.1 — What's actually in the box <span style="color:#FF6B00">→ 29 tools, 5 families</span></h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">Meta exposes 29 distinct tools to AI agents. Memorize the families — Claude will pick the right tool when you describe what you want.</p>
+
+      <div class="tools-29">
+        <div class="tools-29-cat">
+          <h5>CAMPAIGNS &amp; ADS · <span class="tools-count">5 write</span></h5>
+          <ul>
+            <li>ads_create_campaign</li>
+            <li>ads_create_ad_set</li>
+            <li>ads_create_ad</li>
+            <li>ads_update_entity</li>
+            <li>ads_activate_entity</li>
+          </ul>
+        </div>
+        <div class="tools-29-cat">
+          <h5>PRODUCT CATALOG · <span class="tools-count">10 read/write</span></h5>
+          <ul>
+            <li>ads_catalog_create</li>
+            <li>ads_catalog_get_catalogs</li>
+            <li>ads_catalog_get_details</li>
+            <li>ads_catalog_get_diagnostics</li>
+            <li>ads_catalog_get_feed_rules</li>
+            <li>ads_catalog_get_products (+4 more)</li>
+          </ul>
+        </div>
+        <div class="tools-29-cat">
+          <h5>ACCOUNTS &amp; ASSETS · <span class="tools-count">3 read</span></h5>
+          <ul>
+            <li>ads_get_ad_accounts</li>
+            <li>ads_get_ad_entities</li>
+            <li>ads_get_pages_for_business</li>
+          </ul>
+        </div>
+        <div class="tools-29-cat">
+          <h5>TRACKING &amp; DATASETS · <span class="tools-count">4 read</span></h5>
+          <ul>
+            <li>ads_get_dataset_details</li>
+            <li>ads_get_dataset_quality</li>
+            <li>ads_get_dataset_stats</li>
+            <li>ads_get_errors</li>
+          </ul>
+        </div>
+        <div class="tools-29-cat">
+          <h5>INSIGHTS &amp; PERFORMANCE · <span class="tools-count">7 read</span></h5>
+          <ul>
+            <li>ads_insights_advertiser_context</li>
+            <li>ads_insights_anomaly_signal</li>
+            <li>ads_insights_auction_ranking_benchmarks</li>
+            <li>ads_insights_industry_benchmark</li>
+            <li>ads_insights_performance_trend</li>
+            <li>ads_get_opportunity_score</li>
+            <li>ads_get_help_article</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3.2 INSTALL ON CLAUDE DESKTOP -->
+      <h3 style="color:#fff;font-size:1.15rem;font-weight:800;margin:32px 0 6px;">3.2 — Install on Claude Desktop <span style="color:#FF6B00">→ 4 clicks. 90 seconds.</span></h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">No JSON files. No terminal. Just clicks. This is the same flow Daniel San (@dani_avila7) posted yesterday — confirmed working.</p>
+
+      <!-- The one-liner -->
+      <div class="quick-path">
+        <h4>The whole thing in one line:</h4>
+        <div class="quick-path-flow">
+          <span class="quick-path-pill">Open Claude</span>
+          <span class="quick-path-arrow">→</span>
+          <span class="quick-path-pill">Settings</span>
+          <span class="quick-path-arrow">→</span>
+          <span class="quick-path-pill">Connectors</span>
+          <span class="quick-path-arrow">→</span>
+          <span class="quick-path-pill">+ Add custom</span>
+          <span class="quick-path-arrow">→</span>
+          <span class="quick-path-pill">Paste URL</span>
+          <span class="quick-path-arrow">→</span>
+          <span class="quick-path-pill" style="background:rgba(52,199,89,0.15);border-color:rgba(52,199,89,0.3);color:#34C759;">Done</span>
+        </div>
+      </div>
+
+      <!-- The MCP URL — front and center -->
+      <div style="background:linear-gradient(135deg,rgba(66,103,178,0.15) 0%, rgba(66,103,178,0.04) 100%);border:1px solid rgba(66,103,178,0.4);border-radius:12px;padding:20px 24px;margin:18px 0;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;color:#4267B2;text-transform:uppercase;margin-bottom:8px;">📌 The only URL you need · paste this into the Connector form below</div>
+        <div class="code-block json" data-prompt style="margin:6px 0 0;font-size:1rem;"><button class="copy-btn" type="button">COPY</button>https://mcp.facebook.com/ads</div>
+      </div>
+
+      <!-- 4 visual steps in a 2x2 grid -->
+      <div class="install-grid">
+
+        <!-- STEP 1 -->
+        <div class="install-card">
+          <div class="step-bignum">01</div>
+          <h4>Open Claude Settings → Connectors</h4>
+          <p>In Claude Desktop, click your profile (bottom-left) → <span class="key-action">Settings</span>. In the sidebar, click <span class="key-action">Connectors</span>.</p>
+          <div class="ui-mock">
+            <div class="mock-bar">
+              <div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div>
+              <span style="margin-left:10px;">Claude · Settings</span>
+            </div>
+            <div class="mock-body" style="padding: 8px 10px;">
+              <div class="mock-row"><span class="mock-icon">👤</span> Profile</div>
+              <div class="mock-row"><span class="mock-icon">🎨</span> Appearance</div>
+              <div class="mock-row click"><span class="mock-icon">🔌</span> Connectors <span class="mock-arrow">←</span></div>
+              <div class="mock-row"><span class="mock-icon">🔒</span> Privacy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="install-card">
+          <div class="step-bignum">02</div>
+          <h4>Click "+" → Add custom connector</h4>
+          <p>Top-right of the Connectors panel, hit the <span class="key-action">+ Add custom connector</span> button.</p>
+          <div class="ui-mock">
+            <div class="mock-bar">
+              <div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div>
+              <span style="margin-left:10px;">Connectors</span>
+            </div>
+            <div class="mock-body">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div style="font-size:13px;color:#aaa;">Your connectors (0)</div>
+                <div style="background:#FF6B00;color:#000;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:800;">+ Add custom connector</div>
+              </div>
+              <div style="font-size:11px;color:#666;font-style:italic;text-align:center;padding:14px 0;border:1px dashed #2a2a2a;border-radius:6px;">No connectors yet. Click + above.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="install-card">
+          <div class="step-bignum">03</div>
+          <h4>Fill in name + URL → Add</h4>
+          <p>Two fields. That's it.</p>
+          <div class="ui-mock">
+            <div class="mock-bar">
+              <div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div>
+              <span style="margin-left:10px;">Add custom connector</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-label">NAME</div>
+              <div class="mock-input">META MCP</div>
+              <div class="mock-label">MCP SERVER URL</div>
+              <div class="mock-input highlight">https://mcp.facebook.com/ads</div>
+              <div class="mock-btn">Add</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="install-card">
+          <div class="step-bignum">04</div>
+          <h4>Approve Meta OAuth → live</h4>
+          <p>A Meta login window pops. Sign in (same email as Ads Manager). Pick the ad accounts to share. Click <span class="key-action">Approve</span>. Back in Claude, you'll see green = ready.</p>
+          <div class="ui-mock">
+            <div class="mock-bar">
+              <div class="mock-dot r"></div><div class="mock-dot y"></div><div class="mock-dot g"></div>
+              <span style="margin-left:10px;">Connectors</span>
+            </div>
+            <div class="mock-body">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(66,103,178,0.08);border:1px solid rgba(66,103,178,0.3);border-radius:8px;">
+                <div style="width:32px;height:32px;background:#4267B2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;">f</div>
+                <div style="flex:1;">
+                  <div style="color:#fff;font-size:13px;font-weight:700;">META MCP</div>
+                  <div style="color:#888;font-size:11px;">29 tools available</div>
+                </div>
+                <div style="background:rgba(52,199,89,0.15);color:#34C759;font-size:10px;font-weight:800;padding:4px 10px;border-radius:4px;border:1px solid rgba(52,199,89,0.3);">CONNECTED</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Smoke test -->
+      <div class="install-card" style="margin:18px 0;background:rgba(52,199,89,0.04);border-color:rgba(52,199,89,0.3);">
+        <div class="step-bignum" style="color:rgba(52,199,89,0.18);">✓</div>
+        <h4>Test it works — paste this in Claude</h4>
+        <p>If Claude comes back with your real ad accounts, you're done.</p>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>List all my Meta ad accounts. For each, show: account name, currency, status, and total spend in the last 7 days. Format as a clean table.</div>
+      </div>
+
+      <!-- 3.3 INSTALL ON CLAUDE CODE -->
+      <h3 style="color:#fff;font-size:1.15rem;font-weight:800;margin:32px 0 6px;">3.3 — Install on Claude Code <span style="color:#FF6B00">→ 1 command. 30 seconds.</span></h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">Skip this if you don't use Claude Code yet (Section 5.2 of this course shows you how to set it up first). For everyone using terminal-based Claude:</p>
+
+      <div class="install-card" style="border-color:rgba(76,175,80,0.3);background:rgba(76,175,80,0.04);">
+        <div class="step-bignum" style="color:rgba(76,175,80,0.18);">→</div>
+        <h4>Run this in any terminal</h4>
+        <p>That's the entire install. OAuth happens in your browser the first time you use it.</p>
+        <div class="code-block shell" data-prompt><button class="copy-btn" type="button">COPY</button><span class="shell-prompt">$ </span>claude mcp add --transport http meta-ads https://mcp.facebook.com/ads</div>
+        <p style="margin-top:14px;margin-bottom:6px;"><strong style="color:#fff">Verify:</strong></p>
+        <div class="code-block shell" data-prompt><button class="copy-btn" type="button">COPY</button><span class="shell-prompt">$ </span>claude mcp list</div>
+        <p>Should show <code style="color:#4267B2">meta-ads ✓ connected</code>.</p>
+      </div>
+
+      <!-- 3.4 USE CASES -->
+      <h3 style="color:#fff;font-size:1.15rem;font-weight:800;margin:32px 0 6px;">3.4 — Use Cases <span style="color:#FF6B00">→ 8 prompts that turn Meta data into client-ready output</span></h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">These are the prompts you'll actually use. Each one assumes you have the meta-ads MCP installed. Swap [ACCOUNT_ID] and [CLIENT_NAME].</p>
+
+      <div class="niche-section meta">
+        <div class="niche-title">1. The Daily Pulse Dashboard</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Use the meta-ads MCP to pull yesterday's performance for ad account [ACCOUNT_ID]. Group by campaign. For each row show: spend, CPM, CTR, CPA, conversions, vs the 7-day average. Then build me an HTML dashboard with red/yellow/green status cards. Add a summary at the top: biggest winner today, biggest concern, what to do. Use my agency colors: primary #FF6B00, bg #0A0A0A. Output a single self-contained HTML file.</div>
+      </div>
+
+      <div class="niche-section meta">
+        <div class="niche-title">2. The Friday Client Report</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Pull the last 7 days of data for ad account [ACCOUNT_ID]. Generate an HTML one-pager I can send to my client [CLIENT_NAME] tonight. Include: spend vs target, leads (or purchases), CPL trend line, top 3 ads by ROAS with their thumbnails if available, anomalies flagged by ads_insights_anomaly_signal. Tone: confident, no jargon. Brand it with [AGENCY_NAME] header at the top. Output as single HTML.</div>
+      </div>
+
+      <div class="niche-section meta">
+        <div class="niche-title">3. Andromeda Cleanup Audit</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Pull the last 14 days of all ad sets in account [ACCOUNT_ID]. Flag: ad sets in extended Learning Phase, ones with fewer than 50 conversions/week, and any with CPA > 1.5× the account average. Output a kill/keep/scale table with one-line reasoning for each row. Sort by spend descending.</div>
+      </div>
+
+      <div class="niche-section meta">
+        <div class="niche-title">4. Catalog Health Check (DTC clients)</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Run ads_catalog_get_diagnostics on catalog [CATALOG_ID]. Pull every error and warning. Build me a prioritized fix list grouped by severity, and estimate revenue-impact tier (high / medium / low) for each error type. Format as a checklist I can hand off to my client's developer.</div>
+      </div>
+
+      <div class="niche-section meta">
+        <div class="niche-title">5. The Anomaly Slack Alert</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Run ads_insights_anomaly_signal on account [ACCOUNT_ID]. For anything flagged in the last 24h, write a one-line plain-English explanation + a one-line suggested action. Format the whole thing as a Slack-pasteable summary I can drop in #client-[NAME] right now.</div>
+      </div>
+
+      <div class="niche-section meta">
+        <div class="niche-title">6. Auction Edge Report</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Pull ads_insights_auction_ranking_benchmarks for the top 10 ads by spend in account [ACCOUNT_ID]. For each, show our quality / engagement / conversion ranking vs the auction. Identify which ads are losing the auction and explain what's likely dragging us — quality, relevance, or bid strategy. Output as a ranked table.</div>
+      </div>
+
+      <div class="niche-section meta">
+        <div class="niche-title">7. Pre-Pitch Account Audit (sales tool)</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>I'm pitching [BUSINESS_NAME] tomorrow. Use the meta-ads MCP to query the ad opportunity score for their account if I have access, and benchmark them against ads_insights_industry_benchmark for [INDUSTRY]. If I don't have account access, query their public Meta Ad Library footprint instead. Output a "state of their advertising" 1-pager I can use to anchor the pitch — what's working, what's broken, where I'd start.</div>
+      </div>
+
+      <div class="niche-section meta">
+        <div class="niche-title">8. The Bloomberg-Style Live Dashboard</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Build me a self-refreshing HTML dashboard for ad account [ACCOUNT_ID]. Top row = today's spend / leads / ROAS as huge numbers with up/down arrows vs yesterday. Middle = bar chart of last 7 days revenue. Bottom-left = top 5 ads with thumbnails + CPA. Bottom-right = anomaly feed (latest first). Use my agency colors [HEX_PRIMARY] / [HEX_BG]. Make it look like a Bloomberg terminal — dense, monospace, dark. Refresh every 5 minutes via a meta-tag refresh. Single self-contained HTML file.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 04 — CLAUDE DESIGN -->
+    <div class="section">
+      <h2><span class="icon">🎨</span> 04 · Claude Design — Statics, LPs &amp; Decks</h2>
+
+      <!-- YES IT DOES — the explicit answer -->
+      <div style="background:linear-gradient(135deg,rgba(52,199,89,0.08) 0%, rgba(52,199,89,0.02) 100%);border:1px solid rgba(52,199,89,0.3);border-radius:12px;padding:20px 24px;margin:14px 0 18px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#34C759;text-transform:uppercase;margin-bottom:8px;">✓ Yes — Claude designs static ads.</div>
+        <p style="color:#ddd;font-size:0.95rem;line-height:1.65;margin:0;">
+          Claude doesn't generate <em>raster images</em> like Midjourney. It generates <strong style="color:#fff">HTML/CSS artifacts</strong> — fully designed creatives with real typography, layout, and brand colors — that you <strong style="color:#fff">screenshot to PNG</strong> and run as ads. Or you deploy the HTML directly as a landing page. Or you PDF-export it as a deck. Same output engine, three deliverables.
+        </p>
+      </div>
+
+      <!-- THE UNLOCK: reference images -->
+      <div style="background:linear-gradient(135deg,rgba(255,107,0,0.1) 0%, rgba(255,107,0,0.02) 100%);border:1px solid rgba(255,107,0,0.35);border-radius:12px;padding:20px 24px;margin-bottom:18px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#FF6B00;text-transform:uppercase;margin-bottom:8px;">⚡ The unlock most people miss</div>
+        <p style="color:#ddd;font-size:0.92rem;line-height:1.65;margin-bottom:8px;">
+          <strong style="color:#fff">Drop reference images into Claude when you prompt.</strong> Drag-and-drop into the chat box: client brand guidelines, a competitor ad you envy, a vibe board, your Figma frames, a screenshot of their existing site. Claude reads the visual style and matches it.
+        </p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px;">
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px 14px;">
+            <div style="color:#FF6B00;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:4px;">📎 DROP IN</div>
+            <div style="color:#ccc;font-size:12.5px;line-height:1.5;">Brand kit · logo · a screenshot of competitor ads · client's existing website</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px 14px;">
+            <div style="color:#FF6B00;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:4px;">💬 TELL IT</div>
+            <div style="color:#ccc;font-size:12.5px;line-height:1.5;">"Match this brand's vibe" · "design in this style but for [niche]" · "use these colors"</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px 14px;">
+            <div style="color:#FF6B00;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:4px;">🔁 ITERATE</div>
+            <div style="color:#ccc;font-size:12.5px;line-height:1.5;">"Make 10 more variations changing only the hook" · "tighten the headline"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4.1 STATIC ADS -->
+      <h3 style="color:#fff;font-size:1.15rem;font-weight:800;margin:24px 0 6px;">4.1 — Static ad creatives <span style="color:#FF6B00">→ 6 niche prompts</span></h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">Paste any of these into Claude. Swap [CITY] and the headline. <strong style="color:#fff">Bonus:</strong> drop in a competitor ad you like (or your client's brand kit) <em>before</em> the prompt — Claude will match that style.</p>
+
+      <div class="niche-section dent">
+        <div class="niche-title">1. Family Dentist</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Create an HTML ad creative, 1080x1080, square social-feed format.
+Niche: family dentist in [CITY].
+Format: before/after comparison.
+Headline: "Your kid's first dental visit shouldn't end in tears."
+Style: warm and trustworthy. Mint #E8F5E9, cream #FFF8E1, modern serif headline (Playfair Display), Inter body.
+Include: 5-star badge, "247 happy families this year", soft photo placeholders labeled "ANXIOUS BEFORE" / "SMILING AFTER".
+CTA: "Book your free consult →"
+Output: a single HTML file with inline CSS, ready to screenshot at 1080x1080.</div>
+      </div>
+
+      <div class="niche-section gym">
+        <div class="niche-title">2. Local Gym (35–50yo target)</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Create an HTML ad creative, 1080x1350, vertical Reels/Stories format.
+Niche: local gym in [CITY], target dads 35-50.
+Format: transformation + offer.
+Headline: "How Mike dropped 22 lbs at 47 — without giving up beer."
+Style: matte black #0A0A0A, neon green accent #00FF88, all-caps display (Bebas Neue), gritty industrial.
+Include: stats panel (-22 lbs / 16 weeks / 3x per week), pull-quote testimonial, "5 spots left — January cohort".
+CTA: "Claim your spot →"
+Output: single HTML, inline CSS, ready to screenshot at 1080x1350.</div>
+      </div>
+
+      <div class="niche-section rest">
+        <div class="niche-title">3. Italian Restaurant</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Create an HTML ad creative, 1080x1080.
+Niche: Italian family spot in [CITY].
+Format: hand-written secret-menu special.
+Headline: "Wednesday's secret menu (locals only)"
+Style: warm chalkboard — cream #F5E9D0, brown #3E2723, Caveat handwritten headline, Cormorant for menu items.
+Include: 3 dishes + prices, "Walk-in only — 6 to 9 PM", italic line "(don't tell the tourists)".
+CTA: "See you Wednesday →"
+Output: single HTML, inline CSS, screenshot-ready.</div>
+      </div>
+
+      <div class="niche-section real">
+        <div class="niche-title">4. Real Estate Agent (target sellers)</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Create an HTML ad creative, 1080x1350.
+Niche: realtor in [CITY], target home sellers.
+Format: sold-listing flex.
+Headline: "$47K over asking. In 8 days. In [NEIGHBORHOOD]."
+Style: editorial luxe — navy #0F1B2D, champagne #C9A961, Cormorant Garamond + Manrope.
+Include: before/after price tags, "8 days on market" badge, agent photo placeholder, 3-bullet "what we did differently".
+CTA: "Want yours sold like this? DM me 'PLAYBOOK'"
+Output: single HTML, screenshot at 1080x1350.</div>
+      </div>
+
+      <div class="niche-section hair">
+        <div class="niche-title">5. Hair Salon / Colorist</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Create an HTML ad creative, 1080x1920 Story format.
+Niche: hair colorist in [CITY], target women 25-45.
+Format: before/after one-frame.
+Headline: "Boring brunette → bombshell blonde in 4 hours."
+Style: editorial fashion mag — soft pink #F8E8E8, rose gold #B76E79, Didot or Bodoni headline, clean sans body.
+Include: two photo boxes labeled "9 AM" / "1 PM", price callout "$280 (worth $450)", booking urgency.
+CTA: "DM 'GLOW' to book this week →"
+Output: single HTML, screenshot at 1080x1920.</div>
+      </div>
+
+      <div class="niche-section plumb">
+        <div class="niche-title">6. Plumber / Home Services</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Create an HTML ad creative, 1080x1080.
+Niche: local plumber in [CITY].
+Format: trust-builder.
+Headline: "We answer the phone. (Apparently that's rare now.)"
+Style: blue-collar honest — red #C8102E, white, heavy condensed sans (Oswald) headline, Inter body.
+Include: 3 stats (24/7 / $0 quote / 4.9★ on 312 reviews), phone number HUGE, "No surprises, no hidden fees" badge.
+CTA: "Call now — we're 11 min away"
+Output: single HTML, screenshot at 1080x1080.</div>
+      </div>
+
+      <!-- THE COMBO MOVE: Meta MCP × Claude Design -->
+      <div style="background:linear-gradient(135deg,rgba(66,103,178,0.12) 0%, rgba(255,107,0,0.08) 100%);border:1px solid rgba(255,107,0,0.4);border-radius:12px;padding:22px 26px;margin:20px 0 10px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#FF6B00;text-transform:uppercase;margin-bottom:8px;">🔥 The Combo — Meta MCP × Claude Design</div>
+        <h4 style="color:#fff;font-size:1.1rem;font-weight:800;margin-bottom:8px;line-height:1.35;">One winning ad → 10 variations in 4 minutes.</h4>
+        <p style="color:#ccc;font-size:0.9rem;line-height:1.6;margin-bottom:12px;">
+          This is why the two halves of this class fit together. Claude pulls your top performer from Meta via the MCP, then re-designs it 10 ways without touching the winning angle. Drop your client's screenshot or brand kit in too for extra style match.
+        </p>
+        <div class="code-block" data-prompt style="margin:6px 0 0;"><button class="copy-btn" type="button">COPY</button>Use the meta-ads MCP to find the top-performing ad in account [ACCOUNT_ID] over the last 14 days (highest ROAS, minimum 50 conversions). Pull its headline, primary text, image description, and key performance stats.
+
+Then design me 10 static ad variations in HTML that keep the SAME core angle and offer, but change ONE variable per ad:
+- 3 with new headlines (same hook, different framing)
+- 3 with new visual layouts (split, stacked, full-bleed)
+- 2 with new CTAs
+- 2 with new social proof angles (review count, before/after, named testimonial)
+
+Style: match my client's brand — [paste brand colors / fonts / vibe OR drag in their logo and brand kit].
+Format: 1080x1080. Each variation as a separate HTML artifact, ready to screenshot.
+
+Output: also list which variable changed in each one and your hypothesis for why it might outperform the winner.</div>
+      </div>
+
+      <!-- 4.2 LANDING PAGES -->
+      <h3 style="color:#fff;font-size:1.15rem;font-weight:800;margin:32px 0 6px;">4.2 — Landing Pages <span style="color:#FF6B00">→ your $1.5K–$3K deliverable</span></h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">Claude writes the entire conversion site as one artifact. Three niche templates that print money for local biz.</p>
+
+      <div class="niche-section dent">
+        <div class="niche-title">A. Dentist Landing Page</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Build a complete one-page conversion site for a family dentist in [CITY].
+Sections: 1) Hero "The dentist your kids actually ask to visit" + CTA "Book a free first visit" + trust strip. 2) The 3 promises (no shaming about flossing / no surprise bills / no scary kids' visits). 3) 3 testimonial cards. 4) Meet Dr. [LAST NAME] — photo + 4-paragraph bio focused on family + community. 5) Services grid — 6 cards. 6) FAQ — 7 questions, accordion via details/summary. 7) Final CTA + map + phone + booking form.
+Visual: warm trust theme. Mint #5DD3B3, cream #FFF8E1, Playfair Display + Inter. Mobile-first.
+Output: single HTML file, inline CSS, complete with realistic placeholder copy, no JS.</div>
+      </div>
+
+      <div class="niche-section gym">
+        <div class="niche-title">B. Gym Landing Page (12-week transformation)</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Build a one-page sales site for a local gym in [CITY] selling a 12-week transformation program for dads 35-50.
+Sections: 1) Hero "Lose the dad bod in 12 weeks. Without giving up your life." + video placeholder + CTA. 2) Who this is for / not for — two-column. 3) Transformation — 3 before/after card placeholders with stats. 4) The 12-week system — 4 phases on a horizontal timeline. 5) What's included — 6 deliverables with checkmarks. 6) Investment + 30-day money-back guarantee. 7) Coach bio + facility photos. 8) FAQ — 8 questions, accordion. 9) Final CTA — application form, "5 spots left" urgency.
+Visual: matte black #0A0A0A, neon green #00FF88, Bebas Neue + Inter. Mobile-first.
+Output: single HTML file, inline CSS.</div>
+      </div>
+
+      <div class="niche-section real">
+        <div class="niche-title">C. Real Estate Landing Page (free home valuation)</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Build a one-page lead-magnet site for a realtor in [CITY] targeting home sellers. Lead magnet: free home valuation report.
+Sections: 1) Hero "Find out what your [CITY] home is worth in 2026 — free, in 24 hours" + form (address + email + phone) + trust strip. 2) How the report works — 3 steps. 3) Recent sold listings — grid of 6. 4) Why list with [AGENT] — 5 differentiators + agent photo. 5) Testimonials — 3 cards. 6) FAQ — 6 questions. 7) Final CTA — same form repeated.
+Visual: editorial luxe — navy #0F1B2D, champagne #C9A961, Cormorant Garamond + Manrope. Mobile-first.
+Output: single HTML file, inline CSS.</div>
+      </div>
+
+      <!-- 4.3 PITCH DECKS -->
+      <h3 style="color:#fff;font-size:1.15rem;font-weight:800;margin:32px 0 6px;">4.3 — Pitch Decks <span style="color:#FF6B00">→ master prompt</span></h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">One prompt. Adapts to any niche by swapping [CLIENT NAME] and [NICHE]. Use as a screen-share deck on the sales call, then PDF-export as a leave-behind.</p>
+
+      <div class="niche-section">
+        <div class="niche-title" style="color:#FF6B00">Master 12-Slide Client Pitch Deck</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Build a complete client pitch deck as a single HTML file with each slide as a fullscreen section (snap-scroll).
+Use case: I'm an ad agency pitching a [NICHE] client in [CITY] on a 90-day campaign.
+Slides: 1) Cover + "[CLIENT NAME] x [AGENCY NAME] — 90-Day Growth Plan". 2) The opportunity — 1 stat + 1 sentence. 3) Where they are now — 3 honest observations. 4) Where they could be in 90 days — 3 outcomes with target numbers. 5) The strategy — funnel diagram. 6/7/8) Month 1, 2, 3 — deliverables list + 1 KPI each. 9) Sample creative — 3 ad mockups. 10) The team — 3 cards. 11) Investment — single tiered pricing card with one bold "recommended" tier. 12) Guarantee + next step + "Sign here" CTA.
+Visual: my agency brand — bg #0A0A0F, accent #4d8eff, Space Grotesk headlines, Inter body, glassmorphism cards. Each slide centers vertically, 100vh tall.
+Output: single HTML, inline CSS, scroll-snap, no JS.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 05 — FREEPIK -->
+    <div class="section">
+      <h2><span class="icon">🎬</span> 05 · Freepik — Nano Banana → Seedance</h2>
+      <p style="color:#bbb;font-size:0.92rem;line-height:1.65;margin-bottom:14px;">
+        The two-step workflow that turns a still scene into a 5-second hero ad your client will lose their mind over.
+      </p>
+
+      <h3 style="color:#fff;font-size:1.05rem;font-weight:800;margin:0 0 6px;">The 4-step recipe</h3>
+      <div class="recipe-steps">
+        <div class="recipe-step">
+          <div class="recipe-num">01</div>
+          <div class="recipe-title">Source the still</div>
+          <div class="recipe-desc">Real client photo, or generate from scratch with Nano Banana.</div>
+        </div>
+        <div class="recipe-step">
+          <div class="recipe-num">02</div>
+          <div class="recipe-title">Edit in Nano Banana</div>
+          <div class="recipe-desc">Clean BG, swap product, change time-of-day, add brand colors.</div>
+        </div>
+        <div class="recipe-step">
+          <div class="recipe-num">03</div>
+          <div class="recipe-title">Animate with Seedance</div>
+          <div class="recipe-desc">5-second image-to-video. Specific gesture + camera move.</div>
+        </div>
+        <div class="recipe-step">
+          <div class="recipe-num">04</div>
+          <div class="recipe-title">Stitch in CapCut</div>
+          <div class="recipe-desc">Captions, music, CTA card, brand outro. Export 9:16, 1:1, 16:9.</div>
+        </div>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.05rem;font-weight:800;margin:28px 0 4px;">6 niche-tailored video prompts</h3>
+      <p style="color:#999;font-size:0.85rem;margin-bottom:14px;">Each pair = 1 image prompt for Nano Banana + 1 motion prompt for Seedance. Copy both, run sequentially in Freepik, export the MP4.</p>
+
+      <div class="video-prompt-pair">
+        <div class="vp-niche">Dentist</div>
+        <div class="vp-step-label banana">1 · IMAGE — NANO BANANA</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Photorealistic warm modern dental office. Female dentist 30s, friendly smile, light-blue scrubs, gently examining a smiling 8-year-old girl in the dental chair. Soft natural light through windows. Mint accent wall, plants. Documentary style, Sony A7IV, 50mm, shallow DOF.</div>
+        <div class="vp-step-label dance">2 · ANIMATE — SEEDANCE</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>The dentist gently lifts the dental mirror, smiles, and turns to camera with a thumbs-up. Child laughs softly. Warm cinematic motion. 5 seconds.</div>
+      </div>
+
+      <div class="video-prompt-pair">
+        <div class="vp-niche">Local Gym</div>
+        <div class="vp-step-label banana">1 · IMAGE — NANO BANANA</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Photorealistic gritty local gym at 6 AM. Man, 45, slightly overweight but determined, mid-deadlift, sweat on forehead, plain black t-shirt. Cinematic lighting, dust in air, RED, 35mm anamorphic.</div>
+        <div class="vp-step-label dance">2 · ANIMATE — SEEDANCE</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Man completes the deadlift, racks the barbell, exhales heavily, then looks straight to camera with a small confident nod. 5 seconds.</div>
+      </div>
+
+      <div class="video-prompt-pair">
+        <div class="vp-niche">Restaurant</div>
+        <div class="vp-step-label banana">1 · IMAGE — NANO BANANA</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Photorealistic top-down shot of a wood-fired pizza being pulled from oven on a wooden peel, cheese still bubbling, smoke rising, basil leaves scattered. Dim warm restaurant lighting in background, blurred candles. Phase One, 80mm, food editorial.</div>
+        <div class="vp-step-label dance">2 · ANIMATE — SEEDANCE</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Camera slowly pushes in. Pizza is placed on the table, hand reaches in and takes a slice — cheese pull. 5 seconds.</div>
+      </div>
+
+      <div class="video-prompt-pair">
+        <div class="vp-niche">Real Estate</div>
+        <div class="vp-step-label banana">1 · IMAGE — NANO BANANA</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Photorealistic exterior of a modern $850K family home, golden hour, manicured lawn, warm interior lights on, "JUST SOLD" sign in foreground with confident realtor (Latina, 35, blazer, smiling) standing next to it. Architectural photography, Sony A1, 24mm.</div>
+        <div class="vp-step-label dance">2 · ANIMATE — SEEDANCE</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Camera slowly tracks left, revealing the full house. Realtor turns to camera, smiles, mouths "sold". 5 seconds.</div>
+      </div>
+
+      <div class="video-prompt-pair">
+        <div class="vp-niche">Hair Salon</div>
+        <div class="vp-step-label banana">1 · IMAGE — NANO BANANA</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Photorealistic salon mirror selfie POV. Beautiful 28-year-old woman with freshly dyed bombshell blonde hair, glossy finish, perfect waves, black robe, ecstatic smile, holding phone slightly up. Soft pink salon lighting, marble counter, hairdryer in BG. Shot on iPhone 16 Pro, ultra-realistic.</div>
+        <div class="vp-step-label dance">2 · ANIMATE — SEEDANCE</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Woman flips her hair side to side, laughs, then blows a kiss to camera. 5 seconds.</div>
+      </div>
+
+      <div class="video-prompt-pair">
+        <div class="vp-niche">Plumber</div>
+        <div class="vp-step-label banana">1 · IMAGE — NANO BANANA</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Photorealistic plumber, 40, friendly face, branded company polo shirt, kneeling in clean modern kitchen fixing a sink. Toolbox visible, smiling homeowner (woman, 35) in background holding coffee. Natural daylight from window. Documentary style.</div>
+        <div class="vp-step-label dance">2 · ANIMATE — SEEDANCE</div>
+        <div class="code-block" data-prompt><button class="copy-btn" type="button">COPY</button>Plumber finishes tightening, stands up, gives thumbs-up to homeowner. She laughs and nods. 5 seconds.</div>
+      </div>
+    </div>
+
+    <!-- SECTION 06 — THE STACK -->
+    <div class="section">
+      <h2><span class="icon">⚙️</span> 06 · The Local-Biz Agency Stack (LBAS)</h2>
+      <p style="color:#bbb;font-size:0.92rem;line-height:1.65;margin-bottom:14px;">
+        Setup once. Then for each retainer client, every month: one hour, eight ads + a landing page + a pitch deck + a Friday client report.
+      </p>
+
+      <table class="stack-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Step</th><th>Tool</th><th>Time</th><th>Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="num">00</td><td style="color:#fff">Install Meta Ads MCP (one-time)</td><td>Meta + Claude Desktop / Code</td><td class="time">10 min</td><td>Live data layer</td></tr>
+          <tr><td class="num">01</td><td style="color:#fff">Brief</td><td>Notion / paper</td><td class="time">5 min</td><td>1-page client brief</td></tr>
+          <tr><td class="num">02</td><td style="color:#fff">Static ad creatives × 4–6</td><td>Claude Design</td><td class="time">15 min</td><td>4–6 PNG ads</td></tr>
+          <tr><td class="num">03</td><td style="color:#fff">Hero images × 3–4</td><td>Freepik / Nano Banana</td><td class="time">10 min</td><td>3–4 photoreal stills</td></tr>
+          <tr><td class="num">04</td><td style="color:#fff">Animate top 2</td><td>Freepik / Seedance</td><td class="time">10 min</td><td>2 × 5s MP4</td></tr>
+          <tr><td class="num">05</td><td style="color:#fff">Stitch + caption</td><td>CapCut</td><td class="time">10 min</td><td>Final 9:16 + 1:1 ads</td></tr>
+          <tr><td class="num">06</td><td style="color:#fff">Friday client report</td><td>Meta MCP + Claude</td><td class="time">5 min</td><td>HTML 1-pager</td></tr>
+          <tr><td class="num">07</td><td style="color:#fff">Landing page (optional)</td><td>Claude Design</td><td class="time">20 min</td><td>Single-page HTML site</td></tr>
+          <tr><td class="num">08</td><td style="color:#fff">Pitch deck (optional)</td><td>Claude Design</td><td class="time">15 min</td><td>12-slide HTML deck</td></tr>
+        </tbody>
+      </table>
+
+      <div class="totals-grid">
+        <div class="total-card">
+          <div class="total-label">CORE BUNDLE</div>
+          <div class="total-value">55 min</div>
+          <div class="total-desc">Steps 01–06. Every retainer client, every month.</div>
+        </div>
+        <div class="total-card">
+          <div class="total-label">PREMIUM BUNDLE</div>
+          <div class="total-value">90 min</div>
+          <div class="total-desc">Adds LP + deck. Charge $1.5K–$3K extra.</div>
+        </div>
+        <div class="total-card">
+          <div class="total-label">MARGIN RECOVERY</div>
+          <div class="total-value">3–5×</div>
+          <div class="total-desc">Same retainer. Less time. More clients.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 07 — HOMEWORK -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 07 · Homework + Q&amp;A</h2>
+      <p style="color:#bbb;font-size:0.92rem;line-height:1.65;margin-bottom:8px;">
+        If you don't ship within 48 hours of this class, you didn't take it.
+      </p>
+
+      <div class="callout-cta">
+        <h3>Your assignment — install the Meta MCP and ship a full deliverable bundle for ONE local-biz client in 48 hours.</h3>
+        <ol>
+          <li><strong style="color:#fff">Install Meta Ads MCP</strong> on your Claude Desktop and Claude Code (Sections 3.2 + 3.3).</li>
+          <li><strong style="color:#fff">Run prompt #1 (Daily Pulse)</strong> on a real client account. Screenshot the dashboard. That's your proof of life.</li>
+          <li><strong style="color:#fff">5 static ads</strong> from Claude Design — pick the niche prompt closest to your client.</li>
+          <li><strong style="color:#fff">2 video ads</strong> from Freepik — Nano Banana → Seedance, 5 sec each.</li>
+          <li><strong style="color:#fff">1 landing page</strong> from Claude Design (Section 4.2 prompts).</li>
+          <li>Drop the bundle in <strong style="color:#fff">#weekly-wins</strong> with the niche + how long it took. We'll review the top 3 next week.</li>
+        </ol>
+      </div>
+
+      <p style="color:#888;font-size:0.85rem;text-align:center;margin-top:24px;">
+        Bring questions — last 5 min is live Q&amp;A.
+      </p>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="nav-bottom">
+      <a href="../index.html" class="nav-link">← All Lessons</a>
+      <a href="5.15-ai-agents-live.html" class="nav-link">Lesson 5.15 — AI Agents Live →</a>
+    </div>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var block = btn.parentElement;
+        var text = block.innerText.replace(/^COPY\s*/, '').trim();
+        navigator.clipboard.writeText(text).then(function() {
+          btn.classList.add('copied');
+          var orig = btn.textContent;
+          btn.textContent = 'COPIED';
+          setTimeout(function() {
+            btn.classList.remove('copied');
+            btn.textContent = orig;
+          }, 1400);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

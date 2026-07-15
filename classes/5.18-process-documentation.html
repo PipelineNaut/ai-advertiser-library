@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.18: Process Documentation — Become the Owner, Not the Employee</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Hero stat card */
+    .bus-test { background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02)); border: 1px solid rgba(239,68,68,0.3); border-radius: 16px; padding: 28px 32px; margin: 24px 0; }
+    .bus-test h3 { color: #ef4444; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px; }
+    .bus-test p { color: #fff; font-size: 1.1rem; line-height: 1.6; margin: 0; font-weight: 500; }
+
+    /* Owner vs Employee */
+    .vs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+    .vs-card { background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; }
+    .vs-card.bad { border-color: rgba(239,68,68,0.25); background: linear-gradient(135deg, rgba(239,68,68,0.05), transparent); }
+    .vs-card.good { border-color: rgba(34,197,94,0.3); background: linear-gradient(135deg, rgba(34,197,94,0.05), transparent); }
+    .vs-card .label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+    .vs-card.bad .label { color: #ef4444; }
+    .vs-card.good .label { color: #22c55e; }
+    .vs-card .title { color: #fff; font-weight: 800; font-size: 1rem; margin-top: 6px; }
+    .vs-card ul { margin: 12px 0 0; padding: 0 0 0 18px; color: #bbb; font-size: 0.88rem; line-height: 1.75; }
+
+    /* 4 Components grid */
+    .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
+    .comp { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; position: relative; overflow: hidden; }
+    .comp::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #3B82F6; }
+    .comp .icon-big { font-size: 2rem; margin-bottom: 10px; }
+    .comp .ctitle { color: #fff; font-weight: 800; font-size: 1.05rem; margin-bottom: 4px; }
+    .comp .ctag { color: #3B82F6; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .comp .cdesc { color: #bbb; font-size: 0.88rem; line-height: 1.6; }
+    .comp .cex { background: #0a0a0a; border-radius: 8px; padding: 10px 12px; margin-top: 12px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.78rem; color: #86efac; line-height: 1.55; }
+
+    /* SOP comparison */
+    .sop-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sop-col { background: #111; border-radius: 12px; padding: 18px; }
+    .sop-col.bad { border: 1px solid rgba(239,68,68,0.3); background: linear-gradient(180deg, rgba(239,68,68,0.05), transparent); }
+    .sop-col.good { border: 1px solid rgba(34,197,94,0.3); background: linear-gradient(180deg, rgba(34,197,94,0.06), transparent); }
+    .sop-col .header { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+    .sop-col.bad .header { color: #ef4444; }
+    .sop-col.good .header { color: #22c55e; }
+    .sop-col .sop-body { background: #0a0a0a; border-radius: 8px; padding: 14px; font-size: 0.82rem; color: #ccc; line-height: 1.65; font-family: 'SF Mono', Monaco, Consolas, monospace; min-height: 200px; }
+    .sop-col .sop-body strong { color: #fff; }
+
+    /* ClickUp hierarchy */
+    .tree { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 24px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.88rem; line-height: 2; color: #ccc; }
+    .tree .level-0 { color: #3B82F6; font-weight: 800; font-size: 1rem; }
+    .tree .level-1 { color: #fff; font-weight: 700; padding-left: 24px; }
+    .tree .level-2 { color: #bbb; padding-left: 48px; }
+    .tree .level-3 { color: #888; padding-left: 72px; font-size: 0.82rem; }
+    .tree .icon { display: inline-block; width: 20px; }
+
+    /* Workflow steps */
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr) auto; gap: 10px; align-items: stretch; margin: 16px 0; }
+    .flow-step { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px; text-align: center; }
+    .flow-step .sn { color: #3B82F6; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; }
+    .flow-step .sicon { font-size: 2rem; margin: 6px 0; }
+    .flow-step .stitle { color: #fff; font-weight: 700; font-size: 0.88rem; }
+    .flow-step .sdesc { color: #888; font-size: 0.72rem; margin-top: 4px; line-height: 1.45; }
+    .flow-arrow { color: #444; align-self: center; font-size: 1.2rem; }
+    @media (max-width: 720px) {
+      .flow { grid-template-columns: 1fr; }
+      .flow-arrow { display: none; }
+    }
+
+    /* Time comparison */
+    .time-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .time-card { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; text-align: center; }
+    .time-card.before { border-color: rgba(239,68,68,0.3); }
+    .time-card.after { border-color: rgba(34,197,94,0.35); background: linear-gradient(180deg, rgba(34,197,94,0.06), transparent); }
+    .time-card .tt { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+    .time-card.before .tt { color: #ef4444; }
+    .time-card.after .tt { color: #22c55e; }
+    .time-card .tv { font-size: 2rem; font-weight: 900; color: #fff; margin-top: 4px; }
+    .time-card .td { color: #888; font-size: 0.82rem; margin-top: 6px; line-height: 1.55; }
+
+    /* Prompt box */
+    .prompt-box { background: #0a0a0a; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 22px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.82rem; color: #d4d4d4; line-height: 1.75; white-space: pre-wrap; position: relative; }
+    .prompt-box .copy-hint { position: absolute; top: 12px; right: 14px; background: #3B82F6; color: #fff; font-size: 0.66rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Inter', sans-serif; }
+    .prompt-box .k { color: #3B82F6; font-weight: 700; }
+
+    /* First 3 SOPs cards */
+    .first3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .first3-card { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; position: relative; }
+    .first3-card .num-big { font-size: 2.5rem; font-weight: 900; color: rgba(59,130,246,0.15); position: absolute; top: 6px; right: 16px; line-height: 1; }
+    .first3-card .ftitle { color: #fff; font-weight: 800; font-size: 0.98rem; margin-bottom: 6px; }
+    .first3-card .fdesc { color: #999; font-size: 0.82rem; line-height: 1.55; }
+    .first3-card .ftag { display: inline-block; margin-top: 10px; background: rgba(34,197,94,0.1); color: #22c55e; font-size: 0.66rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    @media (max-width: 720px) {
+      .first3, .comp-grid, .sop-compare, .vs-row, .time-cmp { grid-template-columns: 1fr; }
+    }
+
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.18 — Module 5: AI Integration</div>
+      <h1>Process Documentation — <span>Become the Owner</span></h1>
+      <div class="subtitle">
+        <span class="tag">Operations</span>
+        <span class="tag">ClickUp</span>
+        <span class="tag">AI Workflow</span>
+        <span class="tag">~30 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">If you got hit by a bus tomorrow, your agency dies in 2 weeks. That's the test you're failing. Today we fix it — by turning the processes locked in your head into ClickUp SOPs in ~40 min each (instead of the 3 hours it used to take). Watch this once. Walk out with one SOP done.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE BUS TEST                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚌</span> 1. The Bus Test — Are You the Owner or the Employee?</h2>
+
+      <div class="bus-test">
+        <h3>The Bus Test</h3>
+        <p>"If you got hit by a bus tomorrow, would your agency still run for 30 days? 60? A year?" Most owners can't get past week 2. That means you don't own a business — you own a job that pays you what a business would.</p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">Process documentation is what flips you from employee to owner. The instant you can hand a process to a VA or new hire and they execute without you in the loop, you've made an asset. Until then, every client you add is more work for <em>you</em>, not more leverage.</p>
+
+      <div class="vs-row">
+        <div class="vs-card bad">
+          <div class="label">⚠ EMPLOYEE OF YOUR BUSINESS</div>
+          <div class="title">No documented processes</div>
+          <ul>
+            <li>Every new client = more hours for you</li>
+            <li>Can't take a 2-week vacation without things breaking</li>
+            <li>VA asks the same 5 questions every week</li>
+            <li>Hiring = 3 months of training (most quit before month 2)</li>
+            <li>Selling the agency = impossible (there's nothing to sell)</li>
+          </ul>
+        </div>
+        <div class="vs-card good">
+          <div class="label">✓ ACTUAL OWNER</div>
+          <div class="title">Documented in ClickUp + AI</div>
+          <ul>
+            <li>New client = a VA runs through the SOP</li>
+            <li>2-week vacation = everything runs without you</li>
+            <li>VAs onboard in a week, execute by day 10</li>
+            <li>Quality stays consistent because the process IS the quality</li>
+            <li>Agency is now a sellable asset, not a glorified freelance gig</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 18px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #eab308;">🚨 The trap most owners fall into:</strong> They try to document <em>everything</em> at once. Wrong. Start with the 3 highest-frequency, lowest-judgment tasks — the ones a smart 20-year-old could run with the right doc. Strategy and sales calls come LAST.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: ANATOMY OF A REAL SOP       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧬</span> 2. The Anatomy of a Real SOP — 4 Components</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 18px;">Every SOP that actually works has these 4 components. Miss one and the process breaks the moment you hand it off.</p>
+
+      <div class="comp-grid">
+        <div class="comp">
+          <div class="icon-big">⚡</div>
+          <div class="ctag">Component 1</div>
+          <div class="ctitle">Trigger</div>
+          <div class="cdesc">When does this process start? What event kicks it off? Without a trigger, the SOP just sits there.</div>
+          <div class="cex">New client signs contract<br>→ Run "Client Onboarding" SOP</div>
+        </div>
+        <div class="comp">
+          <div class="icon-big">👤</div>
+          <div class="ctag">Component 2</div>
+          <div class="ctitle">Owner</div>
+          <div class="cdesc">Who runs this? A role, not a person. "VA" or "Account Manager" — never "Bob." People leave. Roles stay.</div>
+          <div class="cex">Owner: Account Manager<br>(escalate to Strategist if X)</div>
+        </div>
+        <div class="comp">
+          <div class="icon-big">📋</div>
+          <div class="ctag">Component 3</div>
+          <div class="ctitle">Steps</div>
+          <div class="cdesc">Numbered. Action-verb-led. Each step has time estimate + the "common mistake" to avoid. Screenshots or Loom embeds where it matters.</div>
+          <div class="cex">1. Log into client's Meta BM (2 min)<br>   ⚠ Use agency email, NOT client's</div>
+        </div>
+        <div class="comp">
+          <div class="icon-big">✅</div>
+          <div class="ctag">Component 4</div>
+          <div class="ctitle">Done Definition</div>
+          <div class="cdesc">3-5 specific checkboxes proving completion. Without this, "done" means whatever the VA decides — and that's how things fall through.</div>
+          <div class="cex">☐ Pixel firing on landing page<br>☐ Test campaign live in Draft mode<br>☐ Slack #clients posted</div>
+        </div>
+      </div>
+
+      <h3 style="color: #fff; font-size: 1.05rem; margin: 28px 0 12px; font-weight: 700;">Bad SOP vs. Real SOP</h3>
+
+      <div class="sop-compare">
+        <div class="sop-col bad">
+          <div class="header">⚠ WHAT MOST OWNERS WRITE</div>
+          <div class="sop-body">Onboard the client. Get their ad account access, set up the pixel, run a test campaign, let them know it's done. If there's any issue, message me.</div>
+        </div>
+        <div class="sop-col good">
+          <div class="header">✓ WHAT ACTUALLY WORKS</div>
+          <div class="sop-body"><strong>Trigger:</strong> Contract signed in HelloSign<br><strong>Owner:</strong> Account Manager<br><strong>Steps:</strong><br>1. Send onboarding form (5 min) — template "Client Intake v3"<br>2. Request BM access (2 min) — use copy-paste msg in Doc<br>3. Install pixel via GTM (15 min) — Loom: gtm-pixel.loom.com<br>4. Run test conversion (3 min) — must fire within 30 sec<br>5. Post in #clients (1 min)<br><strong>Done:</strong><br>☐ Pixel firing<br>☐ Test conversion logged<br>☐ #clients message posted</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: CLICKUP STRUCTURE           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📁</span> 3. The ClickUp Structure (Copy This)</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">Don't reinvent the hierarchy. This is the structure I use across every agency I run, and it scales from 1 person to 30:</p>
+
+      <div class="tree">
+        <div class="level-0"><span class="icon">🏢</span> Workspace: [Your Agency Name]</div>
+        <div class="level-1"><span class="icon">📚</span> Space: SOPs &amp; Processes</div>
+        <div class="level-2"><span class="icon">📁</span> Folder: Client Delivery</div>
+        <div class="level-3">📄 Client Onboarding</div>
+        <div class="level-3">📄 Weekly Reporting</div>
+        <div class="level-3">📄 Campaign Setup</div>
+        <div class="level-3">📄 Monthly Optimization Review</div>
+        <div class="level-2"><span class="icon">📁</span> Folder: Sales</div>
+        <div class="level-3">📄 Lead Qualification</div>
+        <div class="level-3">📄 Discovery Call Framework</div>
+        <div class="level-3">📄 Proposal Generation</div>
+        <div class="level-2"><span class="icon">📁</span> Folder: Operations</div>
+        <div class="level-3">📄 Hiring + Trial Project</div>
+        <div class="level-3">📄 Payroll &amp; Contractor Pay</div>
+        <div class="level-3">📄 Weekly Financial Review</div>
+        <div class="level-2"><span class="icon">📁</span> Folder: Marketing</div>
+        <div class="level-3">📄 Content Posting Cadence</div>
+        <div class="level-3">📄 Cold Outreach Sequence</div>
+      </div>
+
+      <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #3B82F6;">💡 Why ClickUp specifically:</strong> Docs, Tasks, Templates, and Automations all live in the same workspace. You can convert any step in a Doc into a real Task with one click. Templates let you re-run the same SOP for every new client. Automations fire when triggers happen. Google Docs can't do any of that — you'd need 4 different tools.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: THE AI WORKFLOW (KILLER)    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🤖</span> 4. The AI Workflow — Write SOPs in 40 Min Instead of 3 Hours</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">This is the killer move. You don't write the SOP from scratch — you <strong style="color: #fff;">record yourself doing the process once</strong>, feed the transcript to AI, and AI writes the SOP. Your job is 5 minutes of cleanup at the end.</p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="sn">Step 1</div>
+          <div class="sicon">🎥</div>
+          <div class="stitle">Record (Loom)</div>
+          <div class="sdesc">Do the process once. Talk through it. 5-15 min.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="sn">Step 2</div>
+          <div class="sicon">📝</div>
+          <div class="stitle">Transcribe</div>
+          <div class="sdesc">Loom auto-transcribes. Copy the text.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="sn">Step 3</div>
+          <div class="sicon">⚡</div>
+          <div class="stitle">Run the Prompt</div>
+          <div class="sdesc">Paste into Claude. Use the prompt below. Wait 30 sec.</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="sn">Step 4</div>
+          <div class="sicon">📋</div>
+          <div class="stitle">Paste to ClickUp</div>
+          <div class="sdesc">Cleanup 5 min. SOP live.</div>
+        </div>
+      </div>
+
+      <div class="time-cmp">
+        <div class="time-card before">
+          <div class="tt">⚠ THE OLD WAY</div>
+          <div class="tv">~3 hrs</div>
+          <div class="td">Sit down, stare at blank doc, type from memory, miss half the steps, finish at midnight</div>
+        </div>
+        <div class="time-card after">
+          <div class="tt">✓ THE AI WAY</div>
+          <div class="tv">~40 min</div>
+          <div class="td">10 min Loom + 30 sec AI + 5 min cleanup. Most of it is the doing-it-once part.</div>
+        </div>
+      </div>
+
+      <h3 style="color: #fff; font-size: 1.05rem; margin: 28px 0 12px; font-weight: 700;">📋 The Prompt (Copy + Paste into Claude)</h3>
+
+      <div class="prompt-box"><span class="copy-hint">COPY ALL</span><span class="k">ROLE / CONTEXT:</span>
+You're helping me convert a Loom recording transcript into a polished SOP for my agency's ClickUp workspace. The reader is a future hire or VA who has never done this task. They're smart but new — don't assume context.
+
+<span class="k">GOAL:</span>
+Turn the transcript below into a clean, structured SOP doc ready to paste into ClickUp Docs.
+
+<span class="k">CONSTRAINTS:</span>
+- Use ONLY information from the transcript — don't invent steps
+- If the transcript skips a step or detail, mark it [GAP — fill in] in the output
+- No fluff. No "let's dive in." No corporate AI phrases.
+- Output as markdown, ready to paste into ClickUp Docs.
+
+<span class="k">INPUTS:</span>
+Process name: [e.g. "Weekly Client Reporting"]
+Owner role: [e.g. "Account Manager" or "VA"]
+Transcript:
+"""
+[paste full Loom transcript here]
+"""
+
+<span class="k">OUTPUT FORMAT:</span>
+Markdown with these sections, in this order:
+
+# [Process Name]
+
+## Trigger
+1 sentence. When does this start?
+
+## Owner
+1 sentence. Role, not a person.
+
+## Tools &amp; Access Needed
+Bullet list of every tool/account needed before starting.
+
+## Steps
+Numbered list. For each step:
+- **Action** (verb-led, 1 sentence)
+- **Time estimate** (rough — 2 min, 5 min, etc.)
+- **Common mistake** (only if obvious from transcript)
+- Sub-bullets for any clicks/values needed
+
+## Done Definition
+3-5 checkboxes the runner can tick to confirm completion.
+
+## Notes / Edge Cases
+Anything that doesn't fit elsewhere.
+
+<span class="k">EVALUATION:</span>
+Before answering, confirm:
+1. Every step starts with an action verb
+2. No corporate AI phrases (unlock, leverage, dive in, etc.)
+3. Time estimates included on each step
+4. Done Definition has 3-5 specific checkboxes
+5. Any transcript gaps marked [GAP — fill in]</div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 18px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">🏆 Why this works:</strong> The 7-part prompt structure (from Lesson 5.0) forces AI to write in YOUR voice, follow YOUR ClickUp format, and self-check before answering. No revisions. No "make it shorter." First pass = paste-ready 90% of the time.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: FIRST 3 SOPs                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 5. The First 3 SOPs to Document — In This Order</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">Don't try to document everything. Pick ONE of these 3 this week. The others next week. By month 2 you'll have the spine of your operation written down.</p>
+
+      <div class="first3">
+        <div class="first3-card">
+          <div class="num-big">1</div>
+          <div class="ftitle">Client Onboarding</div>
+          <div class="fdesc">Every new client triggers this. Kills the "what info do I need from them" chaos. Highest ROI doc you'll ever write — used every single time a client signs.</div>
+          <div class="ftag">Start Here</div>
+        </div>
+        <div class="first3-card">
+          <div class="num-big">2</div>
+          <div class="ftitle">Weekly Client Reporting</div>
+          <div class="fdesc">Repetitive, predictable, handed to a VA fast. Every Friday wasted on reports turns into 2 free hours forever.</div>
+          <div class="ftag">Week 2</div>
+        </div>
+        <div class="first3-card">
+          <div class="num-big">3</div>
+          <div class="ftitle">Ad Campaign Setup</div>
+          <div class="fdesc">Tactical, repeatable, prevents new hires from breaking pixels or burning $$ on misconfigured budgets. Pairs with Lesson 5.3.</div>
+          <div class="ftag">Week 3</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 18px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #ef4444;">🚨 Save these for LAST:</strong> Strategy calls, sales scripts, creative direction. They're judgment-heavy and hard to document — and most VAs can't run them anyway. Document the easy stuff first, free up your time, THEN tackle the hard ones with that freed time.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: HOMEWORK + CHECKLIST        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 6. Homework — Walk Out With 1 SOP Done</h2>
+
+      <p style="color: #ccc; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">By next class, every student should have at least <strong style="color: #fff;">1 working SOP in ClickUp</strong>. Here's the checklist. Total time: under 60 min including the Loom.</p>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Picked ONE of the 3 starter SOPs (Onboarding / Reporting / Campaign Setup)</strong>
+            <span>Don't pick a 4th. Pick from the list. The choice doesn't matter — the action does.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Set up the ClickUp hierarchy (Space → 4 Folders)</strong>
+            <span>Copy the structure from Section 3. Takes 5 min. Lasts forever.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Recorded a Loom of yourself doing the process once</strong>
+            <span>Talk through every step. Don't edit. 5-15 min raw. Quality doesn't matter — coverage does.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Ran the AI prompt with the Loom transcript</strong>
+            <span>Pasted output into ClickUp Doc. Did the 5-min cleanup. Filled any [GAP] markers.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Posted the SOP link in #wins</strong>
+            <span>Accountability + you become an example for the rest of the cohort. Lead from the front.</span>
+          </label>
+        </li>
+      </ul>
+
+      <div style="background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02)); border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 20px; margin-top: 22px;">
+        <div style="color: #22c55e; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">🏆 The compounding play</div>
+        <p style="color: #ccc; font-size: 0.92rem; line-height: 1.65; margin: 0;">1 SOP this week. 1 next week. 1 the week after. By month 3 you have a 12-SOP operations manual. By month 6 you're hiring VAs and they're productive in week 1. By month 12 you're an OWNER, not an employee. That's the math.</p>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>sops</span><span>process-documentation</span><span>clickup</span><span>ai-workflow</span><span>operations</span><span>scaling</span><span>delegation</span><span>agency-ownership</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="../index.html" class="nav-link">← All Lessons</a>
+      <a href="5.0-ai-operators-playbook.html" class="nav-link">5.0 The Playbook</a>
+      <a href="../index.html" class="nav-link">All Modules</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.18-process-docs-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.4b: Client-Side Meta Setup — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .click-step .click-path { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; font-family: 'SF Mono', monospace; font-size: 0.85rem; color: #3B82F6; margin-bottom: 12px; display: inline-block; }
+    .click-step .click-path span { color: #666; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .scenario-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 20px; margin-bottom: 12px; }
+    .scenario-card h4 { color: #3B82F6; margin: 0 0 6px 0; font-size: 0.95rem; }
+    .scenario-card p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .code-block .copy-btn:hover { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.4); }
+    .screenshot-placeholder { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px 20px; margin: 16px 0; text-align: center; }
+    .screenshot-placeholder p { color: #555; font-size: 0.8rem; margin: 0; }
+    .screenshot-placeholder .label { color: #888; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.4b — Module 3: Fulfillment</div>
+      <h1>Client-Side Meta Setup <span>— Getting Access</span></h1>
+      <div class="subtitle">
+        <span class="tag">Meta Ads</span>
+        <span class="tag">Client Onboarding</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Lesson 3.4 was about setting up YOUR Business Manager. This lesson is about what your CLIENT needs to do so you can actually manage their ads. Most clients have never touched Business Manager before, so you'll probably walk them through it.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: WHAT YOU ALREADY DID        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 1. What You Already Did (Quick Recap)</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">You should already have all of this from lesson 3.4. If not, go back and finish it first.</p>
+      <div class="card">
+        <ul>
+          <li><strong style="color: #fff;">Your own Business Manager</strong> created at business.facebook.com</li>
+          <li><strong style="color: #fff;">Your own ad account</strong> created inside your BM</li>
+          <li><strong style="color: #fff;">Business verification</strong> submitted</li>
+          <li><strong style="color: #fff;">Payment method</strong> added to YOUR ad account (for testing/learning)</li>
+        </ul>
+      </div>
+      <div class="danger-box">
+        <p><strong>🛑 Haven't done lesson 3.4 yet?</strong> Stop here and go back. You need your own Business Manager set up before you can receive client access. <a href="3.4-meta-business-manager.html" style="color: #3B82F6;">Go to Lesson 3.4 →</a></p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THREE CLIENT SCENARIOS      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 2. Three Situations You'll Run Into</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Every client is different. Here's what you'll see:</p>
+
+      <div class="scenario-card" style="border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.04);">
+        <h4 style="color: #ef4444;">🅰 Client Has Nothing Set Up (Most Common)</h4>
+        <p>Small business owner, never heard of Business Manager. You walk them through the entire setup. This is what we cover in Section 3 below.</p>
+      </div>
+
+      <div class="scenario-card" style="border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.04);">
+        <h4 style="color: #22c55e;">🅱 Client Already Has BM + Ad Account</h4>
+        <p>They've run ads before or had another agency. Skip Section 3 and go straight to Section 4 (how they invite you).</p>
+      </div>
+
+      <div class="scenario-card" style="border-color: rgba(234,179,8,0.3); background: rgba(234,179,8,0.04);">
+        <h4 style="color: #eab308;">🅲 Client Has a Facebook Page But No Business Manager</h4>
+        <p>They post on their business page but never ran ads through Business Manager. Create the BM first, then claim their existing page inside it.</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Most clients will be Scenario A.</strong> Small business owners don't know what Business Manager is. That's normal. Offer to do it together on a Zoom call or record a Loom video walking them through it.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: CLIENT SETUP WALKTHROUGH    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏗️</span> 3. Setting Up the Client's Side (Scenario A)</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Walk your client through these steps. Either share your screen on a Zoom, send them a Loom, or do it for them if they give you login access (get written permission first).</p>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Client Creates Their Business Manager</h4>
+        <div class="click-path">business.facebook.com <span>→</span> Create Account</div>
+        <p>They fill in:</p>
+        <ul style="color: #ccc; font-size: 0.88rem; line-height: 1.8; padding-left: 20px;">
+          <li><strong style="color: #fff;">Business name:</strong> Their actual business name (e.g. "Tony's Pizza")</li>
+          <li><strong style="color: #fff;">Your name:</strong> Their real full name</li>
+          <li><strong style="color: #fff;">Business email:</strong> Their business email</li>
+        </ul>
+        <p>Click Submit. Meta sends a verification email. They need to open it and confirm.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Business Manager creation page with fields filled in</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Client Creates an Ad Account</h4>
+        <div class="click-path">Business Settings <span>→</span> Accounts <span>→</span> Ad Accounts <span>→</span> Add <span>→</span> Create New</div>
+        <ul style="color: #ccc; font-size: 0.88rem; line-height: 1.8; padding-left: 20px;">
+          <li><strong style="color: #fff;">Account name:</strong> Their business name</li>
+          <li><strong style="color: #fff;">Time zone:</strong> Match their location. If they're in New York, pick Eastern Time. This affects when daily budgets reset.</li>
+          <li><strong style="color: #fff;">Currency:</strong> USD (or whatever currency they operate in)</li>
+        </ul>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🛑 Currency CANNOT be changed after creation.</strong> Double check this with the client before they click Create. If they pick the wrong currency, they have to create a whole new ad account.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Ad account creation with timezone and currency fields</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Client Adds Their Payment Method</h4>
+        <div class="click-path">Business Settings <span>→</span> Payment Methods <span>→</span> Add Payment Method</div>
+        <p>The client enters THEIR credit card or debit card. This is what pays for the ad spend.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Their card, not yours.</strong> You manage the ads. They pay the ad spend. Your management fee is charged separately (via Stripe, invoice, etc). Never put your own card on a client's ad account unless you have a very specific reason and trust them completely.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Payment method screen in Business Manager</div>
+        <p>Screenshot will be added here</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: HOW CLIENT INVITES YOU      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🤝</span> 4. How the Client Gives You Access</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This is the most important part. The client needs to invite you to their Business Manager so their ad account and page show up in YOUR dashboard.</p>
+
+      <h3 style="color: #3B82F6; margin: 24px 0 12px 0;">What the Client Does:</h3>
+
+      <div class="click-step" data-step="Step 4">
+        <h4>Open Business Settings</h4>
+        <div class="click-path">business.facebook.com <span>→</span> Settings ⚙️ <span>(bottom left)</span></div>
+        <p>The gear icon is in the bottom left corner of the screen.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Business Manager dashboard with gear icon highlighted</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="click-step" data-step="Step 5">
+        <h4>Go to People</h4>
+        <div class="click-path">Settings <span>→</span> People <span>(left sidebar)</span></div>
+        <p>This is where they manage who has access to their business assets.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 6">
+        <h4>Add You as a Person</h4>
+        <div class="click-path">People <span>→</span> Add People <span>(blue button)</span></div>
+        <p>They type in YOUR business email (the one connected to your Business Manager).</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Add People dialog with email field</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="click-step" data-step="Step 7">
+        <h4>Give You Full Control</h4>
+        <p>After entering your email, they select what access to give you:</p>
+        <ul style="color: #ccc; font-size: 0.88rem; line-height: 1.8; padding-left: 20px;">
+          <li><strong style="color: #fff;">Ad Account</strong> → Toggle ON → Select their ad account → <strong style="color: #22c55e;">Full Control</strong></li>
+          <li><strong style="color: #fff;">Page</strong> → Toggle ON → Select their Facebook page → <strong style="color: #22c55e;">Full Control</strong></li>
+        </ul>
+        <p>Click <strong>Send Invitation</strong>.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Access selection screen with Full Control toggled on</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Always ask for Full Control.</strong> If they only give you partial access, you might not be able to create campaigns, edit audiences, or adjust budgets. Full Control means you can do your job without asking them to click buttons for you.</p>
+      </div>
+
+      <h3 style="color: #3B82F6; margin: 24px 0 12px 0;">What YOU Do After:</h3>
+
+      <div class="click-step" data-step="Step 8">
+        <h4>Accept the Invitation</h4>
+        <div class="click-path">Your business.facebook.com <span>→</span> Notifications / Settings → Requests</div>
+        <p>You'll get an email from Meta. Log into YOUR Business Manager, find the invitation, and accept it.</p>
+        <p>Once accepted, their ad account and Facebook page will show up inside your Business Manager dashboard. You manage everything from your side. They don't need to do anything else.</p>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Your BM showing the client's ad account after accepting</div>
+        <p>Screenshot will be added here</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: COPY-PASTE CLIENT SCRIPT    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 5. Message to Send Your Client</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Copy this message and send it to your client. Replace the brackets with your info.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Hey [name], to get started I need access to your Meta ad account and Facebook page. Here's what to do:
+
+1. Go to business.facebook.com and log in
+2. Click Settings (gear icon, bottom left)
+3. Click People → Add People
+4. Type in my email: [your email]
+5. Give me Full Control on your ad account and your page
+6. Hit send
+
+That's it! Once I accept on my end we're good to go. Let me know if you need help with any of the steps.</pre>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Pro tip:</strong> If your client is not tech-savvy, offer to hop on a quick Zoom and walk them through it. Takes 5 minutes and saves you a week of back-and-forth messages.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: COMMON QUESTIONS            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">❓</span> 6. Questions Your Client Will Ask</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Have these answers ready. You'll hear them on every single onboarding call.</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 12px;">
+        <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 0.95rem;">"Do you need my Facebook password?"</h4>
+        <p style="color: #888; font-size: 0.88rem; line-height: 1.5; margin: 0;">No. They invite you through Business Manager. You never need their password. Ever.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 12px;">
+        <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 0.95rem;">"Can you see my personal Facebook?"</h4>
+        <p style="color: #888; font-size: 0.88rem; line-height: 1.5; margin: 0;">No. Business Manager is completely separate from their personal profile. You can only see their business page and ad account.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 12px;">
+        <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 0.95rem;">"Who pays for the ads?"</h4>
+        <p style="color: #888; font-size: 0.88rem; line-height: 1.5; margin: 0;">Their credit card is on their ad account. They pay the ad spend directly to Meta. Your management fee is separate.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 12px;">
+        <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 0.95rem;">"What if I already boost posts from my page?"</h4>
+        <p style="color: #888; font-size: 0.88rem; line-height: 1.5; margin: 0;">Boosting is different from running ads through Business Manager. We set up proper campaigns through the ad account, which gives way more control over targeting, budgets, and optimization.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: FINAL CHECKLIST             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> 7. Final Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Client Onboarding Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="onboardChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Client has a Business Manager created</strong>
+            <span>At business.facebook.com with their business name and email</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Client has an ad account inside their BM</strong>
+            <span>With the correct timezone and currency (double check currency!)</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Client's payment method added</strong>
+            <span>Their credit card on their ad account. Not yours.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Client sent you an invitation with Full Control</strong>
+            <span>Ad account + Facebook page, both with Full Control access</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>You accepted the invitation in your BM</strong>
+            <span>Check Settings → Requests or your email notification</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Client's ad account visible in your BM dashboard</strong>
+            <span>You can see it under Accounts → Ad Accounts in your Business Settings</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Client's Facebook page visible in your BM</strong>
+            <span>You can see it under Accounts → Pages in your Business Settings</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>meta</span><span>business-manager</span><span>client-setup</span><span>access</span><span>onboarding</span><span>beginner</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.4-meta-business-manager.html" class="nav-link">← Your BM Setup</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.5-the-pixel.html" class="nav-link">The Pixel →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-3.4b-client-setup-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

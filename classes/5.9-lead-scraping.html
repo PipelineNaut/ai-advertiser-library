@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.9: Lead Scraping with Claude Code — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .score-card { display: flex; align-items: center; gap: 14px; background: #161616; border-radius: 10px; padding: 16px; margin-bottom: 8px; }
+    .score-num { font-size: 1.8rem; font-weight: 800; min-width: 40px; text-align: center; }
+    .score-label { color: #fff; font-weight: 600; font-size: 0.9rem; }
+    .score-desc { color: #888; font-size: 0.82rem; margin-top: 2px; }
+    .niche-pill { display: inline-block; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 20px; padding: 6px 14px; margin: 4px; color: #3B82F6; font-size: 0.82rem; font-weight: 600; }
+    .outreach-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+    .outreach-card h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 0.95rem; }
+    .screenshot-placeholder { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px 20px; margin: 16px 0; text-align: center; }
+    .screenshot-placeholder p { color: #555; font-size: 0.8rem; margin: 0; }
+    .screenshot-placeholder .label { color: #888; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.9 — Module 5: AI Integration</div>
+      <h1>Lead Scraping <span>with Claude Code</span></h1>
+      <div class="subtitle">
+        <span class="tag">Prospecting</span>
+        <span class="tag">Hands-On</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">You need clients. Cold outreach works, but only if you have the right list. Most beginners spend hours Googling businesses and copy-pasting into spreadsheets. Claude Code does this in minutes. 50 qualified prospects in 10 minutes. That's what we're setting up.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHY THIS WORKS                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> Why This Works</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">
+        The secret isn't just finding businesses. It's finding businesses that are <strong style="color: #fff;">already spending money on ads but doing it badly</strong>. Those are the easiest to close because they already believe in advertising. You just need to show them you'll do it better.
+      </p>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6;">
+        Claude Code searches the web, pulls business info, checks the Meta Ad Library to see who's running ads, and scores each prospect by how likely they are to say yes. All in one prompt.
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PICK YOUR NICHE                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📍</span> Step 1: Pick a Niche and City</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Be specific. "Restaurants in the US" is useless. "Italian restaurants in Tampa, FL" is perfect.</p>
+
+      <p style="color: #888; font-size: 0.82rem; margin-bottom: 12px;">Good niches to start with:</p>
+      <div style="margin-bottom: 16px;">
+        <span class="niche-pill">🦷 Dentists</span>
+        <span class="niche-pill">💪 Gyms</span>
+        <span class="niche-pill">❄️ HVAC</span>
+        <span class="niche-pill">🔧 Plumbers</span>
+        <span class="niche-pill">💇 Salons</span>
+        <span class="niche-pill">🍽️ Restaurants</span>
+        <span class="niche-pill">🏠 Roofing</span>
+        <span class="niche-pill">💆 Med Spas</span>
+        <span class="niche-pill">🚗 Auto Detail</span>
+        <span class="niche-pill">🐕 Dog Groomers</span>
+        <span class="niche-pill">🏡 Real Estate</span>
+        <span class="niche-pill">🧹 Cleaning</span>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Pick YOUR city first.</strong> Local businesses trust local people. "I'm based in Tampa and I help Tampa businesses" hits different than cold outreach from across the country.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE PROMPT                             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Step 2: Run the Prospecting Prompt</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Open Claude Code and paste this. Replace the brackets with your niche and city.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>I'm building a prospect list for my ad agency. Find potential clients in the [NICHE] space in [CITY, STATE].
+
+Do this:
+1. Search for 50 [NICHE] businesses in [CITY, STATE]
+2. For each one, get: business name, phone number, website URL, address, Google rating, number of reviews, whether they have a Facebook page (yes/no)
+3. Check the Meta Ad Library (facebook.com/ads/library) to see which ones are currently running Facebook or Instagram ads
+4. For businesses running ads, note: how many active ads, and whether the ads look good or bad
+5. Score each prospect 1-5 based on this:
+   - 5 = running ads but they look bad (easiest to close)
+   - 4 = running ads, decent quality (might want better results)
+   - 3 = has Facebook page but no ads (needs education)
+   - 2 = no Facebook page, good reviews (potential but more work)
+   - 1 = no online presence (skip)
+6. Sort by score (5 first), then by Google rating
+7. Only include businesses with 3.5+ stars and at least 20 reviews
+8. Save as a CSV file: prospects/[city]-[niche]-[date].csv
+
+Build a markdown table first so I can review, then save the CSV.</pre>
+      </div>
+
+      <div class="screenshot-placeholder">
+        <div class="label">📸 SCREENSHOT: Claude Code generating a prospect table</div>
+        <p>Screenshot will be added here</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Why 3.5+ stars and 20+ reviews?</strong> Those businesses are established enough to have ad budget. A business with 3 reviews and 2 stars probably can't afford you.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SCORING SYSTEM                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📊</span> The Scoring System</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This is how you prioritize who to contact first. Start from the top.</p>
+
+      <div class="score-card" style="border-left: 4px solid #22c55e;">
+        <div class="score-num" style="color: #22c55e;">5</div>
+        <div>
+          <div class="score-label">Running bad ads</div>
+          <div class="score-desc">Easiest to close. They're already spending money but wasting it. You show them what you'd do differently.</div>
+        </div>
+      </div>
+
+      <div class="score-card" style="border-left: 4px solid #3B82F6;">
+        <div class="score-num" style="color: #3B82F6;">4</div>
+        <div>
+          <div class="score-label">Running decent ads</div>
+          <div class="score-desc">They know ads work. Pitch better results, better cost per lead, better creative.</div>
+        </div>
+      </div>
+
+      <div class="score-card" style="border-left: 4px solid #eab308;">
+        <div class="score-num" style="color: #eab308;">3</div>
+        <div>
+          <div class="score-label">Facebook page, no ads</div>
+          <div class="score-desc">They're online but not advertising. Needs a little education on why ads work.</div>
+        </div>
+      </div>
+
+      <div class="score-card" style="border-left: 4px solid #f97316;">
+        <div class="score-num" style="color: #f97316;">2</div>
+        <div>
+          <div class="score-label">No Facebook, good reviews</div>
+          <div class="score-desc">Good business, just not online. More work to convert but could be a long-term client.</div>
+        </div>
+      </div>
+
+      <div class="score-card" style="border-left: 4px solid #666;">
+        <div class="score-num" style="color: #666;">1</div>
+        <div>
+          <div class="score-label">No online presence</div>
+          <div class="score-desc">Skip. They're not ready for ads if they don't even have a website.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- OUTREACH TEMPLATES                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💬</span> Step 3: Send Your Outreach</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Two templates. Use the one that matches your prospect's score.</p>
+
+      <div class="outreach-card">
+        <h4>For Score 4-5: They're Running Ads</h4>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Hey [name], I was looking at [business]'s Facebook ads and noticed a few things that could probably cut your cost per lead in half. I work with [niche] businesses in [city] on their Meta ads.
+
+Would you be open to a 10-minute call where I walk you through what I'd change? No pitch, just showing you what I see.</pre>
+        </div>
+        <div class="tip-box">
+          <p><strong>💡 Why this works:</strong> You're leading with value, not a sales pitch. You already looked at their ads. That alone puts you ahead of 95% of cold outreach.</p>
+        </div>
+      </div>
+
+      <div class="outreach-card">
+        <h4>For Score 2-3: They're Not Running Ads</h4>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Hey [name], I help [niche] businesses in [city] get more customers through Facebook and Instagram ads. Most of your competitors are running them. [competitor name] has [X] ads live right now.
+
+Would it be worth a quick chat to see if it makes sense for [business]?</pre>
+        </div>
+        <div class="tip-box">
+          <p><strong>💡 Why this works:</strong> Mentioning a specific competitor by name creates urgency. They didn't know their competitor was running ads. Now they want to know more.</p>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Keep it short.</strong> Nobody reads a 5-paragraph cold message. 3-4 sentences max. If you can't say it in a text message, it's too long.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MAKE IT A SYSTEM                       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> Step 4: Make It a Weekly System</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Don't do this once and forget about it. Make it a weekly habit.</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div style="background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 4px 10px; border-radius: 6px;">MON</div>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Run the scraping prompt for a new city or niche. Get 50 fresh prospects.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div style="background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 4px 10px; border-radius: 6px;">MON</div>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Send 10-15 outreach messages to your highest-scored prospects.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+          <div style="background: rgba(59,130,246,0.2); color: #3B82F6; font-weight: 800; font-size: 0.8rem; padding: 4px 10px; border-radius: 6px;">WED</div>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Follow up with anyone who didn't respond Monday.</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="background: rgba(59,130,246,0.2); color: #3B82F6; font-weight: 800; font-size: 0.8rem; padding: 4px 10px; border-radius: 6px;">FRI</div>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0;">Second follow-up. Add new prospects from this week's list.</p>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">That's 40-60 outreach messages a week. Even with a 5% response rate, you're getting 2-3 calls a week. Close one a month and you're making money.</p>
+
+      <div class="tip-box">
+        <p><strong>💡 Track everything.</strong> Add columns to your CSV for: outreach date, response (yes/no), notes, follow-up date. If you're not tracking, you're guessing.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- QUICK PROMPT: META AD LIBRARY          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔍</span> Bonus: Check Any Business in the Ad Library</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Want to manually check a specific business? Go here:</p>
+
+      <a href="https://www.facebook.com/ads/library" target="_blank" style="display: block; background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 16px; text-decoration: none; margin-bottom: 12px;">
+        <div style="color: #3B82F6; font-weight: 700; font-size: 0.95rem;">Meta Ad Library</div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">facebook.com/ads/library — See every active ad any business is running. Free. No login needed.</div>
+      </a>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">Search by business name. If they have active ads, you can see every single one. What creative they're using, what copy, how long it's been running. Ads running for 60+ days are probably working. Ads that just started are tests.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT NOT TO DO                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚫</span> What NOT to Do</h2>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't spam 200 people with the same generic message.</strong> Personalize every outreach. Mention their business name, their ads, their competitors. Copy-paste outreach gets ignored.</p>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't pitch on the first message.</strong> Your goal is a 10-minute call, not a sale. Offer value first (free audit, free review, what you'd change). The sale happens on the call.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't skip follow-ups.</strong> Most responses come on the 2nd or 3rd message, not the first. If you only message once, you're leaving money on the table.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't target businesses with under 20 reviews.</strong> They're usually too small or too new to have ad budget. Focus on established businesses that can actually pay you.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHECKLIST                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> Homework Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Prospecting Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="prospectChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Pick a niche and your city</strong>
+            <span>Start local. One niche, one city.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Run the prospecting prompt in Claude Code</strong>
+            <span>Get 50 businesses with contact info, ratings, and ad status</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Review the table and check the scores</strong>
+            <span>Focus on Score 4-5 prospects first (running ads, especially bad ones)</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Export as CSV and add tracking columns</strong>
+            <span>Outreach date, response, notes, follow-up date</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Send your first 5 outreach messages</strong>
+            <span>Use the templates above. Personalize every single one.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Set a reminder to follow up Wednesday and Friday</strong>
+            <span>Most responses come on follow-up, not the first message</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Create a prospects/ folder in your project</strong>
+            <span>Store all your CSV files here. One per city/niche combo.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>prospecting</span><span>lead-scraping</span><span>claude-code</span><span>outreach</span><span>meta-ad-library</span><span>local-business</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.8-ai-video-animation-for-ads.html" class="nav-link">← AI Video & Animation</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.1-intro-ai-media-buying.html" class="nav-link">Back to Module 5 →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.9-scraping-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

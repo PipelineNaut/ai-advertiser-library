@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.5: Reading Your Ad Data With AI — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; color: #ccc; line-height: 1.7; white-space: pre-wrap; overflow-x: auto; }
+    .quote-block { background: rgba(59,130,246,0.06); border-left: 3px solid #3B82F6; border-radius: 0 10px 10px 0; padding: 16px 20px; margin: 12px 0; color: #ccc; font-size: 0.88rem; line-height: 1.6; font-style: italic; }
+    .checklist { list-style: none; padding: 0; margin: 16px 0; }
+    .checklist li { color: #ccc; font-size: 0.88rem; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 10px; }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon { color: #3B82F6; font-size: 1rem; }
+    .step-card { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin: 16px 0; }
+    .step-num { display: inline-block; background: #3B82F6; color: #fff; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: 700; font-size: 0.85rem; margin-right: 10px; }
+    .step-title { color: #fff; font-weight: 700; font-size: 1rem; display: inline; }
+    .step-desc { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-top: 12px; }
+    .adlevel-box { background: rgba(59,130,246,0.04); border: 2px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 24px; margin: 24px 0; text-align: center; }
+    .adlevel-box h3 { color: #fff; font-size: 1.1rem; margin: 0 0 8px 0; }
+    .adlevel-box p { color: #888; font-size: 0.88rem; margin: 0; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.5 — Module 5: AI Integration</div>
+      <h1>Reading Your <span>Ad Data With AI</span></h1>
+      <div class="subtitle">
+        <span class="tag">Data Analysis</span>
+        <span class="tag">~5 min</span>
+        <span class="tag">Needs: Ads running + Agent installed (5.4)</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Instead of staring at Ads Manager trying to figure out what's working, you're gonna export your data, drop it into Claude Code, and let your agent tell you exactly what to kill, scale, and do next. Takes 2 minutes once you get the flow down.</div>
+
+    <!-- STEP 1 -->
+    <div class="section">
+      <h2><span class="icon">📊</span> The Process</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 20px;">This is your weekly (or daily) routine. Three steps, no setup, no tools to install.</p>
+
+      <div class="step-card">
+        <div><span class="step-num">1</span><div class="step-title">Export from Ads Manager</div></div>
+        <div class="step-desc">
+          <ol style="padding-left: 20px; line-height: 2;">
+            <li>Open <strong style="color:#fff;">Meta Ads Manager</strong></li>
+            <li>Select your <strong style="color:#fff;">date range</strong> — last 7 days is a good default</li>
+            <li>Make sure these columns are showing: Campaign name, Ad set name, Ad name, Amount spent, Results, Cost per result, CTR, CPM</li>
+            <li>Click <strong style="color:#fff;">Reports → Export Table Data → CSV</strong></li>
+            <li>Save the file</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div><span class="step-num">2</span><div class="step-title">Drop It Into Claude Code</div></div>
+        <div class="step-desc">
+          <p>Drag the CSV file into your Claude Code workspace folder. That's it. Your agent can now read the file.</p>
+          <p style="margin-top: 8px;">If you named it something like <code style="color: #3B82F6;">ads-march-9.csv</code>, your agent will see it automatically.</p>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div><span class="step-num">3</span><div class="step-title">Ask Your Agent to Analyze</div></div>
+        <div class="step-desc">
+          <p>Open Claude Code and tell it what you want to know. Here's a solid starting prompt:</p>
+        </div>
+      </div>
+
+      <div class="code-block">read ads-march-9.csv and give me a full breakdown.
+
+my target CPL is $25.
+
+tell me:
+- which ads are profitable and which are bleeding money
+- which ad sets i should kill immediately
+- which ads are winning and should get more budget
+- what i should do tomorrow based on this data
+
+use the actual numbers. be specific.</div>
+    </div>
+
+    <!-- WHAT YOU GET BACK -->
+    <div class="section">
+      <h2><span class="icon">💬</span> What You'll Get Back</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Your agent reads the entire file and gives you a breakdown like this:</p>
+
+      <div class="quote-block">"Campaign 'Local Dentist - Broad' spent $142 with 3 leads at $47.33 each — that's almost 2x your target. Ad set 'Interest Stack Cold' spent $89 with zero results, kill it. Your best performer is 'Retargeting - Video Viewers' at $12.50 per lead, well under your $25 target. I'd scale that one 20% and pause everything in the cold interest stack. For tomorrow, focus your budget on retargeting and test 3-4 new hooks in a fresh ad set."</div>
+
+      <div class="tip-box">
+        <p><strong>💡 The key:</strong> Always tell the agent your target CPL. Without a target, it can't tell you if something is good or bad — it's just numbers without context.</p>
+      </div>
+    </div>
+
+    <!-- MORE PROMPTS -->
+    <div class="section">
+      <h2><span class="icon">🔥</span> Other Things You Can Ask</h2>
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-bottom: 12px;">Once your data is in, try these:</p>
+
+      <div class="code-block">"compare this week's data to last week. am I trending up or down?"</div>
+      <div class="code-block">"my client wants to know why CPM went up. explain it in a way I can tell them."</div>
+      <div class="code-block">"if I had to cut my budget in half tomorrow, which campaigns would you keep?"</div>
+      <div class="code-block">"write me a weekly report for my client based on this data."</div>
+      <div class="code-block">"which creative angles are working best? what should my next batch of ads focus on?"</div>
+
+      <p style="color: #888; font-size: 0.85rem; margin-top: 12px;">The agent does the math and the analysis. You make the final call.</p>
+    </div>
+
+    <!-- DAILY VS WEEKLY -->
+    <div class="section">
+      <h2><span class="icon">📅</span> How Often Should You Do This?</h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 20px 0;">
+        <div style="background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 12px; padding: 20px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.95rem; margin-bottom: 8px;">📆 Weekly (minimum)</div>
+          <div style="color: #ccc; font-size: 0.85rem; line-height: 1.6;">Export every Monday morning. Review the past 7 days. Make your kill/scale decisions for the week. Send your client a report. This is the baseline.</div>
+        </div>
+        <div style="background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.15); border-radius: 12px; padding: 20px;">
+          <div style="color: #fff; font-weight: 700; font-size: 0.95rem; margin-bottom: 8px;">📊 Daily (recommended)</div>
+          <div style="color: #ccc; font-size: 0.85rem; line-height: 1.6;">Quick 2-minute check. Export, drop in, ask "anything I need to act on today?" Catches problems before they burn through budget. This is what the best media buyers do.</div>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Pro move:</strong> Keep your CSV files organized. Name them by date: <code style="color:#3B82F6;">ads-2026-03-09.csv</code>. That way when you want to compare weeks, you can tell Claude "compare ads-2026-03-09.csv with ads-2026-03-02.csv" and it'll show you the trend.</p>
+      </div>
+    </div>
+
+    <!-- COMMON MISTAKES -->
+    <div class="section">
+      <h2><span class="icon">⚠️</span> Common Mistakes</h2>
+      <div class="warning-box">
+        <p><strong>⚠️ Don't just say "analyze my data"</strong> — be specific about what you want. Include your target CPL, what you're optimizing for, and what decisions you need to make.</p>
+      </div>
+      <div class="warning-box">
+        <p><strong>⚠️ Don't panic over one day</strong> — ad accounts need 3-7 days minimum to show real patterns. One bad day doesn't mean the campaign is dead. Export a full week before making big decisions.</p>
+      </div>
+      <div class="warning-box">
+        <p><strong>⚠️ Don't forget the columns</strong> — if you export without CPM or CTR columns, the agent can't diagnose creative problems. Make sure all the key metrics are in your export.</p>
+      </div>
+    </div>
+
+    <!-- ADLEVEL TEASER -->
+    <div class="section">
+      <h2><span class="icon">🚀</span> What's Coming: Automatic Data</h2>
+
+      <div class="adlevel-box">
+        <div style="font-size: 1.5rem; margin-bottom: 12px;">⚡</div>
+        <h3>Adlevel — No More Manual Exports</h3>
+        <p style="margin-bottom: 12px;">Right now you're exporting CSVs manually. That works and it's what you should learn first.</p>
+        <p style="margin-bottom: 12px;">But <strong style="color: #3B82F6;">Adlevel</strong> connects directly to your ad accounts and feeds data to your agents automatically. No downloading, no dragging files. Your agents just watch your campaigns in real time and flag things as they happen.</p>
+        <p style="color: #666;">Once Adlevel is set up, this entire lesson becomes automatic. But learning the manual way first means you actually understand what the data means — which makes you a better media buyer whether you use the automation or not.</p>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section">
+      <h2><span class="icon">✅</span> Checklist</h2>
+      <ul class="checklist">
+        <li><span class="check-icon">☐</span> Exported campaign data from Ads Manager as CSV</li>
+        <li><span class="check-icon">☐</span> Dropped the CSV into your Claude Code workspace</li>
+        <li><span class="check-icon">☐</span> Asked your agent to analyze with your target CPL included</li>
+        <li><span class="check-icon">☐</span> Got a kill/scale/watch recommendation from the agent</li>
+        <li><span class="check-icon">☐</span> Decided on your frequency: daily or weekly exports</li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai</span><span>data-analysis</span><span>claude-code</span><span>csv-export</span><span>ads-manager</span><span>reporting</span><span>adlevel</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.4-ai-media-buying-agent.html" class="nav-link">← AI Media Buying Agent</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.6-ai-ad-copy-creative-generation.html" class="nav-link">AI Ad Copy & Creative →</a>
+    </div>
+  </div>
+</body>
+</html>

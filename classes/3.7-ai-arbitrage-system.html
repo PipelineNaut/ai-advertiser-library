@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3.7: The AI Arbitrage System — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+
+    /* Agent UI mockup cards */
+    .agent-panel { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; }
+    .agent-panel-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .agent-panel-header span { color: #666; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+    .agent-row { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; transition: background 0.2s; }
+    .agent-row:hover { background: rgba(255,255,255,0.02); }
+    .agent-row:last-child { border-bottom: none; }
+    .agent-badge { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; color: #fff; flex-shrink: 0; }
+    .agent-icon-img { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; }
+    .agent-info { flex: 1; }
+    .agent-info .aname { color: #fff; font-weight: 700; font-size: 0.9rem; }
+    .agent-info .arole { color: #666; font-size: 0.78rem; }
+    .agent-status { font-size: 0.72rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+    .status-active { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .status-idle { color: #444; }
+    .agent-expand { display: none; padding: 0 20px 20px 74px; }
+    .agent-expand.show { display: block; }
+    .agent-expand p { color: #999; font-size: 0.85rem; line-height: 1.6; margin: 0 0 8px 0; }
+    .agent-expand .output-box { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 14px; margin-top: 10px; }
+    .agent-expand .output-label { color: #444; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+
+    /* Pipeline flow */
+    .pipeline { display: flex; align-items: stretch; gap: 0; overflow-x: auto; padding: 20px 0; }
+    .pipe-node { flex: 1; min-width: 140px; text-align: center; position: relative; }
+    .pipe-badge { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: #fff; margin: 0 auto 10px; position: relative; z-index: 1; }
+    .pipe-name { color: #fff; font-weight: 700; font-size: 0.85rem; }
+    .pipe-role { color: #666; font-size: 0.72rem; margin-top: 2px; }
+    .pipe-arrow { position: absolute; top: 28px; right: -12px; color: #333; font-size: 1.2rem; z-index: 2; }
+    .pipe-node:last-child .pipe-arrow { display: none; }
+    .pipe-connector { position: absolute; top: 28px; left: 50%; right: -50%; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.06)); z-index: 0; }
+    .pipe-node:last-child .pipe-connector { display: none; }
+
+    /* Timeline */
+    .day-cards { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    @media (max-width: 768px) { .day-cards { grid-template-columns: repeat(4, 1fr); } }
+    .day-card { background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .day-card:hover, .day-card.active { border-color: rgba(59,130,246,0.5); background: rgba(59,130,246,0.04); }
+    .day-num { font-weight: 800; font-size: 1.1rem; margin-bottom: 4px; }
+    .day-label { color: #666; font-size: 0.72rem; line-height: 1.3; }
+    .day-time { color: #3B82F6; font-size: 0.7rem; font-weight: 700; margin-top: 6px; }
+    .day-detail { background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 20px; margin-top: 12px; display: none; }
+    .day-detail.show { display: block; }
+    .day-detail h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 0.95rem; }
+    .day-detail p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0 0 8px 0; }
+    .day-detail .agents-used { display: flex; gap: 6px; margin-top: 10px; }
+    .day-detail .agents-used .mini-badge { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.65rem; color: #fff; }
+    .mini-badge-img { width: 28px; height: 28px; border-radius: 6px; }
+
+    /* Diagnostic tool */
+    .diag-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #ccc; padding: 12px 18px; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-family: inherit; transition: all 0.2s; width: 100%; text-align: left; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+    .diag-btn:hover, .diag-btn.active { background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.4); }
+    .diag-btn .diag-icon { font-size: 1.2rem; }
+    .diag-result { display: none; background: #161616; border: 1px solid rgba(59,130,246,0.15); border-radius: 10px; padding: 20px; margin: -4px 0 12px 0; }
+    .diag-result.show { display: block; }
+
+    /* VS comparison */
+    .vs-split { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; }
+    .vs-side { padding: 24px; }
+    .vs-divider { width: 1px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; position: relative; }
+    .vs-badge { background: #161616; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #666; font-weight: 800; font-size: 0.8rem; position: absolute; }
+    .task-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.82rem; }
+    .task-item:last-child { border-bottom: none; }
+    .task-time { color: #666; font-family: monospace; min-width: 50px; font-size: 0.78rem; }
+
+    /* Screen share links */
+    .screen-link { display: flex; align-items: center; gap: 10px; background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 16px; color: #ccc; text-decoration: none; font-size: 0.85rem; transition: border-color 0.2s; margin-bottom: 6px; }
+    .screen-link:hover { border-color: rgba(59,130,246,0.4); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 3.7 — Module 3: Fulfillment</div>
+      <h1>The AI Arbitrage System — <span>Your Unfair Advantage</span></h1>
+      <div class="subtitle">
+        <span class="tag">Core System</span>
+        <span class="tag">AI Workflow</span>
+        <span class="tag">~25 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">This is THE lesson. Everything you've learned so far was setup. This is the system that lets you run ads for 10+ clients while traditional agencies struggle with 3.</div>
+
+    <!-- SCREENS TO OPEN -->
+    <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #3B82F6; margin: 0 0 12px 0; font-size: 0.95rem;">🖥️ Screens to Open (Have These Ready)</h3>
+      <a href="https://adlevel.ai/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">1.</span>
+        <span><strong style="color: #fff;">Adlevel.ai Dashboard</strong> — Show the 5 agents panel (Aurelius, Vortex, Nexus, Zenith, Stratos)</span>
+      </a>
+      <a href="https://adsmanager.facebook.com/adsmanager/manage/campaigns" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">2.</span>
+        <span><strong style="color: #fff;">Ads Manager</strong> — Show a real campaign with good naming + results columns</span>
+      </a>
+      <a href="https://www.facebook.com/ads/library/" target="_blank" class="screen-link">
+        <span style="color: #3B82F6; font-weight: 700;">3.</span>
+        <span><strong style="color: #fff;">Meta Ad Library</strong> — Search a niche, show longest-running ads = proven winners</span>
+      </a>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: THE ARBITRAGE (VISUAL)     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💡</span> 1. The Arbitrage</h2>
+
+      <div style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; overflow: hidden;">
+        <div class="vs-split">
+          <div class="vs-side">
+            <div style="color: #ef4444; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">❌ Traditional Agency</div>
+            <div class="task-item"><span class="task-time" style="color: #ef4444;">2 hrs</span><span style="color: #888;">Research client niche manually</span></div>
+            <div class="task-item"><span class="task-time" style="color: #ef4444;">3 hrs</span><span style="color: #888;">Write ad copy (5-10 variations)</span></div>
+            <div class="task-item"><span class="task-time" style="color: #ef4444;">4 hrs</span><span style="color: #888;">Design creatives in Photoshop</span></div>
+            <div class="task-item"><span class="task-time" style="color: #ef4444;">2 hrs</span><span style="color: #888;">Build campaign structure</span></div>
+            <div class="task-item"><span class="task-time" style="color: #ef4444;">1 hr</span><span style="color: #888;">Launch + verify</span></div>
+            <div class="task-item"><span class="task-time" style="color: #ef4444;">3 hrs</span><span style="color: #888;">Weekly optimization + reporting</span></div>
+            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+              <div style="color: #ef4444; font-weight: 800; font-size: 1.3rem;">15-20 hrs/client</div>
+              <div style="color: #666; font-size: 0.78rem;">Max 3-5 clients = $6K-$10K/mo ceiling</div>
+            </div>
+          </div>
+          <div class="vs-divider"><div class="vs-badge">VS</div></div>
+          <div class="vs-side">
+            <div style="color: #22c55e; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">✅ AI Agent Arbitrage</div>
+            <div class="task-item"><span class="task-time" style="color: #22c55e;">15 min</span><span style="color: #ccc;">Nexus researches niche + competitors</span></div>
+            <div class="task-item"><span class="task-time" style="color: #22c55e;">10 min</span><span style="color: #ccc;">Aurelius writes 50+ ad variations</span></div>
+            <div class="task-item"><span class="task-time" style="color: #22c55e;">20 min</span><span style="color: #ccc;">Vortex reviews creative structure</span></div>
+            <div class="task-item"><span class="task-time" style="color: #22c55e;">30 min</span><span style="color: #ccc;">Build campaign + upload</span></div>
+            <div class="task-item"><span class="task-time" style="color: #22c55e;">5 min</span><span style="color: #ccc;">Nexus verifies everything is live</span></div>
+            <div class="task-item"><span class="task-time" style="color: #22c55e;">15 min</span><span style="color: #ccc;">Zenith + Stratos handle weekly ops</span></div>
+            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06);">
+              <div style="color: #22c55e; font-weight: 800; font-size: 1.3rem;">3-5 hrs/client</div>
+              <div style="color: #888; font-size: 0.78rem;">10-15 clients = $20K-$30K/mo potential</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="color: #888; font-size: 0.82rem; text-align: center; margin-top: 12px;">Same price to the client. Same results. 4x less work. That's the arbitrage.</p>
+    </div>
+
+    <!-- REAL ADS MANAGER SCREENSHOT -->
+    <div class="section">
+      <h2><span class="icon">🖥️</span> What This Looks Like in Real Life</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">This is a real Ads Manager account running 9 campaigns. Notice the naming conventions, the metrics columns, and how you can see everything at a glance:</p>
+      <div style="border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; overflow: hidden;">
+        <img src="../images/ads-manager-campaigns.jpg" alt="Real Ads Manager campaign view with 9 campaigns showing CTR, landing page views, checkouts, cost per purchase, and results columns" style="width: 100%; display: block;">
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+        <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15); border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 200px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.82rem;">1,561 purchases</div>
+          <div style="color: #888; font-size: 0.72rem;">Across 9 campaigns in 2 weeks</div>
+        </div>
+        <div style="background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.15); border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 200px;">
+          <div style="color: #3B82F6; font-weight: 700; font-size: 0.82rem;">$135.19 avg cost/purchase</div>
+          <div style="color: #888; font-size: 0.72rem;">With $75.47 avg cost per checkout</div>
+        </div>
+        <div style="background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.15); border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 200px;">
+          <div style="color: #a78bfa; font-weight: 700; font-size: 0.82rem;">66.73% avg landing page rate</div>
+          <div style="color: #888; font-size: 0.72rem;">Healthy funnel, page loads fast</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE PIPELINE               -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> 2. The Agent Pipeline</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">
+        Every client goes through the same pipeline. Each agent handles one step:
+      </p>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 1.2rem;">🖥️</span>
+        <span style="color: #eab308; font-size: 0.85rem; font-weight: 600;">SHOW ON SCREEN: Open Adlevel.ai. Show the agents panel. Walk through each agent as you explain what it does.</span>
+      </div>
+
+      <div class="pipeline">
+        <div class="pipe-node">
+          <img src="../images/agents/aurelius.svg" alt="Aurelius" class="pipe-badge" style="background: none; width: 56px; height: 56px;">
+          <div class="pipe-name">Aurelius</div>
+          <div class="pipe-role">Launches campaigns</div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-connector"></div>
+        </div>
+        <div class="pipe-node">
+          <img src="../images/agents/vortex.svg" alt="Vortex" class="pipe-badge" style="background: none; width: 56px; height: 56px;">
+          <div class="pipe-name">Vortex</div>
+          <div class="pipe-role">Reviews creatives</div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-connector"></div>
+        </div>
+        <div class="pipe-node">
+          <img src="../images/agents/nexus.svg" alt="Nexus" class="pipe-badge" style="background: none; width: 56px; height: 56px;">
+          <div class="pipe-name">Nexus</div>
+          <div class="pipe-role">Verifies live</div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-connector"></div>
+        </div>
+        <div class="pipe-node">
+          <img src="../images/agents/zenith.svg" alt="Zenith" class="pipe-badge" style="background: none; width: 56px; height: 56px;">
+          <div class="pipe-name">Zenith</div>
+          <div class="pipe-role">Tracks data</div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-connector"></div>
+        </div>
+        <div class="pipe-node">
+          <img src="../images/agents/stratos.svg" alt="Stratos" class="pipe-badge" style="background: none; width: 56px; height: 56px;">
+          <div class="pipe-name">Stratos</div>
+          <div class="pipe-role">Optimizes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: MEET YOUR AGENTS           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🤖</span> 3. Meet Your Agents</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Click each agent to see what it does and what its output looks like:
+      </p>
+
+      <div class="agent-panel">
+        <div class="agent-panel-header"><span>AGENTS</span></div>
+
+        <!-- AURELIUS -->
+        <div class="agent-row" onclick="toggleAgent('aurelius')">
+          <img src="../images/agents/aurelius.svg" alt="Aurelius" class="agent-icon-img">
+          <div class="agent-info">
+            <div class="aname">Aurelius</div>
+            <div class="arole">Launches new campaigns</div>
+          </div>
+          <div class="agent-status status-active">ACTIVE</div>
+        </div>
+        <div class="agent-expand" id="aurelius">
+          <p>You feed Aurelius the client's business info, offer, and target audience. It builds the entire campaign: writes 50+ ad copy variations across 4 proven frameworks (PAS, AIDA, BAB, Story), each hitting a <strong style="color: #fff;">different psychological motivation</strong>.</p>
+          <div class="output-box">
+            <div class="output-label">Example Output</div>
+            <div style="font-size: 0.82rem; line-height: 1.6;">
+              <div style="color: #e67e22; font-weight: 700; margin-bottom: 8px;">Tony's Pizza — 12 Ad Variations Generated</div>
+              <div style="color: #888; margin-bottom: 4px;">🔥 <strong style="color: #ccc;">Ad 1 (PAS — Health angle):</strong> "Tired of pizza that sits like a brick? Our hand-tossed dough uses imported Italian flour..."</div>
+              <div style="color: #888; margin-bottom: 4px;">🎯 <strong style="color: #ccc;">Ad 2 (AIDA — Family angle):</strong> "Friday nights just got better. 2 large pizzas, 4 drinks, $19.99..."</div>
+              <div style="color: #888; margin-bottom: 4px;">💰 <strong style="color: #ccc;">Ad 3 (BAB — Value angle):</strong> "You're paying $35 for delivery pizza? Tony's gives you better pizza for half..."</div>
+              <div style="color: #666; font-style: italic; margin-top: 8px;">+ 9 more variations across different angles...</div>
+            </div>
+          </div>
+          <p style="margin-top: 12px;"><strong style="color: #fff;">Key insight:</strong> A dog food company doesn't need 10 ways to say "healthy food." It needs ads about joint health, shedding, vet bills, picky eaters, energy levels — each a completely separate ad.</p>
+        </div>
+
+        <!-- VORTEX -->
+        <div class="agent-row" onclick="toggleAgent('vortex')">
+          <img src="../images/agents/vortex.svg" alt="Vortex" class="agent-icon-img">
+          <div class="agent-info">
+            <div class="aname">Vortex</div>
+            <div class="arole">Reviews creative structure</div>
+          </div>
+          <div class="agent-status status-idle">IDLE</div>
+        </div>
+        <div class="agent-expand" id="vortex">
+          <p>Before you spend a dollar, Vortex reviews your creative mix. It checks that you have enough diversity — different formats (image, carousel, video, UGC), different angles, different hooks. It flags when your creatives are too similar.</p>
+          <div class="output-box">
+            <div class="output-label">Example Output</div>
+            <div style="font-size: 0.82rem; line-height: 1.6;">
+              <div style="color: #7c3aed; font-weight: 700; margin-bottom: 8px;">Creative Review — Tony's Pizza Campaign</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ 18 unique creatives (target: 15-25)</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ 4 format types (image, carousel, video, UGC)</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ 7 unique angles covered</div>
+              <div style="color: #eab308; margin-bottom: 4px;">⚠️ Missing: testimonial-style creative</div>
+              <div style="color: #ef4444; margin-bottom: 4px;">🔴 Ads 5 and 8 are too similar (both family deal, same visual)</div>
+              <div style="color: #888; font-style: italic; margin-top: 8px;">Recommendation: Replace ad 8, add 1 testimonial creative</div>
+            </div>
+          </div>
+          <p style="margin-top: 12px;"><strong style="color: #fff;">Why it matters:</strong> "Creative IS the new targeting." The algorithm needs variety to find buyers. Vortex makes sure you hit that bar before launch.</p>
+        </div>
+
+        <!-- NEXUS -->
+        <div class="agent-row" onclick="toggleAgent('nexus')">
+          <img src="../images/agents/nexus.svg" alt="Nexus" class="agent-icon-img">
+          <div class="agent-info">
+            <div class="aname">Nexus</div>
+            <div class="arole">Verifies ads are live</div>
+          </div>
+          <div class="agent-status status-idle">IDLE</div>
+        </div>
+        <div class="agent-expand" id="nexus">
+          <p>Nexus is your QA agent. After you publish, it verifies everything is running: ads approved, pixel firing, placements correct, Audience Network excluded, no policy violations, budget delivering. It also does pre-launch research — competitor analysis via the Ad Library.</p>
+          <div class="output-box">
+            <div class="output-label">Example Output — Launch Verification</div>
+            <div style="font-size: 0.82rem; line-height: 1.6;">
+              <div style="color: #2563eb; font-weight: 700; margin-bottom: 8px;">Launch Check — Tony's Pizza</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ All 18 ads approved</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ Pixel firing on all pages</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ Audience Network excluded</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ Placements: FB Feed, IG Feed, IG Stories, IG Reels</div>
+              <div style="color: #22c55e; margin-bottom: 4px;">✅ Budget delivering: $15/day per ad set</div>
+              <div style="color: #eab308; margin-bottom: 4px;">⚠️ Advantage+ creative features ON — review if intended</div>
+              <div style="color: #888; font-style: italic; margin-top: 8px;">Status: CLEAR FOR LAUNCH ✅</div>
+            </div>
+          </div>
+          <p style="margin-top: 12px;"><strong style="color: #fff;">Ad Library trick:</strong> Ads running 60+ days = proven winners. They wouldn't keep spending if they weren't profitable. Study the angles, not the creative.</p>
+        </div>
+
+        <!-- ZENITH -->
+        <div class="agent-row" onclick="toggleAgent('zenith')">
+          <img src="../images/agents/zenith.svg" alt="Zenith" class="agent-icon-img">
+          <div class="agent-info">
+            <div class="aname">Zenith</div>
+            <div class="arole">Tracks ad performance</div>
+          </div>
+          <div class="agent-status status-idle">IDLE</div>
+        </div>
+        <div class="agent-expand" id="zenith">
+          <p>Zenith monitors your campaigns and generates clean, client-ready weekly reports. Paste raw Ads Manager data → get a professional report in 2 minutes.</p>
+
+          <!-- FULL MOCK ZENITH REPORT -->
+          <div style="background: #0a0a0a; border: 1px solid rgba(22,163,106,0.25); border-radius: 14px; overflow: hidden; margin-top: 12px;">
+            <!-- Report Header -->
+            <div style="background: linear-gradient(135deg, rgba(22,163,106,0.12), rgba(59,130,246,0.06)); padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <img src="../images/agents/zenith.svg" alt="Zenith" style="width: 28px; height: 28px; border-radius: 7px;">
+                  <span style="color: #fff; font-weight: 800; font-size: 0.95rem;">ZENITH WEEKLY REPORT</span>
+                </div>
+                <div style="color: #666; font-size: 0.72rem; margin-top: 4px;">Tony's Pizza — Curitiba, PR</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="color: #888; font-size: 0.72rem;">Feb 17 – Feb 23, 2026</div>
+                <div style="color: #16a34a; font-size: 0.72rem; font-weight: 600;">Week 2 of 4</div>
+              </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <div style="padding: 16px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+                <div style="color: #666; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">Spent</div>
+                <div style="color: #fff; font-weight: 800; font-size: 1.15rem; margin-top: 4px;">$210</div>
+                <div style="color: #888; font-size: 0.68rem;">$30/day avg</div>
+              </div>
+              <div style="padding: 16px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+                <div style="color: #666; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">Impressions</div>
+                <div style="color: #fff; font-weight: 800; font-size: 1.15rem; margin-top: 4px;">18.4K</div>
+                <div style="color: #22c55e; font-size: 0.68rem;">↑ 12% vs wk1</div>
+              </div>
+              <div style="padding: 16px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+                <div style="color: #666; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">CPM</div>
+                <div style="color: #fff; font-weight: 800; font-size: 1.15rem; margin-top: 4px;">$11.41</div>
+                <div style="color: #22c55e; font-size: 0.68rem;">↓ 8% vs wk1</div>
+              </div>
+              <div style="padding: 16px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+                <div style="color: #666; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">CTR</div>
+                <div style="color: #fff; font-weight: 800; font-size: 1.15rem; margin-top: 4px;">3.2%</div>
+                <div style="color: #22c55e; font-size: 0.68rem;">↑ above 2% ✓</div>
+              </div>
+              <div style="padding: 16px; text-align: center; border-right: 1px solid rgba(255,255,255,0.04);">
+                <div style="color: #666; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">Leads</div>
+                <div style="color: #fff; font-weight: 800; font-size: 1.15rem; margin-top: 4px;">23</div>
+                <div style="color: #22c55e; font-size: 0.68rem;">↑ 44% vs wk1</div>
+              </div>
+              <div style="padding: 16px; text-align: center;">
+                <div style="color: #666; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">CPL</div>
+                <div style="color: #22c55e; font-weight: 800; font-size: 1.15rem; margin-top: 4px;">$9.13</div>
+                <div style="color: #22c55e; font-size: 0.68rem;">Target: $15 ✓</div>
+              </div>
+            </div>
+
+            <!-- Top & Bottom Performers -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <!-- Top Performers -->
+              <div style="padding: 16px 22px; border-right: 1px solid rgba(255,255,255,0.04);">
+                <div style="color: #22c55e; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">🏆 Top 3 Performers</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                  <div>
+                    <div style="color: #fff; font-size: 0.82rem; font-weight: 600;">#1 — "Friday Night Deal"</div>
+                    <div style="color: #666; font-size: 0.7rem;">Family angle • Image • PAS</div>
+                  </div>
+                  <div style="color: #22c55e; font-weight: 800; font-size: 0.85rem;">$6.20 CPL</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                  <div>
+                    <div style="color: #fff; font-size: 0.82rem; font-weight: 600;">#2 — "Half the Price"</div>
+                    <div style="color: #666; font-size: 0.7rem;">Value angle • Carousel • BAB</div>
+                  </div>
+                  <div style="color: #22c55e; font-weight: 800; font-size: 0.85rem;">$7.80 CPL</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                  <div>
+                    <div style="color: #fff; font-size: 0.82rem; font-weight: 600;">#3 — "Real Italian Dough"</div>
+                    <div style="color: #666; font-size: 0.7rem;">Quality angle • Video • Story</div>
+                  </div>
+                  <div style="color: #22c55e; font-weight: 800; font-size: 0.85rem;">$8.50 CPL</div>
+                </div>
+              </div>
+
+              <!-- Bottom Performers -->
+              <div style="padding: 16px 22px;">
+                <div style="color: #ef4444; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">💀 Bottom 3 — Kill These</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                  <div>
+                    <div style="color: #888; font-size: 0.82rem; font-weight: 600; text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">#12 — "Healthy Choice"</div>
+                    <div style="color: #555; font-size: 0.7rem;">Health angle • Image • AIDA</div>
+                  </div>
+                  <div style="color: #ef4444; font-weight: 800; font-size: 0.85rem;">$28.00</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                  <div>
+                    <div style="color: #888; font-size: 0.82rem; font-weight: 600; text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">#15 — "Gourmet at Home"</div>
+                    <div style="color: #555; font-size: 0.7rem;">Premium angle • Image • PAS</div>
+                  </div>
+                  <div style="color: #ef4444; font-weight: 800; font-size: 0.85rem;">$22.50</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                  <div>
+                    <div style="color: #888; font-size: 0.82rem; font-weight: 600; text-decoration: line-through; text-decoration-color: rgba(239,68,68,0.4);">#9 — "New in Town"</div>
+                    <div style="color: #555; font-size: 0.7rem;">Novelty angle • Carousel • AIDA</div>
+                  </div>
+                  <div style="color: #ef4444; font-weight: 800; font-size: 0.85rem;">$19.00</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div style="padding: 16px 22px;">
+              <div style="color: #3B82F6; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">📋 Next Week Recommendations</div>
+              <div style="font-size: 0.82rem; line-height: 1.8; color: #ccc;">
+                <div>✅ <strong style="color: #fff;">Scale</strong> "Friday Night Deal" budget +20% ($18 → $22/day)</div>
+                <div>✅ <strong style="color: #fff;">Create</strong> 3 more family-angle variations (winning theme)</div>
+                <div>❌ <strong style="color: #fff;">Kill</strong> ads #12, #15, #9 (above CPL target, low CTR)</div>
+                <div>🔄 <strong style="color: #fff;">Replace</strong> killed ads with 3 new value-angle creatives</div>
+                <div>⏳ <strong style="color: #fff;">Monitor</strong> ad set 2 — exiting learning phase tomorrow</div>
+              </div>
+            </div>
+
+            <!-- Report Footer -->
+            <div style="background: rgba(255,255,255,0.02); padding: 12px 22px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between;">
+              <span style="color: #444; font-size: 0.7rem;">Generated by Zenith • Adlevel.ai</span>
+              <span style="color: #444; font-size: 0.7rem;">Ready to send to client ✓</span>
+            </div>
+          </div>
+          <!-- END MOCK REPORT -->
+
+          <p style="margin-top: 14px;"><strong style="color: #fff;">2 minutes.</strong> That's all it takes. A traditional agency spends 1-2 hours building this same report per client, per week.</p>
+        </div>
+
+        <!-- STRATOS -->
+        <div class="agent-row" onclick="toggleAgent('stratos')">
+          <img src="../images/agents/stratos.svg" alt="Stratos" class="agent-icon-img">
+          <div class="agent-info">
+            <div class="aname">Stratos</div>
+            <div class="arole">Optimizes for results</div>
+          </div>
+          <div class="agent-status status-idle">IDLE</div>
+        </div>
+        <div class="agent-expand" id="stratos">
+          <p>Stratos is your optimization brain. Feed it campaign data → it diagnoses exactly what's wrong and tells you what to do. No guessing, no panic — just data-driven decisions.</p>
+          <div class="output-box">
+            <div class="output-label">Example Output — Optimization</div>
+            <div style="font-size: 0.82rem; line-height: 1.6;">
+              <div style="color: #8b5cf6; font-weight: 700; margin-bottom: 8px;">Diagnosis — Tony's Pizza Week 2</div>
+              <div style="color: #888;">📊 CPM up 15% → <span style="color: #eab308;">Normal fluctuation, within range</span></div>
+              <div style="color: #888;">📊 Ad Set 2 CTR dropped to 0.8% → <span style="color: #ef4444;">Creative fatigue. Add 5 new creatives.</span></div>
+              <div style="color: #888;">📊 Ad 3 CPL at $6.20 (target: $12) → <span style="color: #22c55e;">Winner! Scale budget 20%.</span></div>
+              <div style="color: #888;">📊 Learning phase: Ad Set 1 exited → <span style="color: #22c55e;">Safe to optimize</span></div>
+              <div style="color: #888; margin-top: 8px;">⚡ <strong style="color: #fff;">Action items:</strong> Kill ads 12, 15. Scale ad 3. Generate 5 new value-angle creatives via Aurelius.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: 7-DAY TIMELINE             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📅</span> 4. The 7-Day Client Launch</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        From signing to ads live in 7 days. Click each day to expand:
+      </p>
+
+      <div class="day-cards">
+        <div class="day-card" onclick="showDay(1)">
+          <div class="day-num" style="color: #3B82F6;">D1</div>
+          <div class="day-label">Onboard</div>
+          <div class="day-time">90 min</div>
+        </div>
+        <div class="day-card" onclick="showDay(2)">
+          <div class="day-num" style="color: #a78bfa;">D2</div>
+          <div class="day-label">Research</div>
+          <div class="day-time">60 min</div>
+        </div>
+        <div class="day-card" onclick="showDay(3)">
+          <div class="day-num" style="color: #8b5cf6;">D3</div>
+          <div class="day-label">Creatives</div>
+          <div class="day-time">60 min</div>
+        </div>
+        <div class="day-card" onclick="showDay(4)">
+          <div class="day-num" style="color: #6366f1;">D4</div>
+          <div class="day-label">Build</div>
+          <div class="day-time">45 min</div>
+        </div>
+        <div class="day-card" onclick="showDay(5)">
+          <div class="day-num" style="color: #4f46e5;">D5</div>
+          <div class="day-label">Review</div>
+          <div class="day-time">30 min</div>
+        </div>
+        <div class="day-card" onclick="showDay(6)">
+          <div class="day-num" style="color: #4338ca;">D6</div>
+          <div class="day-label">Launch</div>
+          <div class="day-time">10 min</div>
+        </div>
+        <div class="day-card" onclick="showDay(7)">
+          <div class="day-num" style="color: #22c55e;">D7</div>
+          <div class="day-label">Monitor</div>
+          <div class="day-time">15 min</div>
+        </div>
+      </div>
+
+      <div class="day-detail" id="day-1">
+        <h4>Day 1: Onboarding Call + Account Setup</h4>
+        <p>Run the onboarding checklist (lesson 3.1). Collect business info, get BM access, set up ad account. Install GTM + pixel if they have a website. Get all assets (logo, photos, testimonials).</p>
+        <div class="agents-used">
+          <div style="color: #666; font-size: 0.75rem; margin-right: 4px;">Agents:</div>
+          <div style="color: #888; font-size: 0.78rem;">None (manual onboarding call)</div>
+        </div>
+      </div>
+      <div class="day-detail" id="day-2">
+        <h4>Day 2: Research + Ad Copy</h4>
+        <p><strong style="color: #2563eb;">Nexus</strong> analyzes competitor ads in the Ad Library, extracts winning angles, generates 15-20 unique reasons to buy. Then <strong style="color: #e67e22;">Aurelius</strong> takes those angles and writes 20+ ad copy variations across 4 frameworks.</p>
+        <div class="agents-used">
+          <div style="color: #666; font-size: 0.75rem; margin-right: 4px;">Agents:</div>
+          <img src="../images/agents/nexus.svg" class="mini-badge-img" alt="NX">
+          <img src="../images/agents/aurelius.svg" class="mini-badge-img" alt="AU">
+        </div>
+      </div>
+      <div class="day-detail" id="day-3">
+        <h4>Day 3: Creative Production + Review</h4>
+        <p><strong style="color: #e67e22;">Aurelius</strong> generates 15-25 ad creatives (images, carousels, video concepts). Then <strong style="color: #7c3aed;">Vortex</strong> reviews the mix — checks diversity, flags duplicates, ensures you have enough unique angles and formats before spending a dollar.</p>
+        <div class="agents-used">
+          <div style="color: #666; font-size: 0.75rem; margin-right: 4px;">Agents:</div>
+          <img src="../images/agents/aurelius.svg" class="mini-badge-img" alt="AU">
+          <img src="../images/agents/vortex.svg" class="mini-badge-img" alt="VX">
+        </div>
+      </div>
+      <div class="day-detail" id="day-4">
+        <h4>Day 4: Campaign Build</h4>
+        <p>Build the campaign in Ads Manager (lesson 3.6 structure). Upload all creatives. Set broad targeting. Set budget. <strong style="color: #2563eb;">Nexus</strong> runs the account audit checklist — placements correct, Audience Network off, pixel verified. DO NOT publish yet.</p>
+        <div class="agents-used">
+          <div style="color: #666; font-size: 0.75rem; margin-right: 4px;">Agents:</div>
+          <img src="../images/agents/nexus.svg" class="mini-badge-img" alt="NX">
+        </div>
+      </div>
+      <div class="day-detail" id="day-5">
+        <h4>Day 5: Review + Client Approval</h4>
+        <p>Review everything. Send the client a preview of 3-5 top ads. Get sign-off. Fix anything they want. Confirm budget and start date.</p>
+        <div class="agents-used">
+          <div style="color: #666; font-size: 0.75rem; margin-right: 4px;">Agents:</div>
+          <div style="color: #888; font-size: 0.78rem;">None (client communication)</div>
+        </div>
+      </div>
+      <div class="day-detail" id="day-6">
+        <h4>Day 6: Launch 🚀</h4>
+        <p>Publish the campaign. <strong style="color: #2563eb;">Nexus</strong> verifies everything is live — ads approved, pixel firing, budget delivering. Text the client: "Your ads are live! I'll check in with data in 3 days."</p>
+        <div class="agents-used">
+          <div style="color: #666; font-size: 0.75rem; margin-right: 4px;">Agents:</div>
+          <img src="../images/agents/nexus.svg" class="mini-badge-img" alt="NX">
+        </div>
+      </div>
+      <div class="day-detail" id="day-7">
+        <h4>Day 7: First Check (Don't Touch)</h4>
+        <p><strong style="color: #16a34a;">Zenith</strong> shows you the initial data. <strong style="color: #8b5cf6;">Stratos</strong> diagnoses if anything needs attention. Usually: "Learning phase active. Normal volatility. Wait." First real optimization = Day 10.</p>
+        <div class="agents-used">
+          <div style="color: #666; font-size: 0.75rem; margin-right: 4px;">Agents:</div>
+          <img src="../images/agents/zenith.svg" class="mini-badge-img" alt="ZN">
+          <img src="../images/agents/stratos.svg" class="mini-badge-img" alt="ST">
+        </div>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px; text-align: center;">
+        <div style="color: #22c55e; font-weight: 800; font-size: 1.1rem;">Total: ~4-5 hours across 7 days</div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 4px;">After launch: 15 min/day per client. At 10 clients = 2.5 hrs/day.</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: DIAGNOSTIC TOOL            -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔧</span> 5. When Things Go Wrong (Click the Symptom)</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        This is what <strong style="color: #8b5cf6;">Stratos</strong> does — but you need to understand the framework too. Click the symptom you're seeing:
+      </p>
+
+      <button class="diag-btn" onclick="toggleDiag('d1')">
+        <span class="diag-icon">📈</span>
+        <span><strong style="color: #fff;">High CPM + Low CTR</strong> — paying a lot, nobody's clicking</span>
+      </button>
+      <div class="diag-result" id="d1">
+        <div style="color: #ef4444; font-weight: 700; margin-bottom: 8px;">Diagnosis: Creative Problem</div>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">Your ads aren't interesting enough to stop the scroll. The algorithm is showing them but people keep scrolling past. <strong style="color: #fff;">Action: Add 20+ more diverse creatives.</strong> Not variations of the same ad — completely different angles, different visuals, different hooks. The algorithm needs variety to find what resonates.</p>
+      </div>
+
+      <button class="diag-btn" onclick="toggleDiag('d2')">
+        <span class="diag-icon">👆</span>
+        <span><strong style="color: #fff;">Good CTR + No Conversions</strong> — people click but don't fill out the form</span>
+      </button>
+      <div class="diag-result" id="d2">
+        <div style="color: #eab308; font-weight: 700; margin-bottom: 8px;">Diagnosis: Landing Page Problem</div>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">The ad is doing its job — people are interested and clicking. But when they land on the page, something kills the conversion. Could be: slow load time, confusing form, mismatched messaging, too many steps. <strong style="color: #fff;">Action: Fix the landing page.</strong> This might not be your job — escalate to whoever built the page.</p>
+      </div>
+
+      <button class="diag-btn" onclick="toggleDiag('d3')">
+        <span class="diag-icon">📋</span>
+        <span><strong style="color: #fff;">Good Leads + No Shows</strong> — people fill out the form but never show up</span>
+      </button>
+      <div class="diag-result" id="d3">
+        <div style="color: #eab308; font-weight: 700; margin-bottom: 8px;">Diagnosis: Follow-Up Problem</div>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">The ads are working. The landing page is working. But the leads go cold between form submission and the appointment. <strong style="color: #fff;">Action: Fix the nurture sequence.</strong> They need faster follow-up (text within 5 minutes), reminder emails, and confirmation messages. This is an automation/operations problem, not an ads problem.</p>
+      </div>
+
+      <button class="diag-btn" onclick="toggleDiag('d4')">
+        <span class="diag-icon">📞</span>
+        <span><strong style="color: #fff;">Good Shows + No Close</strong> — people show up but don't buy</span>
+      </button>
+      <div class="diag-result" id="d4">
+        <div style="color: #ef4444; font-weight: 700; margin-bottom: 8px;">Diagnosis: Sales Problem</div>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">Everything upstream is working perfectly. The ads bring leads, they show up — but the client can't close them. <strong style="color: #fff;">This is NOT your problem.</strong> Your job ends at delivering qualified leads. If the client can't close, that's a sales training issue. Document the data and show them the leads are quality.</p>
+      </div>
+
+      <button class="diag-btn" onclick="toggleDiag('d5')">
+        <span class="diag-icon">💸</span>
+        <span><strong style="color: #fff;">CPMs Suddenly Through the Roof</strong> — everything was fine, now costs are insane</span>
+      </button>
+      <div class="diag-result" id="d5">
+        <div style="color: #a78bfa; font-weight: 700; margin-bottom: 8px;">Diagnosis: Creative Fatigue or Algorithm Reset</div>
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;">Two possibilities: <strong style="color: #fff;">(1) Creative fatigue</strong> — your audience has seen the same ads too many times. Solution: add 20 new diverse creatives. <strong style="color: #fff;">(2) Algorithm reset</strong> — sometimes Meta's system recalibrates. Solution: wait 72 hours. If CPMs don't normalize, it's fatigue — feed it fresh creative.</p>
+      </div>
+
+      <div class="danger-box" style="margin-top: 16px;">
+        <p><strong>🔴 The golden rule: When in doubt, add more diverse creatives.</strong> 90% of performance problems in the Andromeda era are creative problems. Not targeting. Not budget. Not placements. Creative diversity.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: ANDROMEDA                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> 6. Why This Works Now</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        In December 2024, Meta launched <strong style="color: #fff;">Andromeda</strong> — a new AI system that changed everything:
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+        <div style="background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 18px; text-align: center;">
+          <div style="color: #3B82F6; font-weight: 800; font-size: 1.5rem;">10,000x</div>
+          <div style="color: #888; font-size: 0.78rem;">More ad candidates</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 18px; text-align: center;">
+          <div style="color: #22c55e; font-weight: 800; font-size: 1.5rem;">+22%</div>
+          <div style="color: #888; font-size: 0.78rem;">ROAS with Advantage+</div>
+        </div>
+        <div style="background: #161616; border: 1px solid rgba(139,92,246,0.2); border-radius: 10px; padding: 18px; text-align: center;">
+          <div style="color: #a78bfa; font-weight: 800; font-size: 1.5rem;">100x</div>
+          <div style="color: #888; font-size: 0.78rem;">Faster processing</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div style="background: rgba(239,68,68,0.04); border: 1px solid rgba(239,68,68,0.15); border-radius: 10px; padding: 18px;">
+          <div style="color: #ef4444; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">❌ OLD WAY (Dead)</div>
+          <div style="font-size: 0.82rem; line-height: 1.7; color: #888;">
+            <div>5+ campaigns, complex structure</div>
+            <div>Micro-segmented audiences</div>
+            <div>3-6 creatives per ad set</div>
+            <div>Manual interest/lookalike targeting</div>
+            <div>"Duplicate and relaunch" strategy</div>
+          </div>
+        </div>
+        <div style="background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.15); border-radius: 10px; padding: 18px;">
+          <div style="color: #22c55e; font-weight: 700; font-size: 0.85rem; margin-bottom: 10px;">✅ NEW WAY (Andromeda)</div>
+          <div style="font-size: 0.82rem; line-height: 1.7; color: #ccc;">
+            <div>1-2 campaigns maximum</div>
+            <div>Broad or NO targeting</div>
+            <div><strong>15-25+ diverse creatives per ad set</strong></div>
+            <div>Trust the algorithm completely</div>
+            <div><strong>Creative IS the targeting</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: TALK TRACK                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🗣️</span> 7. How to Explain This to Prospects</h2>
+
+      <div style="background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(139,92,246,0.06)); border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 24px;">
+        <div style="color: #3B82F6; font-weight: 700; font-size: 0.82rem; margin-bottom: 12px;">📝 COPY-PASTE TALK TRACK</div>
+        <p style="color: #fff; font-size: 0.95rem; line-height: 1.7; font-style: italic; margin: 0;">"We use AI-powered tools that let us test way more ad variations than a traditional agency. Most agencies test 5-10 ads. We test 50+. That means we find what works faster, lower your cost per lead faster, and scale faster. You get the quality of a big agency without the big agency overhead."</p>
+      </div>
+
+      <div class="warning-box" style="margin-top: 12px;">
+        <p><strong>⚠️ Never say "AI does everything."</strong> Clients want a human managing their money. The right framing: "I use AI tools to do MORE for you, FASTER." Not: "A robot handles your ads."</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 8: CHECKLIST                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 8. Lesson Checklist</h2>
+
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Explain AI Agent Arbitrage in one sentence</strong>
+            <span>Same price, same results, 4x less work. AI agents handle 80% of the media buying workflow.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Name all 5 agents and what each one does</strong>
+            <span>Aurelius (launches campaigns), Vortex (reviews creatives), Nexus (verifies live + audits), Zenith (tracks performance), Stratos (optimizes).</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Walk through the 7-day timeline from memory</strong>
+            <span>D1 onboard → D2 research+copy → D3 creatives → D4 build → D5 review → D6 launch → D7 monitor.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Diagnose "high CPM + low CTR" without looking</strong>
+            <span>Creative problem. Add 20+ diverse creatives. Not targeting. Not budget. Creative.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Explain "creative is the new targeting" to a prospect</strong>
+            <span>Andromeda changed everything. The algorithm finds buyers based on creative diversity, not audience settings. More diverse ads = cheaper leads.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Know the daily 15-min routine</strong>
+            <span>5 min check → 5 min Zenith + Stratos diagnosis → 5 min execute changes. Per client. Per day.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai-arbitrage</span><span>aurelius</span><span>vortex</span><span>nexus</span><span>zenith</span><span>stratos</span><span>andromeda</span><span>core-system</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="3.6-campaign-structure.html" class="nav-link">← Campaign Structure</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="3.8-ai-ad-copy.html" class="nav-link">AI Ad Copy Generator →</a>
+    </div>
+  </div>
+
+  <script>
+    // === AGENT EXPAND/COLLAPSE ===
+    function toggleAgent(id) {
+      const el = document.getElementById(id);
+      const isOpen = el.classList.contains('show');
+      document.querySelectorAll('.agent-expand').forEach(e => e.classList.remove('show'));
+      if (!isOpen) el.classList.add('show');
+    }
+
+    // === DAY CARDS ===
+    function showDay(n) {
+      const cards = document.querySelectorAll('.day-card');
+      const details = document.querySelectorAll('.day-detail');
+      const target = document.getElementById('day-' + n);
+      const isOpen = target.classList.contains('show');
+      cards.forEach(c => c.classList.remove('active'));
+      details.forEach(d => d.classList.remove('show'));
+      if (!isOpen) {
+        target.classList.add('show');
+        cards[n-1].classList.add('active');
+      }
+    }
+
+    // === DIAGNOSTIC TOOL ===
+    function toggleDiag(id) {
+      const el = document.getElementById(id);
+      const btn = el.previousElementSibling;
+      const isOpen = el.classList.contains('show');
+      document.querySelectorAll('.diag-result').forEach(e => e.classList.remove('show'));
+      document.querySelectorAll('.diag-btn').forEach(b => b.classList.remove('active'));
+      if (!isOpen) {
+        el.classList.add('show');
+        btn.classList.add('active');
+      }
+    }
+
+    // === CHECKLIST ===
+    const STORAGE_KEY = 'ai-adv-3.7-arbitrage-v3';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

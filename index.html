@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The AI Advertiser Library</title>
+<style>
+  :root{
+    --bg:#08090c; --panel:#0e1015; --panel-2:#12151c; --line:rgba(255,255,255,.07);
+    --ink:#e8e6df; --ink-dim:#9a978e; --ink-faint:#5f5d55;
+    --blue:#3b82f6; --blue-soft:rgba(59,130,246,.12);
+    --amber:#f59e0b; --amber-soft:rgba(245,158,11,.10);
+    --green:#34d399; --red:#f87171;
+    --serif:"Iowan Old Style","Palatino","Charter",Georgia,serif;
+    --sans:"Futura","Avenir Next","Trebuchet MS",sans-serif;
+    --mono:ui-monospace,"SF Mono","Menlo",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:110px}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--serif);
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  body::before{ /* glow atmosphere */
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(900px 400px at 15% -5%, rgba(59,130,246,.09), transparent 60%),
+      radial-gradient(700px 380px at 90% 0%, rgba(245,158,11,.05), transparent 60%);
+  }
+  body::after{ /* grain */
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.35;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;position:relative;z-index:1}
+
+  /* ---------- masthead ---------- */
+  header.masthead{padding:64px 0 36px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:18px}
+  .eyebrow .dot{color:var(--amber)}
+  h1.site-title{font-family:var(--sans);font-weight:700;font-size:clamp(38px,6vw,68px);letter-spacing:.01em;line-height:1.02;text-transform:uppercase}
+  h1 .thin{color:var(--ink-faint);font-weight:400}
+  .lede{max-width:66ch;margin-top:20px;font-size:17px;color:var(--ink-dim);font-style:italic}
+  .lede b{color:var(--ink);font-style:normal}
+  .statline{display:flex;flex-wrap:wrap;gap:34px;margin-top:30px;font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
+  .statline b{display:block;font-size:22px;color:var(--ink);font-weight:600;letter-spacing:0}
+  .statline span{letter-spacing:.14em;text-transform:uppercase}
+
+  /* ---------- toolbar ---------- */
+  .toolbar{position:sticky;top:0;z-index:40;background:rgba(8,9,12,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .toolbar-inner{display:flex;align-items:center;gap:14px;padding:12px 0;flex-wrap:wrap}
+  .search{flex:1 1 240px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 14px}
+  .search input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-family:var(--serif);font-size:15px}
+  .search input::placeholder{color:var(--ink-faint);font-style:italic}
+  .search kbd{font-family:var(--mono);font-size:10px;color:var(--ink-faint);border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;transition:.18s}
+  .chip:hover{color:var(--ink);border-color:rgba(255,255,255,.2)}
+  .chip.active{color:#0a0a0a;background:var(--ink);border-color:var(--ink);font-weight:700}
+  .result-note{font-family:var(--mono);font-size:11px;color:var(--ink-faint);padding:14px 0 0;display:none}
+  .result-note.show{display:block}
+
+  /* ---------- sections ---------- */
+  section.module{padding:54px 0 8px}
+  .mod-head{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:baseline;margin-bottom:8px}
+  .mod-num{font-family:var(--sans);font-weight:700;font-size:clamp(44px,5vw,60px);color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.25);line-height:1}
+  .mod-title{font-family:var(--sans);text-transform:uppercase;letter-spacing:.06em;font-size:clamp(20px,2.6vw,27px);font-weight:700}
+  .mod-sub{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+  .mod-desc{grid-column:2;max-width:70ch;color:var(--ink-dim);font-style:italic;font-size:15.5px}
+  .mod-meta{grid-column:2;font-family:var(--mono);font-size:11px;color:var(--ink-faint);letter-spacing:.1em;margin-top:8px;text-transform:uppercase}
+
+  /* ---------- lesson rows ---------- */
+  .lessons{margin-top:26px;border-top:1px solid var(--line)}
+  a.lesson{display:grid;grid-template-columns:86px 1fr auto;gap:20px;padding:20px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;position:relative;transition:background .15s}
+  a.lesson::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--blue);transform:scaleY(0);transition:transform .18s}
+  a.lesson:hover{background:rgba(255,255,255,.025)}
+  a.lesson:hover::before{transform:scaleY(1)}
+  .l-num{font-family:var(--mono);font-size:15px;color:var(--blue);padding-top:3px}
+  .l-title{font-family:var(--sans);font-size:17px;font-weight:600;letter-spacing:.01em;margin-bottom:5px}
+  a.lesson:hover .l-title{color:#fff}
+  .l-desc{font-size:14.5px;color:var(--ink-dim);max-width:78ch}
+  .l-tags{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+  .tag{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border-radius:4px;padding:3px 8px}
+  .tag.dl{color:var(--amber);background:var(--amber-soft);border:1px solid rgba(245,158,11,.25)}
+  .tag.new{color:var(--green);background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25)}
+  .tag.old{color:var(--red);background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.22)}
+  .l-time{font-family:var(--mono);font-size:12px;color:var(--ink-faint);white-space:nowrap;padding-top:4px}
+  .lesson.superseded .l-title,.lesson.superseded .l-desc{opacity:.5}
+
+  /* ---------- agents strip ---------- */
+  .agents{margin:60px 0 0;padding:34px 0 10px;border-top:1px solid var(--line)}
+  .agents-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:24px}
+  .agent{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 18px;transition:.18s}
+  .agent:hover{border-color:rgba(59,130,246,.4);transform:translateY(-2px)}
+  .agent img{width:46px;height:46px;margin-bottom:12px}
+  .agent h4{font-family:var(--sans);text-transform:uppercase;letter-spacing:.08em;font-size:14px}
+  .agent .role{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin:4px 0 8px}
+  .agent p{font-size:13px;color:var(--ink-dim)}
+
+  /* ---------- downloads ---------- */
+  section.downloads{padding:64px 0 10px}
+  .dl-cat{margin-top:38px}
+  .dl-cat h3{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--line);padding-bottom:10px}
+  .packs{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;margin-top:16px}
+  .pack{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:.18s}
+  .pack:hover{border-color:rgba(245,158,11,.4);transform:translateY(-2px)}
+  .pack h4{font-family:var(--sans);font-size:15.5px;font-weight:600;letter-spacing:.01em}
+  .pack .file{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint)}
+  .pack p{font-size:13.5px;color:var(--ink-dim);flex:1}
+  .pack .inside{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);line-height:1.7;border-left:2px solid var(--line);padding-left:10px}
+  .pack-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:4px}
+  .pack-foot a.get{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-decoration:none;border:1px solid rgba(245,158,11,.35);border-radius:6px;padding:7px 13px;transition:.15s}
+  .pack-foot a.get:hover{background:var(--amber);color:#0a0a0a}
+  .pack-foot a.src{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);text-decoration:none}
+  .pack-foot a.src:hover{color:var(--blue)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);margin-top:70px;padding:34px 0 60px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);line-height:2}
+  footer a{color:var(--ink-dim)}
+  .hidden{display:none!important}
+
+  @media(max-width:720px){
+    a.lesson{grid-template-columns:56px 1fr}
+    .l-time{grid-column:2}
+    .mod-head{grid-template-columns:1fr}
+    .mod-desc,.mod-meta{grid-column:1}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">The Operator's Reference <span class="dot">●</span> Dialforge / Outbound</div>
+    <h1 class="site-title">AI Advertiser <span class="thin">Library</span></h1>
+    <p class="lede">Everything in the <b>Brez Scales “AI Arbitrage System”</b> course, catalogued: what every lesson teaches, what every downloadable pack does, and which lesson it belongs to. Mirrored locally — every link works offline.</p>
+    <div class="statline">
+      <div><b>48</b><span>Lessons</span></div>
+      <div><b>17</b><span>Download Packs</span></div>
+      <div><b>3+1</b><span>Modules + Bonus</span></div>
+      <div><b>~17h</b><span>Total Runtime</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toolbar">
+  <div class="wrap toolbar-inner">
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5f5d55" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search lessons and packs… (title, topic, agent, tool)" autocomplete="off">
+      <kbd>/</kbd>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip active" data-f="all">All</button>
+      <button class="chip" data-f="m3">Mod 3 · Fulfillment</button>
+      <button class="chip" data-f="m4">Mod 4 · Scaling</button>
+      <button class="chip" data-f="m5">Mod 5 · AI</button>
+      <button class="chip" data-f="bonus">Bonus</button>
+      <button class="chip" data-f="packs">Downloads</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap"><p class="result-note" id="note"></p></div>
+
+<!-- ============ MODULE 3 ============ -->
+<section class="module" id="m3" data-group="m3">
+  <div class="wrap">
+    <div class="mod-head">
+      <div class="mod-num">03</div>
+      <div>
+        <div class="mod-sub">Module Three</div>
+        <div class="mod-title">Fulfillment</div>
+      </div>
+      <p class="mod-desc">You signed a client — now deliver. Onboarding, budgets, Meta Business Manager, the pixel, campaign structure, then the 5-agent AI workflow that writes, designs, targets and optimizes the ads. Ends with keeping the client.</p>
+      <div class="mod-meta">16 lessons · ~3.8 hrs</div>
+    </div>
+    <div class="lessons" data-list="m3"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 4 ============ -->
+<section class="module" id="m4" data-group="m4">
+  <div class="wrap">
+    <div class="mod-head">
+      <div class="mod-num">04</div>
+      <div>
+        <div class="mod-sub">Module Four</div>
+        <div class="mod-title">Advanced Implementation</div>
+      </div>
+      <p class="mod-desc">Running the agency itself: juggling 5–7 clients, reporting that retains them, raising prices, your first hire, the systems that stop burnout — the road to the $10K/month milestone.</p>
+      <div class="mod-meta">7 lessons · ~1.4 hrs</div>
+    </div>
+    <div class="lessons" data-list="m4"></div>
+  </div>
+</section>
+
+<!-- ============ MODULE 5 ============ -->
+<section class="module" id="m5" data-group="m5">
+  <div class="wrap">
+    <div class="mod-head">
+      <div class="mod-num">05</div>
+      <div>
+        <div class="mod-sub">Module Five</div>
+        <div class="mod-title">AI Integration</div>
+      </div>
+      <p class="mod-desc">The Claude Code era. Set up your AI orchestrator, connect it to Meta over the official MCP, then put agents to work: media buying, lead scraping, competitor research, SOPs, video clones, and the 7-day operator routine.</p>
+      <div class="mod-meta">21 lessons (+1 legacy) · ~8 hrs</div>
+    </div>
+    <div class="lessons" data-list="m5"></div>
+
+    <div class="agents" data-search="aurelius zenith vortex nexus stratos traffic command agents squad">
+      <div class="mod-sub">The Traffic Command Squad — the 5 agents from Lessons 3.7 &amp; 5.4</div>
+      <div class="agents-grid">
+        <div class="agent"><img src="images/agents/aurelius.svg" alt=""><h4>Aurelius</h4><div class="role">Traffic Commander</div><p>Lead agent. Orchestrates the squad, writes ad copy (12 angles, PAS/AIDA/BAB/Story).</p></div>
+        <div class="agent"><img src="images/agents/zenith.svg" alt=""><h4>Zenith</h4><div class="role">Metrics Analyst</div><p>CPA analysis, kill/scale decisions, budget allocation, metric diagnosis.</p></div>
+        <div class="agent"><img src="images/agents/vortex.svg" alt=""><h4>Vortex</h4><div class="role">Creative Architect</div><p>Hooks, creative briefs, angles, fatigue checks — builds the visuals pipeline.</p></div>
+        <div class="agent"><img src="images/agents/nexus.svg" alt=""><h4>Nexus</h4><div class="role">Tracking Specialist</div><p>Pixel audits, CAPI setup, events, match-rate and attribution analysis.</p></div>
+        <div class="agent"><img src="images/agents/stratos.svg" alt=""><h4>Stratos</h4><div class="role">Strategy Advisor</div><p>Funnel selection, unit economics, scaling strategy, campaign architecture.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BONUS ============ -->
+<section class="module" id="bonus" data-group="bonus">
+  <div class="wrap">
+    <div class="mod-head">
+      <div class="mod-num" style="-webkit-text-stroke-color:rgba(245,158,11,.45)">+</div>
+      <div>
+        <div class="mod-sub">Bonus</div>
+        <div class="mod-title">Live Class SOPs</div>
+      </div>
+      <p class="mod-desc">Recorded live classes turned into SOPs: the full MEGA BRAIN agency architecture (source of 11 of the download packs), reverse-engineering winning ads, 10-minute landing pages, and the Meta MCP creative stack.</p>
+      <div class="mod-meta">4 classes · ~3.7 hrs</div>
+    </div>
+    <div class="lessons" data-list="bonus"></div>
+  </div>
+</section>
+
+<!-- ============ DOWNLOADS ============ -->
+<section class="downloads" id="packs" data-group="packs">
+  <div class="wrap">
+    <div class="mod-head">
+      <div class="mod-num" style="-webkit-text-stroke-color:rgba(245,158,11,.45)">17</div>
+      <div>
+        <div class="mod-sub">The Vault</div>
+        <div class="mod-title">Download Packs</div>
+      </div>
+      <p class="mod-desc">Every installable asset in the course. Unzip, follow the README / INSTALL inside (most copy into <code style="font-family:var(--mono);font-size:12px">~/.claude/</code>), and each card links back to the lesson that teaches it.</p>
+    </div>
+    <div id="dl-root"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Local mirror of <a href="https://ai-advertiser-course.vercel.app">ai-advertiser-course.vercel.app</a>, captured 2026-07-15 via <a href="scrape.py">scrape.py</a>.<br>
+    Original course index preserved as <a href="original-index.html">original-index.html</a> · Part of the Dialforge workspace.
+  </div>
+</footer>
+
+<script>
+const L = (id,file,title,desc,time,tags=[]) => ({id,file,title,desc,time,tags});
+
+const LESSONS = {
+m3:[
+L("3.1","3.1-fulfillment-overview.html","Client Onboarding Checklist","The 26-item checklist across 6 phases — everything you need from a client before touching a single ad.","10 min"),
+L("3.2","3.2-how-online-advertising-works.html","Setting Ad Budgets","The napkin math that makes advertising make sense. Tony's Pizza example: spend $450, get $4,500 back.","10 min"),
+L("3.3","3.3-ad-platforms.html","Business Manager Setup","Step-by-step Meta Business Manager setup: create the account, add payment, configure settings.","15 min"),
+L("3.4","3.4-meta-business-manager.html","Ad Account Setup","Create and configure the ad account inside Business Manager — payment methods and account settings.","15 min"),
+L("3.4b","3.4b-client-meta-setup.html","Client-Side Meta Setup","Getting access to your client's ad account and page: walk them through BM setup and send the invite.","15 min"),
+L("3.4c","3.4c-get-invited-to-client-bm.html","Get Invited to the Client's BM (Simple Path)","Skip building your own BM per client — have them invite you to theirs. 5 minutes, no verification wait. Includes the copy-paste message and the role to request.","10 min"),
+L("3.5","3.5-the-pixel.html","The Pixel","Your “universal remote” for tracking. GTM-first installation, event setup, and testing.","15 min"),
+L("3.6","3.6-campaign-structure.html","Campaign Structure","The 3-level hierarchy — Campaign → Ad Set → Ad — plus budget allocation and naming conventions.","10 min"),
+L("3.7","3.7-ai-arbitrage-system.html","The AI Arbitrage System","Meet the 5 agents: Aurelius, Vortex, Nexus, Zenith, Stratos — the complete workflow from client onboarding to optimization.","25 min"),
+L("3.8","3.8-ai-ad-copy-generator.html","AI Ad Copy Generator","Aurelius writes your ads: 12 unique angles, 4 frameworks (PAS / AIDA / BAB / Story), and the mega prompt builder.","20 min"),
+L("3.9","3.9-ai-creative-builder.html","AI Creative Builder","Vortex builds your visuals: 6 ad formats, the tool stack, niche template gallery, and the diversity check.","20 min"),
+L("3.9b","3.9b-ai-ad-design.html","AI Ad Creative Design","Professional ad images for any local business in 10 minutes — Google Stitch + Canva, copy-paste prompts.","15 min"),
+L("3.10","3.10-ai-audience-finder.html","Targeting in the Andromeda Era","Creative IS the new targeting. Why detailed targeting is dead under Andromeda and why location radius still matters.","10 min"),
+L("3.11","3.11-ai-campaign-optimizer.html","Campaign Optimization","The 15-minute daily routine: Scan → Decide → Execute → Log. 4 key metrics and KILL / WATCH / SCALE rules.","15 min"),
+L("3.12","3.12-niche-templates.html","Niche Templates — Plug & Play","Pre-built setups for Restaurant, Real Estate, Home Services, Med Spa and Gym: budget, radius, copy, creative.","15 min"),
+L("3.13","3.13-client-communication.html","Client Communication & Retention","The communication rhythm, 3 tough-conversation scripts, 5 retention rules.","10 min"),
+],
+m4:[
+L("4.1","4.1-managing-multiple-clients.html","Managing Multiple Clients","Daily routines, time blocking, and the systems that keep you sane at 5–7 clients.","15 min"),
+L("4.2","4.2-advanced-reporting.html","Advanced Reporting","Monthly strategy calls, ROI calculators, and reports that make clients glad they hired you.","15 min"),
+L("4.3","4.3-raising-your-prices.html","Raising Your Prices","The $1.5K → $3K → $5K ladder: when to raise, how to have the conversation, and the script.","10 min"),
+L("4.4","4.4-hiring-your-first-va.html","Hiring Your First VA","When to hire, what to delegate, where to find them, what to pay — the hire that buys back your time.","10 min"),
+L("4.5","4.5-building-systems.html","Building Systems","SOPs, the 80/15/5 rule, folder structures — run the agency without burning out.","10 min"),
+L("4.6","4.6-troubleshooting.html","Troubleshooting","Disabled ad accounts, policy violations, stuck learning phase, CPM spikes — every common failure and its fix.","15 min"),
+L("4.7","4.7-ten-k-milestone.html","The $10K/Month Milestone","The math, the daily routine, the P&L — then the decision: stay comfortable or push to $30K.","10 min"),
+],
+m5:[
+L("5.0","5.0-ai-operators-playbook.html","The AI Operator's Playbook","Start here. The 4 questions before opening Claude Code, the 7-part prompt anatomy, 4 refinement moves, and the self-review rubric — the system, not the tricks.","30 min",["start"]),
+L("5.1","5.1-intro-ai-media-buying.html","Intro to AI-Powered Media Buying","The big picture: the two tools you're about to use and what the connected workflow looks like.","8 min"),
+L("5.2","5.2-claude-code-setup.html","Setting Up Your AI Orchestrator","Install the orchestrator that handles copy, research, SOPs and client work — and later installs every other agent.","15 min"),
+L("5.3","5.3-meta-mcp-connection.html","Connect Claude Code to Meta (Official MCP)","Updated 2026: one terminal command, one Facebook login, and Claude Code controls every ad account you manage. No tokens, no expiry.","5 min",["new"]),
+L("5.3L","5.3-meta-api-connection.html","Meta API Connection (Legacy Token Method)","The old Dev App + access-token setup. Superseded by the official Meta MCP above — kept for reference.","15 min",["old"]),
+L("5.4","5.4-ai-media-buying-agent.html","The AI Media Buying Agent","Your 24/7 campaign manager: Monitor, Optimizer, Reporter and Alert Manager. Configure thresholds and let it work.","20 min",["dl"]),
+L("5.5","5.5-reading-ad-data-with-ai.html","Reading Your Ad Data With AI","Pull ad data into AI and actually understand it: CSV uploads, Google Sheets connection, real insights.","12 min"),
+L("5.6","5.6-ai-ad-copy-creative-generation.html","AI Ad Copy & Creative Generation","The copy agent, hook formulas and iteration loops — blank page to 20 variations in minutes.","15 min"),
+L("5.7","5.7-image-generation-for-ads.html","Image Generation for Ads","The prompting formula plus 12 niche-specific prompts, finished in Canva.","12 min"),
+L("5.8","5.8-ai-video-animation-for-ads.html","AI Video & Animation for Ads","Runway vs Kling vs Pika: when to use each, cost comparison, single image → full video ad.","12 min"),
+L("5.9","5.9-lead-scraping.html","Lead Scraping with Claude Code","Find 50 qualified prospects in 10 minutes: scrape businesses, check Meta Ad Library, score them.","15 min"),
+L("5.10","5.10-automated-lead-scraping.html","Automated Lead Scraping","Turn prospecting into a system: one command, 50 scored leads in Google Sheets, scheduled weekly.","20 min",["dl"]),
+L("5.11","5.11-competitor-research.html","AI Competitor Research","Tear apart a competitor's entire ad strategy in 5 minutes with Meta Ad Library + Claude Code.","15 min"),
+L("5.12","5.12-selling-automations.html","Selling AI Automations (Upsell)","Turn a $1,500 ad client into $3–4K/mo: 5 automation types, pricing packages, the pitch.","15 min"),
+L("5.13","5.13-building-sops.html","Building SOPs with AI","Document everything you do so you can hire someone to do it — Claude turns mess into clean SOPs.","15 min"),
+L("5.14","5.14-claude-code-daily-use.html","Claude Code in Real Life","The dumbest-proof getting-started guide: set up your Jarvis in 5 minutes, build a website, land clients.","40 min"),
+L("5.15","5.15-ai-agents-live.html","AI Agents: Scraper, Designer, Copywriter & Analyst","Four ready-to-use agents — Lead Scraper, Web Designer, Copywriter, Data Analyst/Reporting — with downloads for each.","60 min",["dl"]),
+L("5.16","5.16-first-7-days-with-mcp.html","First 7 Days with Claude Code + Meta MCP","The operator week: Mon audit, Tue create, Wed launch, Thu optimize, Fri report, Sat research, Sun plan. Copy-paste prompts per day.","30 min/day"),
+L("5.17","5.17-ai-clone-ad-factory.html","The AI Clone Ad Factory","One face, infinite ads: brief → record → edit → save. A finished, captioned Meta-ready video ad in ~7 min for ~$0.60.","25 min"),
+L("5.18","5.18-process-documentation.html","Process Documentation — Become the Owner","Loom + one AI prompt = ClickUp SOPs in 40 minutes instead of 3 hours. The bus-test fix for your agency.","30 min"),
+L("5.19","5.19-build-your-life-os.html","Build Your Life OS","Score the 5 life areas — finances, professional, relationships, health, mind — and build a personal command-center dashboard with AI accountability.","40 min"),
+L("5.20","5.20-paper-design-for-claude-code.html","Paper Design for Claude Code","A design tool Claude Code can see and edit. Build a real client landing-page hero live in 12 minutes, with the copy-paste prompt.","40 min"),
+],
+bonus:[
+L("🧠","bonus-mega-brain-tour.html","Behind My MEGA BRAIN","The full agency-on-AI architecture: CLAUDE.md config, 6-agent C-suite, the MEGA Digestive knowledge system, hooks and skills. Source of 11 starter packs below.","~75 min",["dl"]),
+L("🦴","bonus-invisible-skeleton.html","The Invisible Skeleton","Reverse-engineer winning Meta ads: the 10 universal jobs every ad does, live X-rays, the master prompt, plus Foreplay/Atria spy tools and 20+ brands to study.","~75 min"),
+L("🎯","bonus-niche-landing-page.html","Niche Landing Page in 10 Minutes","One Claude prompt + Vercel = a custom, niche-specific landing page with the prospect's name on it. Build one per niche, close more calls.","10 min"),
+L("🔌","bonus-claude-freepik-local-biz.html","Meta Ads MCP + AI Creative Stack","Install the official Meta Ads MCP on Claude Desktop + Claude Code (8 dashboard prompts), then the creative stack: Claude Design + Freepik. 26 paste-ready prompts.","~60 min"),
+],
+};
+
+const PACKS = [
+{cat:"Ready-to-Use Agents", items:[
+ {file:"ai-advertiser-agent.zip", name:"Traffic Command v1.0", from:["5.4","classes/5.4-ai-media-buying-agent.html"],
+  desc:"The flagship: a 5-agent ad-management squad (Aurelius, Zenith, Vortex, Nexus, Stratos) with 18 skills and 47 expert frameworks. Ask it “CPM is $45 and CTR 0.6% — what's wrong?” and the right specialist answers.",
+  inside:"agents/ ×5 · knowledge/ TFC chunks · DEVELOPER-GUIDE.md"},
+ {file:"lead-scraper-agent.zip", name:"Lead Scraper Agent", from:["5.15","classes/5.15-ai-agents-live.html"],
+  desc:"Finds 30–50 qualified local businesses in any niche + city, scores them by likelihood to hire an agency, outputs a CSV with phones, websites and outreach messages.",
+  inside:"SKILL.md · CLAUDE.md · README.md"},
+ {file:"web-designer-agent.zip", name:"Web Designer Agent", from:["5.15","classes/5.15-ai-agents-live.html"],
+  desc:"Builds complete, modern, responsive local-business landing pages from scratch — or revamps existing ugly sites. Every output looks like a $5,000 website.",
+  inside:"SKILL.md · CLAUDE.md · README.md"},
+ {file:"copywriter-agent.zip", name:"Copywriter Agent", from:["5.15","classes/5.15-ai-agents-live.html"],
+  desc:"Writes high-converting ads, emails, DMs and scripts in your client's exact voice — it studies real examples of their voice before writing anything.",
+  inside:"SKILL.md · CLAUDE.md · README.md"},
+ {file:"data-analyst-agent.zip", name:"Data Analyst Agent", from:["5.15","classes/5.15-ai-agents-live.html"],
+  desc:"Analyzes campaign data, finds revenue leaks and hidden opportunities, writes client-ready reports in plain English. Works with Meta, Google Ads, or any CSV.",
+  inside:"SKILL.md · CLAUDE.md · README.md"},
+ {file:"lead-scraper.zip", name:"Lead Scraper (Python project)", from:["5.10","classes/5.10-automated-lead-scraping.html"],
+  desc:"The standalone scraper project: open it in Claude Code and say “set it up”. Scrapes prospects, scores by close-ability, drops results into prospects/.",
+  inside:"scrape.py · INSTRUCTIONS.md · requirements.txt · prospects/"},
+]},
+{cat:"MEGA BRAIN — Agents & Knowledge", items:[
+ {file:"mega-brain-starter.zip", name:"MEGA BRAIN Starter (full bundle)", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"The everything-pack: persistent memory system, MCP stack config, and the C-suite agent team in one install. Start here if you want the whole architecture at once.",
+  inside:".claude/agents/ · memory-system/ · mcp-stack/"},
+ {file:"agent-team-starter.zip", name:"Agent Team Starter (C-Suite)", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"The 6-agent executive team — CEO, CMO, COO, CSO, CFO and JARVIS — plus the master CLAUDE.md that wires them together. Edit the [BRACKETS] to make it yours.",
+  inside:"agents/ ceo·cmo·coo·cso·cfo·jarvis · CLAUDE.md"},
+ {file:"brain-knowledge-base-starter.zip", name:"Brain Knowledge Base Starter", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"The brain/ folder skeleton your knowledge lives in: domain chunks (marketing, operations), copywriting DNA (Halbert), and the master _INDEX.",
+  inside:"brain/domains/ · brain/dna/ · _INDEX.md"},
+ {file:"claude-md-template.zip", name:"CLAUDE.md Template", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"Just the master config: the agency-brain CLAUDE.md template with [BRACKETS] for your business details, offers, clients and rules.",
+  inside:"CLAUDE.md"},
+ {file:"mega-digestive-lite.zip", name:"MEGA Digestive Lite (skill)", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"The 3-phase knowledge digestion pipeline: turns raw courses, transcripts, PDFs and recordings into structured knowledge chunks for your brain. Trigger: “digest this”.",
+  inside:"SKILL.md"},
+]},
+{cat:"Skills & Automation", items:[
+ {file:"skills-starter-pack.zip", name:"Skills Starter Pack (4 skills)", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"Four lite skills in one: Firecrawl Research (voice-of-customer mining from Reddit/Amazon/YouTube), Copywriter, MEGA Digestive, and Ralph Wiggum.",
+  inside:"firecrawl-research-lite · copywriter-lite · mega-digestive-lite · ralph-wiggum-lite"},
+ {file:"ralph-wiggum-lite.zip", name:"Ralph Wiggum Lite (skill)", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"The 8-pass copy verification loop: forces AI-generated copy through 8 framework passes until it scores 9.5+. Trigger: “verify copy”.",
+  inside:"SKILL.md"},
+ {file:"hooks-pack.zip", name:"Hooks Pack", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"Your AI's reflexes — 4 shell hooks that fire automatically: auto-link new knowledge, validate chunks, auto-save learnings, auto-commit changes.",
+  inside:"auto-link.sh · validate-chunk.sh · auto-save-learnings.sh · auto-commit.sh · INSTALL.md"},
+ {file:"memory-system-setup.zip", name:"Memory System Setup (claude-mem)", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"Persistent memory across every Claude session — your AI remembers your business, clients and decisions. Install guide + the memory rules file.",
+  inside:"INSTALL.md · MEMORY_RULES.md"},
+ {file:"mcp-stack-config.zip", name:"MCP Stack Config", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"The settings.json of MCP servers that make Claude able to DO things — run ads, scrape sites, automate browsers, pull data — plus the install walkthrough.",
+  inside:"settings.json · INSTALL.md"},
+]},
+{cat:"Frameworks", items:[
+ {file:"compound-engineering.zip", name:"Compound Engineering", from:["Bonus 🧠","classes/bonus-mega-brain-tour.html"],
+  desc:"The 4-phase framework for any task bigger than a day: invest in planning where the leverage is instead of jumping to execution and paying for it later.",
+  inside:"README.md (the full framework)"},
+]},
+];
+
+/* ---------- render lessons ---------- */
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const TAGMAP = {dl:'<span class="tag dl">⬇ has download</span>', new:'<span class="tag new">updated 2026</span>', old:'<span class="tag old">superseded</span>', start:'<span class="tag new">start here</span>'};
+for (const [key,list] of Object.entries(LESSONS)){
+  const root = document.querySelector(`[data-list="${key}"]`);
+  root.innerHTML = list.map(l=>`
+    <a class="lesson ${l.tags.includes('old')?'superseded':''}" href="classes/${l.file}" data-search="${(l.id+' '+l.title+' '+l.desc).toLowerCase().replace(/"/g,'')}">
+      <div class="l-num">${l.id}</div>
+      <div>
+        <div class="l-title">${esc(l.title)}</div>
+        <div class="l-desc">${esc(l.desc)}</div>
+        ${l.tags.length?`<div class="l-tags">${l.tags.map(t=>TAGMAP[t]||'').join('')}</div>`:''}
+      </div>
+      <div class="l-time">${l.time}</div>
+    </a>`).join('');
+}
+
+/* ---------- render packs ---------- */
+document.getElementById('dl-root').innerHTML = PACKS.map(cat=>`
+  <div class="dl-cat">
+    <h3>${cat.cat}</h3>
+    <div class="packs">
+      ${cat.items.map(p=>`
+      <div class="pack" data-search="${(p.name+' '+p.file+' '+p.desc+' '+p.inside).toLowerCase().replace(/"/g,'')}">
+        <div>
+          <h4>${esc(p.name)}</h4>
+          <div class="file">${p.file}</div>
+        </div>
+        <p>${esc(p.desc)}</p>
+        <div class="inside">${p.inside}</div>
+        <div class="pack-foot">
+          <a class="get" href="downloads/${p.file}" download>Download</a>
+          <a class="src" href="${p.from[1]}">from lesson ${p.from[0]} →</a>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`).join('');
+
+/* ---------- search + filter ---------- */
+const q = document.getElementById('q');
+const note = document.getElementById('note');
+let filter = 'all';
+
+document.getElementById('chips').addEventListener('click', e=>{
+  const b = e.target.closest('.chip'); if(!b) return;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  b.classList.add('active'); filter = b.dataset.f; apply();
+});
+q.addEventListener('input', apply);
+document.addEventListener('keydown', e=>{
+  if(e.key==='/' && document.activeElement!==q){ e.preventDefault(); q.focus(); }
+  if(e.key==='Escape'){ q.value=''; apply(); q.blur(); }
+});
+
+function apply(){
+  const term = q.value.trim().toLowerCase();
+  let shown = 0;
+  document.querySelectorAll('section[data-group]').forEach(sec=>{
+    const inFilter = filter==='all' || sec.dataset.group===filter;
+    let secHits = 0;
+    sec.querySelectorAll('[data-search]').forEach(el=>{
+      const hit = inFilter && (!term || el.dataset.search.includes(term));
+      el.classList.toggle('hidden', !hit);
+      if(hit){ secHits++; shown++; }
+    });
+    sec.classList.toggle('hidden', secHits===0);
+    sec.querySelectorAll('.dl-cat').forEach(c=>{
+      c.classList.toggle('hidden', !c.querySelector('.pack:not(.hidden)'));
+    });
+  });
+  note.textContent = (term||filter!=='all') ? `${shown} result${shown===1?'':'s'} ${term?`for “${q.value.trim()}”`:''}` : '';
+  note.classList.toggle('show', !!(term||filter!==`all`));
+}
+</script>
+</body>
+</html>

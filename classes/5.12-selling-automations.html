@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.12: Selling AI Automations (Upsell) — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .danger-box { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .danger-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .danger-box strong { color: #ef4444; }
+    .screenshot-placeholder { border: 2px dashed rgba(255,255,255,0.1); border-radius: 12px; padding: 40px 20px; margin: 16px 0; text-align: center; }
+    .screenshot-placeholder p { color: #555; font-size: 0.8rem; margin: 0; }
+    .screenshot-placeholder .label { color: #888; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+    .auto-card { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; margin-bottom: 16px; display: flex; gap: 18px; align-items: flex-start; }
+    .auto-card .auto-icon { font-size: 2rem; min-width: 48px; height: 48px; background: rgba(59,130,246,0.08); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .auto-card .auto-body { flex: 1; }
+    .auto-card .auto-name { color: #fff; font-weight: 700; font-size: 1rem; margin: 0 0 2px 0; }
+    .auto-card .auto-price { color: #3B82F6; font-weight: 700; font-size: 0.88rem; margin: 0 0 8px 0; }
+    .auto-card .auto-desc { color: #888; font-size: 0.85rem; line-height: 1.5; margin: 0 0 10px 0; }
+    .auto-card .auto-builds { color: #ccc; font-size: 0.82rem; line-height: 1.6; margin: 0; }
+    .auto-card .auto-builds strong { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+    .pricing-table { width: 100%; border-collapse: separate; border-spacing: 12px 0; margin: 20px 0; }
+    .pricing-col { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; text-align: center; vertical-align: top; width: 33.33%; }
+    .pricing-col.featured { border-color: rgba(59,130,246,0.4); background: linear-gradient(180deg, rgba(59,130,246,0.06) 0%, #161616 100%); }
+    .pricing-col .plan-name { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 0 0 8px 0; }
+    .pricing-col.featured .plan-name { color: #3B82F6; }
+    .pricing-col .plan-price { color: #fff; font-size: 1.8rem; font-weight: 800; margin: 0 0 4px 0; }
+    .pricing-col .plan-period { color: #666; font-size: 0.78rem; margin: 0 0 16px 0; }
+    .pricing-col .plan-features { list-style: none; padding: 0; margin: 0; text-align: left; }
+    .pricing-col .plan-features li { color: #ccc; font-size: 0.82rem; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 8px; }
+    .pricing-col .plan-features li:last-child { border-bottom: none; }
+    .pricing-col .plan-features li::before { content: '✓'; color: #22c55e; font-weight: 700; font-size: 0.75rem; }
+    .math-visual { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; margin: 20px 0; }
+    .math-box { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; text-align: center; }
+    .math-box .math-label { color: #888; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px 0; }
+    .math-box .math-value { font-size: 1.8rem; font-weight: 800; margin: 0 0 4px 0; }
+    .math-box .math-detail { color: #888; font-size: 0.78rem; margin: 0; }
+    .math-arrow { color: #3B82F6; font-size: 2rem; font-weight: 800; text-align: center; }
+    @media (max-width: 600px) {
+      .auto-card { flex-direction: column; gap: 12px; }
+      .pricing-table { border-spacing: 0; }
+      .pricing-table, .pricing-table tbody, .pricing-table tr { display: block; }
+      .pricing-col { display: block; width: auto; margin-bottom: 12px; }
+      .math-visual { grid-template-columns: 1fr; }
+      .math-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.12 — Module 5: AI Integration</div>
+      <h1>Selling AI <span>Automations</span></h1>
+      <div class="subtitle">
+        <span class="tag">upsell</span>
+        <span class="tag">automations</span>
+        <span class="tag">revenue</span>
+        <span class="tag">gohighlevel</span>
+        <span class="tag">local-business</span>
+        <span class="tag">~15 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">You're managing someone's ads for $1,500/mo. But the business owner has 15 other problems you could solve. Leads with no follow-up. No email list. Mid Google reviews. Manual appointment reminders. Every one of those problems is an upsell. And most of them run on autopilot once you set them up.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE BUYING PSYCHOLOGY                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> Why Upselling Works (The Psychology)</h2>
+
+      <div style="background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.02)); border: 1px solid rgba(59,130,246,0.25); border-radius: 14px; padding: 24px; margin-bottom: 16px;">
+        <p style="color: #3B82F6; font-weight: 800; font-size: 1.1rem; margin: 0 0 8px 0;">"A buyer is a buyer is a buyer."</p>
+        <p style="color: #888; font-size: 0.85rem; margin: 0;">— Dan Kennedy, No B.S. Direct Marketing</p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">
+        The moment someone signs a contract with you, they are in a <strong style="color: #fff;">buying state</strong>. They just made a decision, they trust you, they're excited about the results, and their wallet is already open. This is the single best moment to offer more value.
+      </p>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">
+        Three principles that make this work:
+      </p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 10px;">
+        <p style="color: #3B82F6; font-weight: 700; font-size: 0.95rem; margin: 0 0 4px;">1. Maximum Buy-In</p>
+        <p style="color: #888; font-size: 0.85rem; line-height: 1.5; margin: 0;">Right after someone says yes to your ad management, they've already overcome all their objections. They trust you. They believe in the outcome. Offering the next logical thing meets almost zero resistance.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 10px;">
+        <p style="color: #3B82F6; font-weight: 700; font-size: 0.95rem; margin: 0 0 4px;">2. Your Best Customer Is Your Existing Customer</p>
+        <p style="color: #888; font-size: 0.85rem; line-height: 1.5; margin: 0;">It costs 5-7x more to acquire a new client than to sell more to one you already have. Every client you close for $1,500 could be a $3,500 client if you just offer the right add-on at the right time.</p>
+      </div>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+        <p style="color: #3B82F6; font-weight: 700; font-size: 0.95rem; margin: 0 0 4px;">3. The Next Logical Offer</p>
+        <p style="color: #888; font-size: 0.85rem; line-height: 1.5; margin: 0;">The upsell has to make sense. "I'm running your ads. Now let me make sure the leads actually get followed up." That's not a random pitch. That's the obvious next step. The client is thinking it before you even say it.</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Two moments to upsell:</strong> (1) Right when they sign the contract — "Most of my clients also add lead follow-up so they don't lose leads. Want me to include that?" (2) 30-60 days in when you've proven results — "We're getting you 40 leads/month but your team is only calling back 60%. Let me fix that."</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE ONBOARDING UPSELL SCRIPT           -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💬</span> The Onboarding Upsell Script</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Use this right after the client signs the ad management contract. While they're still on the call or in the same conversation.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Awesome, so we're locked in on the ad management. Before we wrap up, I want to mention something real quick.
+
+The ads are going to bring leads in. That part I'm confident in. But the #1 thing I see kill results for businesses like yours is slow follow-up. A lead fills out the form, and if nobody calls or texts them back within 5 minutes, the chance of booking them drops by like 80%.
+
+What I do for most of my clients is set up an automated follow-up system alongside the ads. The second someone fills out your form, they get a text within 60 seconds. Something like "Hey [name], thanks for reaching out, when's a good time to chat?" Then if they don't respond, it follows up automatically at 24 hours and 72 hours.
+
+It runs completely on autopilot. Your team doesn't have to change anything they're doing. It just makes sure no lead falls through the cracks.
+
+It's an additional $[500-800]/mo on top of the ad management. Most clients see about 20-30% more booked appointments just from the faster follow-up alone.
+
+Want me to include that in the setup? I can have it running by the time the first ads go live.</pre>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't be pushy.</strong> If they say no, that's fine. Say "No problem, it's always there if you want to add it later." You'll have another chance at 30-60 days when you can show them real data on how many leads aren't getting called back.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE MATH (visual, upfront)             -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📈</span> The Math</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Same number of clients. Double the revenue. The automations take <em>less</em> ongoing work than ad management because they literally run themselves.</p>
+
+      <div class="math-visual">
+        <div class="math-box">
+          <p class="math-label">Without Upsells</p>
+          <p class="math-value" style="color: #888;">$7,500<span style="font-size:0.5em;color:#555">/mo</span></p>
+          <p class="math-detail">5 clients × $1,500/mo</p>
+        </div>
+        <div class="math-arrow">→</div>
+        <div class="math-box" style="border-color: rgba(59,130,246,0.3);">
+          <p class="math-label">With Upsells</p>
+          <p class="math-value" style="color: #3B82F6;">$15,000<span style="font-size:0.5em;color:#555">/mo</span></p>
+          <p class="math-detail">5 clients × $3,000/mo avg</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 8px;">
+        <span style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: #22c55e; font-weight: 700; font-size: 0.85rem; padding: 6px 16px; border-radius: 20px;">+100% revenue, ~$50-100/mo in tool costs</span>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE 5 AUTOMATION TYPES                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🤖</span> The Upsell Menu</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Pick 1-2 that make sense for each client. You don't need to sell all of these.</p>
+
+      <div class="auto-card">
+        <div class="auto-icon">⚡</div>
+        <div class="auto-body">
+          <p class="auto-name">Lead Follow-Up Automation</p>
+          <p class="auto-price">$500 – $800/mo</p>
+          <p class="auto-desc">The biggest problem with local businesses: leads come in and they take forever to respond. Or they never respond. Automated text/email sequences hit the lead within 60 seconds.</p>
+          <div class="auto-builds">
+            <strong>What you build:</strong>
+            Instant text ("Hey [name], thanks for reaching out...") → Email confirmation with offer details → 24hr follow-up text → 72hr last-chance text
+          </div>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">📧</div>
+        <div class="auto-body">
+          <p class="auto-name">Email Sequences</p>
+          <p class="auto-price">$500 – $1,000/mo</p>
+          <p class="auto-desc">Most local businesses have zero email marketing. Even a basic welcome sequence and monthly newsletter puts them ahead of 90% of competitors.</p>
+          <div class="auto-builds">
+            <strong>What you build:</strong>
+            5-email welcome sequence → Monthly newsletter template → Re-engagement sequence for old leads → Post-visit follow-up
+          </div>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">⭐</div>
+        <div class="auto-body">
+          <p class="auto-name">Review Generation System</p>
+          <p class="auto-price">$300 – $500/mo</p>
+          <p class="auto-desc">After someone visits, automatically send them a text asking for a Google review. More reviews = higher Google ranking = more free traffic.</p>
+          <div class="auto-builds">
+            <strong>What you build:</strong>
+            Automated text after visit ("How was it? Leave a review → [link]") → Low rating? Redirect to private feedback form instead of Google
+          </div>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">💬</div>
+        <div class="auto-body">
+          <p class="auto-name">Chatbot / AI Receptionist</p>
+          <p class="auto-price">$500 – $1,000/mo</p>
+          <p class="auto-desc">A chatbot on their website or Facebook page that answers common questions, books appointments, and captures lead info 24/7.</p>
+          <div class="auto-builds">
+            <strong>What you build:</strong>
+            AI chatbot trained on FAQ/services/pricing → Captures name, phone, email, service → Books into calendar → Sends you a notification
+          </div>
+        </div>
+      </div>
+
+      <div class="auto-card">
+        <div class="auto-icon">📊</div>
+        <div class="auto-body">
+          <p class="auto-name">Weekly Reporting Dashboard</p>
+          <p class="auto-price">$300 – $500/mo</p>
+          <p class="auto-desc">Instead of texting "ads are going well," give them a clean dashboard. Makes you look professional and kills "how are my ads doing?" messages.</p>
+          <div class="auto-builds">
+            <strong>What you build:</strong>
+            Looker/Data Studio dashboard → Key metrics: spend, leads, CPL, ROAS → Auto-updates daily → Weekly email summary
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PRICING TABLE                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💰</span> Pricing Packages</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">Keep it simple. Bundle 1-2 automations with ad management.</p>
+
+      <table class="pricing-table">
+        <tr>
+          <td class="pricing-col">
+            <p class="plan-name">Basic</p>
+            <p class="plan-price">$1,500</p>
+            <p class="plan-period">per month</p>
+            <ul class="plan-features">
+              <li>Ad management</li>
+              <li>Campaign setup</li>
+              <li>Monthly reporting</li>
+              <li>Creative refreshes</li>
+            </ul>
+          </td>
+          <td class="pricing-col featured">
+            <p class="plan-name">Growth</p>
+            <p class="plan-price">$2,500</p>
+            <p class="plan-period">per month</p>
+            <ul class="plan-features">
+              <li>Everything in Basic</li>
+              <li>Lead follow-up automation</li>
+              <li>Email sequences</li>
+              <li>Faster lead response</li>
+              <li>More booked appointments</li>
+            </ul>
+          </td>
+          <td class="pricing-col">
+            <p class="plan-name">Premium</p>
+            <p class="plan-price">$3,500–4K</p>
+            <p class="plan-period">per month</p>
+            <ul class="plan-features">
+              <li>Everything in Growth</li>
+              <li>AI chatbot / receptionist</li>
+              <li>Review generation system</li>
+              <li>Reporting dashboard</li>
+              <li>Full automation suite</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+
+      <div class="tip-box">
+        <p><strong>💡 Your cost to run these automations:</strong> $50-100/mo in tool costs. The rest is profit. And most of it runs on autopilot once you set it up.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHEN TO PITCH                          -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> When to Pitch</h2>
+
+      <div class="tip-box">
+        <p><strong>💡 Don't pitch upsells on the first call.</strong> Wait until you've delivered results with their ads. Usually 30-60 days in. Let the ad performance speak first.</p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 16px 0;">The perfect moment is when they say something like:</p>
+
+      <div style="background: #161616; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+        <p style="color: #888; font-size: 0.82rem; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Listen for these triggers:</p>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <span style="color: #3B82F6; font-size: 0.85rem;">💬</span>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0; font-style: italic;">"We're getting leads but my front desk isn't following up fast enough"</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <span style="color: #3B82F6; font-size: 0.85rem;">💬</span>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0; font-style: italic;">"I wish we had more Google reviews"</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <span style="color: #3B82F6; font-size: 0.85rem;">💬</span>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0; font-style: italic;">"Do you know anything about email marketing?"</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="color: #3B82F6; font-size: 0.85rem;">💬</span>
+          <p style="color: #ccc; font-size: 0.88rem; margin: 0; font-style: italic;">"People keep asking questions on our Facebook page at midnight"</p>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6;">You're solving a problem they just told you about. That's not a pitch — that's a solution.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE PITCH SCRIPT                       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎤</span> The Pitch Script</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">For when you want to formally present the upsell. Works on a call or in a message. Adjust the numbers based on what you're actually seeing.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>Hey [client name], so your ads are doing well. We're averaging [X leads] 
+at [$X per lead] which is solid. But I've noticed something.
+
+About [30-40%] of your leads aren't getting a response in the first hour. 
+Industry data shows that leads contacted within 5 minutes are 21x more 
+likely to convert than leads contacted after 30 minutes.
+
+I can set up an automated follow-up system that:
+- Texts every new lead within 60 seconds
+- Sends a confirmation email with your offer
+- Follows up automatically if they don't respond
+- Books them straight into your calendar
+
+It runs on autopilot. Your team doesn't need to do anything differently. 
+
+I set this up for my other [niche] clients and they typically see 
+[20-40% more booked appointments] from the same ad spend.
+
+It's an additional $[X]/mo on top of what we're doing now. Want me 
+to set it up this week?</pre>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't lie about numbers.</strong> Use real data if you have it. If you don't, say "industry benchmarks show..." instead of making up client results.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TOOLS                                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> Tools You'll Use</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">You don't need to be a developer. Here's what handles the heavy lifting:</p>
+
+      <a href="https://www.gohighlevel.com/" target="_blank" style="display: block; background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 16px; text-decoration: none; margin-bottom: 12px;">
+        <div style="color: #3B82F6; font-weight: 700; font-size: 0.95rem;">⚙️ GoHighLevel</div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">All-in-one: texts, emails, calendar booking, pipeline management. $97-297/mo. Most agency owners use this.</div>
+      </a>
+
+      <a href="https://www.make.com/" target="_blank" style="display: block; background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 16px; text-decoration: none; margin-bottom: 12px;">
+        <div style="color: #3B82F6; font-weight: 700; font-size: 0.95rem;">🔗 Make.com</div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">Visual automation builder. Connect Meta lead forms → Twilio texts → Google Sheets → email. More DIY, cheaper than GHL.</div>
+      </a>
+
+      <a href="https://zapier.com/" target="_blank" style="display: block; background: #161616; border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 16px; text-decoration: none; margin-bottom: 12px;">
+        <div style="color: #3B82F6; font-weight: 700; font-size: 0.95rem;">⚡ Zapier</div>
+        <div style="color: #888; font-size: 0.82rem; margin-top: 2px;">If-this-then-that for business apps. Simpler than Make, more expensive at scale. Great for quick integrations.</div>
+      </a>
+
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-top: 16px;"><strong style="color: #fff;">Setup time:</strong> 2-4 hours per client. After that it runs itself. Check in once a week to make sure nothing broke. Use Claude Code to write the email copy, text sequences, and chatbot scripts.</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT NOT TO DO                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🚫</span> What NOT to Do</h2>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't pitch upsells before delivering ad results.</strong> You need to earn trust first. If you pitch automations on day one, you look like you're just trying to charge more. Wait 30-60 days.</p>
+      </div>
+
+      <div class="danger-box">
+        <p><strong>🛑 Don't oversell the complexity.</strong> "I'll build you an AI-powered omnichannel automation suite" sounds scary. "I'll set up a system that texts every new lead within 60 seconds" sounds like exactly what they need.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Don't set and forget.</strong> Check automations weekly. A broken follow-up sequence means leads are falling through the cracks — and that's your reputation on the line.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- CHECKLIST                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> Homework Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Upsell Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="prospectChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Identify 1-2 automations for your current client</strong>
+            <span>What problem are they complaining about? Match it to an automation.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Price out your packages (Basic / Growth / Premium)</strong>
+            <span>Use the pricing table above as a starting point. Adjust for your market.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Wait for a natural opening to pitch</strong>
+            <span>Listen for trigger phrases. Don't force it. Solve a problem they mentioned.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Use the pitch script (adjusted for your client)</strong>
+            <span>Swap in your real numbers. Lead with the data, end with the ask.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Set up at least one automation</strong>
+            <span>Start with lead follow-up. It's the easiest to build and the easiest to prove ROI.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Track the impact</strong>
+            <span>More bookings? Faster response time? More reviews? Measure what you built.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Pitch the same automation to other clients</strong>
+            <span>Once you have results from one client, use that data to sell to the next.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>upsell</span><span>automations</span><span>revenue</span><span>gohighlevel</span><span>local-business</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.11-competitor-research.html" class="nav-link">← Competitor Research</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.1-intro-ai-media-buying.html" class="nav-link">Back to Module 5 →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.12-automations-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

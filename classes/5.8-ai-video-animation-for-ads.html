@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.8: AI Video & Animation for Ads — AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; color: #ccc; line-height: 1.7; white-space: pre-wrap; overflow-x: auto; }
+    .tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 16px 0; }
+    .tool-card { background: rgba(59,130,246,0.04); border: 1px solid rgba(59,130,246,0.15); border-radius: 12px; padding: 20px; }
+    .tool-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .tool-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .tool-name { color: #fff; font-weight: 700; font-size: 1rem; }
+    .tool-tag { display: inline-block; background: rgba(59,130,246,0.15); color: #3B82F6; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 600; margin-bottom: 8px; }
+    .tool-desc { color: #ccc; font-size: 0.85rem; line-height: 1.6; }
+    .workflow-steps { counter-reset: wf; list-style: none; padding: 0; margin: 16px 0; }
+    .workflow-steps li { color: #ccc; font-size: 0.88rem; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: flex-start; gap: 12px; line-height: 1.6; }
+    .workflow-steps li:last-child { border-bottom: none; }
+    .workflow-steps li::before { counter-increment: wf; content: counter(wf); background: rgba(59,130,246,0.2); color: #3B82F6; font-weight: 700; font-size: 0.8rem; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .niche-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 16px 0; }
+    .niche-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 14px; }
+    .niche-name { color: #3B82F6; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
+    .niche-ideas { color: #888; font-size: 0.8rem; line-height: 1.5; }
+    .math-box { background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.15); border-radius: 12px; padding: 20px; margin: 16px 0; }
+    .math-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .math-row:last-child { border-bottom: none; }
+    .math-label { color: #ccc; font-size: 0.88rem; }
+    .math-value { color: #22c55e; font-weight: 700; font-size: 0.88rem; }
+    .math-value.old { color: #ef4444; text-decoration: line-through; }
+    .checklist { list-style: none; padding: 0; margin: 16px 0; }
+    .checklist li { color: #ccc; font-size: 0.88rem; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 10px; }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon { color: #3B82F6; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.8 — Module 5: AI Integration</div>
+      <h1>AI Video & <span>Animation for Ads</span></h1>
+      <div class="subtitle">
+        <span class="tag">Video</span>
+        <span class="tag">Creative</span>
+        <span class="tag">~7 min read</span>
+      </div>
+    </div>
+
+    <div class="summary-box">Video ads almost always outperform static images on Meta — higher engagement, lower CPM, more conversions. You don't need a video editor or After Effects. AI tools make video ads in minutes. Text animations, product showcases, short clips with motion graphics — stuff that used to cost $500 from a freelancer.</div>
+
+    <!-- THE TOOLS -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> The Tools</h2>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-header">
+            <div class="tool-icon" style="background: rgba(34,197,94,0.2);">💻</div>
+            <div class="tool-name">Remotion</div>
+          </div>
+          <div class="tool-tag">ADVANCED — CODE-BASED</div>
+          <div class="tool-desc">Create videos with code. Tell Claude "build me a Remotion video with these 3 testimonials" and it writes the code. Best for templated videos you'll reuse — weekly reports, dynamic text overlays.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-header">
+            <div class="tool-icon" style="background: rgba(59,130,246,0.2);">🎬</div>
+            <div class="tool-name">Runway</div>
+          </div>
+          <div class="tool-tag">RECOMMENDED — EASIEST</div>
+          <div class="tool-desc">Most popular AI video tool. Give it an image or text prompt and it generates a short video clip. Best for turning your AI images into video with subtle motion.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-header">
+            <div class="tool-icon" style="background: rgba(168,85,247,0.2);">🎥</div>
+            <div class="tool-name">Kling</div>
+          </div>
+          <div class="tool-tag">LONGER CLIPS</div>
+          <div class="tool-desc">Handles longer clips and complex motion better. Best for 10-15 second scenes with people moving — someone walking into a gym, a car driving up.</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-header">
+            <div class="tool-icon" style="background: rgba(234,179,8,0.2);">✨</div>
+            <div class="tool-name">Pika</div>
+          </div>
+          <div class="tool-tag">QUICK & FUN</div>
+          <div class="tool-desc">Quick animations, fun effects. Best for product photo effects, logo animations, "3D pop" style visuals that do well on Instagram.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REMOTION EXAMPLE -->
+    <div class="section">
+      <h2><span class="icon">💻</span> Remotion: Tell Claude What to Build</h2>
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-bottom: 12px;">Set up a Remotion project, then just describe what you want:</p>
+      <div class="code-block">npx create-video@latest my-ad-video
+cd my-ad-video
+npm start</div>
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 12px 0;">Then tell Claude:</p>
+      <div class="code-block">i have a Remotion project set up. create a 15-second vertical video
+(1080x1920) with:
+- a bold headline that animates in from the bottom: "Still Paying
+  $200/mo for a Gym You Never Go To?"
+- hold for 3 seconds
+- transition to second text: "Try Us Free for 30 Days"
+- hold for 2 seconds
+- end card with a colored background and text: "Link in Bio"
+use a dark background with white text. modern clean font.</div>
+      <p style="color: #888; font-size: 0.85rem; margin-top: 12px;">Claude writes the code. You run it. You get an MP4. No video editor needed. Build the template once, swap text for different clients.</p>
+    </div>
+
+    <!-- RUNWAY WORKFLOW -->
+    <div class="section">
+      <h2><span class="icon">🎬</span> Runway: Image to Video</h2>
+      <ol style="color: #ccc; font-size: 0.88rem; line-height: 2; padding-left: 20px;">
+        <li>Go to <strong style="color:#fff;">runway.com</strong>, sign up (free trial available)</li>
+        <li>Upload one of your AI-generated ad images from lesson 5.7</li>
+        <li>Select <strong style="color:#fff;">"Image to Video"</strong></li>
+        <li>Add a motion prompt like <em>"slow zoom in, hair blowing slightly in wind"</em></li>
+        <li>Generate — you get a 4-10 second clip</li>
+      </ol>
+
+      <div class="tip-box">
+        <p><strong>💡 Example:</strong> Generate a static image of a pizza being pulled from an oven (5.7 prompts), upload to Runway, prompt "slow pull back, steam rising from pizza, warm flickering light." That 5 seconds of motion makes the ad feel way more premium than a static image.</p>
+      </div>
+    </div>
+
+    <!-- THE ACTUAL WORKFLOW -->
+    <div class="section">
+      <h2><span class="icon">🔄</span> The Full Workflow for Client Video Ads</h2>
+      <ul class="workflow-steps">
+        <li>Write ad copy using your copywriter agent (Lesson 5.6)</li>
+        <li>Generate the base image using AI (Lesson 5.7)</li>
+        <li>Pick your video tool: subtle motion → Runway, people moving → Kling, text animations → Remotion, quick social → Pika</li>
+        <li>Add text overlays in the video tool or bring the clip into Canva Video (free)</li>
+        <li>Export as MP4 — 1080×1920 for stories/reels, 1080×1080 for feed</li>
+        <li>Upload to Meta Ads Manager</li>
+      </ul>
+      <p style="color: #888; font-size: 0.85rem; margin-top: 8px;">Total time: 15-30 minutes for a finished video ad. No designer. No editor. No freelancer.</p>
+    </div>
+
+    <!-- NICHE IDEAS -->
+    <div class="section">
+      <h2><span class="icon">💡</span> What to Make for Each Niche</h2>
+      <div class="niche-grid">
+        <div class="niche-card">
+          <div class="niche-name">🍕 Restaurants</div>
+          <div class="niche-ideas">Slow motion food shots, steam rising, cheese pulls. Text overlay with offer.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-name">💪 Gyms</div>
+          <div class="niche-ideas">Quick cuts of exercises, before/after transformations, text testimonials animating in.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-name">🦷 Dentists</div>
+          <div class="niche-ideas">Clean smile reveals, clinic walkthroughs, "what your visit looks like" style.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-name">💆 Med Spas</div>
+          <div class="niche-ideas">Slow pan over products, treatment process clips, results reveals.</div>
+        </div>
+        <div class="niche-card">
+          <div class="niche-name">🏠 Home Services</div>
+          <div class="niche-ideas">Before/after transitions, text overlay with pricing.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE MATH -->
+    <div class="section">
+      <h2><span class="icon">💰</span> The "Never Hire a Video Editor" Math</h2>
+      <div class="math-box">
+        <div class="math-row">
+          <div class="math-label">Freelance editor (4 videos/client/month)</div>
+          <div class="math-value old">$400–$1,200/mo</div>
+        </div>
+        <div class="math-row">
+          <div class="math-label">Runway</div>
+          <div class="math-value">$15/mo</div>
+        </div>
+        <div class="math-row">
+          <div class="math-label">Kling</div>
+          <div class="math-value">$10/mo or free</div>
+        </div>
+        <div class="math-row">
+          <div class="math-label">Pika</div>
+          <div class="math-value">Free tier</div>
+        </div>
+        <div class="math-row">
+          <div class="math-label">Remotion</div>
+          <div class="math-value">Free (open source)</div>
+        </div>
+        <div class="math-row">
+          <div class="math-label">Canva</div>
+          <div class="math-value">Free</div>
+        </div>
+        <div class="math-row" style="border-top: 1px solid rgba(34,197,94,0.3); margin-top: 8px; padding-top: 12px;">
+          <div class="math-label"><strong style="color:#fff;">Total with AI tools</strong></div>
+          <div class="math-value">Under $30/mo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK START -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> Quick Start: Your First AI Video Ad</h2>
+      <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin-bottom: 12px;">Want to get one done right now? Takes about 10 minutes:</p>
+      <ol style="color: #ccc; font-size: 0.88rem; line-height: 2; padding-left: 20px;">
+        <li>Go to ChatGPT, generate an ad image (use prompts from 5.7)</li>
+        <li>Go to runway.com, upload that image</li>
+        <li>Set motion to "slow zoom in with slight camera movement"</li>
+        <li>Download the 5-second clip</li>
+        <li>Open Canva, create a new "Mobile Video" project</li>
+        <li>Drop the clip in, add headline text and CTA on top</li>
+        <li>Export as MP4</li>
+      </ol>
+      <p style="color: #888; font-size: 0.85rem; margin-top: 8px;">You just made a video ad. 10 minutes. No designer.</p>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section">
+      <h2><span class="icon">✅</span> Checklist</h2>
+      <ul class="checklist">
+        <li><span class="check-icon">☐</span> Signed up for at least one AI video tool (Runway recommended)</li>
+        <li><span class="check-icon">☐</span> Turned one AI-generated image into a video clip</li>
+        <li><span class="check-icon">☐</span> Added text overlay to a video clip using Canva</li>
+        <li><span class="check-icon">☐</span> Exported a finished video ad (1080×1920 or 1080×1080)</li>
+        <li><span class="check-icon">☐</span> (Optional) Set up a Remotion project with Claude Code</li>
+        <li><span class="check-icon">☐</span> (Optional) Created a text animation video with Remotion</li>
+        <li><span class="check-icon">☐</span> Built at least 2 video ad variations for one client</li>
+        <li><span class="check-icon">☐</span> Uploaded a finished video ad to Meta Ads Manager</li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai</span><span>video</span><span>runway</span><span>remotion</span><span>kling</span><span>pika</span><span>animation</span><span>ad-creative</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.7-image-generation-for-ads.html" class="nav-link">← Image Generation</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.9-lead-scraping.html" class="nav-link">Lead Scraping →</a>
+    </div>
+  </div>
+</body>
+</html>

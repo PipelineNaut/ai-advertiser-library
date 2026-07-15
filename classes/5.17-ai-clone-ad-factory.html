@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.17: The AI Clone Ad Factory · AI Advertiser</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.88rem; line-height: 1.5; }
+    .code-block { background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; margin: 12px 0; position: relative; overflow-x: auto; }
+    .code-block pre { color: #ccc; font-family: 'SF Mono', Consolas, monospace; font-size: 0.85rem; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .code-block .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+    .code-block:hover .copy-btn { opacity: 1; }
+    .click-step { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px; margin-bottom: 16px; position: relative; overflow: hidden; }
+    .click-step::before { content: attr(data-step); position: absolute; top: 0; right: 0; background: #3B82F6; color: #fff; font-weight: 800; font-size: 0.85rem; padding: 6px 14px; border-radius: 0 12px 0 8px; }
+    .click-step h4 { color: #3B82F6; margin: 0 0 8px 0; font-size: 1rem; }
+    .click-step p { color: #ccc; font-size: 0.92rem; line-height: 1.6; margin: 0 0 12px 0; }
+    .click-step p:last-child { margin-bottom: 0; }
+    .tip-box { background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .tip-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .tip-box strong { color: #22c55e; }
+    .warning-box { background: rgba(234,179,8,0.08); border: 1px solid rgba(234,179,8,0.25); border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+    .warning-box p { color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0; }
+    .warning-box strong { color: #eab308; }
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .tool-card { background: #161616; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; }
+    .tool-card .tool-name { color: #3B82F6; font-weight: 700; font-size: 0.95rem; margin: 0 0 6px; }
+    .tool-card .tool-role { color: #ccc; font-size: 0.84rem; line-height: 1.5; margin: 0 0 10px; }
+    .tool-card .tool-cost { color: #666; font-size: 0.78rem; }
+    /* Pipeline diagram */
+    .pipeline-diagram { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 18px 0; }
+    .pd-stage { flex: 1; min-width: 132px; background: #0d0d0d; border: 1px solid rgba(59,130,246,0.22); border-radius: 12px; padding: 16px 12px; text-align: center; }
+    .pd-icon { font-size: 1.7rem; line-height: 1; }
+    .pd-num { color: #3B82F6; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.12em; margin-top: 8px; }
+    .pd-name { color: #fff; font-weight: 700; font-size: 0.9rem; margin: 3px 0 5px; }
+    .pd-out { color: #888; font-size: 0.72rem; line-height: 1.4; }
+    .pd-arrow { color: #3B82F6; font-size: 1.3rem; font-weight: 800; flex: 0 0 auto; }
+    /* Metric strip */
+    .metric-strip { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+    .metric { flex: 1; min-width: 110px; background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 12px; text-align: center; }
+    .metric .m-num { color: #3B82F6; font-size: 1.55rem; font-weight: 800; line-height: 1; }
+    .metric .m-label { color: #888; font-size: 0.74rem; margin-top: 6px; }
+    /* Leverage split */
+    .leverage-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .leverage-col { border-radius: 12px; padding: 20px; }
+    .leverage-col.once { background: rgba(168,85,247,0.07); border: 1px solid rgba(168,85,247,0.25); }
+    .leverage-col.every { background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.25); }
+    .lc-label { font-weight: 800; font-size: 0.74rem; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .leverage-col.once .lc-label { color: #a855f7; }
+    .leverage-col.every .lc-label { color: #3B82F6; }
+    .leverage-col ul { margin: 0; padding-left: 18px; }
+    .leverage-col li { color: #ccc; font-size: 0.84rem; line-height: 1.75; }
+    /* Stage banner */
+    .stage-banner { display: flex; align-items: center; gap: 14px; background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
+    .sb-icon { font-size: 1.9rem; line-height: 1; }
+    .sb-text strong { color: #fff; display: block; font-size: 1.02rem; }
+    .sb-text span { color: #888; font-size: 0.8rem; }
+    /* Kanban mock */
+    .kanban-mock { display: flex; gap: 8px; overflow-x: auto; margin: 16px 0; padding-bottom: 6px; }
+    .kanban-col { min-width: 124px; flex: 1; background: #0d0d0d; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 10px; }
+    .kc-head { font-size: 0.72rem; font-weight: 700; color: #ccc; margin-bottom: 8px; text-align: center; }
+    .kanban-card { background: #1c1c1c; border: 1px solid rgba(59,130,246,0.22); border-radius: 6px; padding: 8px 9px; font-size: 0.7rem; color: #999; line-height: 1.4; }
+    .kanban-card.done { border-color: rgba(34,197,94,0.3); }
+    @media (max-width: 640px) { .tool-grid, .leverage-split { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.17 · Module 5: AI Integration</div>
+      <h1>The AI Clone <span>Ad Factory</span></h1>
+      <div class="subtitle">
+        <span class="tag">AI Clones</span>
+        <span class="tag">Ad Pipeline</span>
+        <span class="tag">~25 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">One face. Infinite ads. This is the pipeline that turns a single AI clone of you into an ad factory. You type a brief, and a finished, captioned, Meta-ready vertical ad comes out the other side in about 7 minutes for around 60 cents. No film crew, no editor, no burnout. You build the clone one time, then it produces every ad after that.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHY THIS MATTERS                       -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> Why This Matters</h2>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Creative is the bottleneck in paid advertising. Meta burns through ads fast, every winning ad eventually fatigues, and you constantly need fresh ones. For most operators the production side is the part that breaks them. Filming, re-filming, waiting on an editor, slowly running out of energy.</p>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This pipeline takes you out of the production line. You build an AI clone of yourself one time. After that, the clone records the ads and the only thing you do is type the brief.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;">
+        <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; padding: 20px;">
+          <p style="color: #ef4444; font-weight: 700; font-size: 0.95rem; margin: 0 0 8px;">The old way</p>
+          <p style="color: #888; font-size: 0.82rem; line-height: 1.5; margin: 0;">Set up a camera, film yourself, re-film the bad takes, hand it to an editor, wait two days, pay hundreds per ad. After a week you are burnt out, and when you run out of creative your results drop.</p>
+        </div>
+        <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; padding: 20px;">
+          <p style="color: #22c55e; font-weight: 700; font-size: 0.95rem; margin: 0 0 8px;">The factory way</p>
+          <p style="color: #888; font-size: 0.82rem; line-height: 1.5; margin: 0;">Clone yourself one time. Type a brief. A finished, captioned ad is ready in about 7 minutes for around 60 cents. Run it as often as you need. You never sit in front of a camera and you never run dry.</p>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 This is a workflow you can sell.</strong> Once it works for you, it works for every client you sign. You can also package the whole system as its own offer. A factory that produces ads on demand can be the offer itself.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HOW THE FACTORY WORKS                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🏭</span> How the Factory Works</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 4px;">The whole factory is four stages. A brief goes in one end, a finished ad comes out the other. Every ad you ever make travels this same line.</p>
+
+      <div class="pipeline-diagram">
+        <div class="pd-stage">
+          <div class="pd-icon">📝</div>
+          <div class="pd-num">STAGE 1</div>
+          <div class="pd-name">Brief + Script</div>
+          <div class="pd-out">out: an approved script</div>
+        </div>
+        <div class="pd-arrow">→</div>
+        <div class="pd-stage">
+          <div class="pd-icon">🎬</div>
+          <div class="pd-num">STAGE 2</div>
+          <div class="pd-name">Record</div>
+          <div class="pd-out">out: a raw clone video</div>
+        </div>
+        <div class="pd-arrow">→</div>
+        <div class="pd-stage">
+          <div class="pd-icon">✂️</div>
+          <div class="pd-num">STAGE 3</div>
+          <div class="pd-name">Edit</div>
+          <div class="pd-out">out: a finished ad</div>
+        </div>
+        <div class="pd-arrow">→</div>
+        <div class="pd-stage">
+          <div class="pd-icon">💾</div>
+          <div class="pd-num">STAGE 4</div>
+          <div class="pd-name">Save</div>
+          <div class="pd-out">out: stored + logged</div>
+        </div>
+      </div>
+
+      <div class="metric-strip">
+        <div class="metric"><div class="m-num">~7 min</div><div class="m-label">per ad, start to finish</div></div>
+        <div class="metric"><div class="m-num">~$0.60</div><div class="m-label">in tool credits per ad</div></div>
+        <div class="metric"><div class="m-num">4</div><div class="m-label">stages on the line</div></div>
+        <div class="metric"><div class="m-num">1</div><div class="m-label">human checkpoint</div></div>
+      </div>
+
+      <h3 style="color:#fff; font-size:1rem; margin:22px 0 6px;">Where the leverage comes from</h3>
+      <p style="color: #ccc; font-size: 0.9rem; line-height: 1.6; margin-bottom: 4px;">Two things you build a single time. Five things you repeat for every ad. That gap is the whole reason this scales.</p>
+
+      <div class="leverage-split">
+        <div class="leverage-col once">
+          <div class="lc-label">BUILD ONE TIME</div>
+          <ul>
+            <li>Clone your voice in ElevenLabs</li>
+            <li>Clone your avatar in HeyGen</li>
+            <li>Collect a B-roll library of your own clips</li>
+            <li>Set up the ClickUp pipeline board</li>
+          </ul>
+        </div>
+        <div class="leverage-col every">
+          <div class="lc-label">REPEAT PER AD</div>
+          <ul>
+            <li>Write the brief</li>
+            <li>Draft and approve the script</li>
+            <li>Generate the clone video</li>
+            <li>Edit it in Submagic</li>
+            <li>Save it and log it</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 One gate, one rule.</strong> There is exactly one human checkpoint in this pipeline: you approve the script before it gets recorded. Everything before the gate is cheap to redo. Everything after it costs money. Catch problems at the script, never after.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE TOOLS                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧰</span> The Tools You Need</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">Six tools. None of them need code. Each one does one job on the line.</p>
+
+      <div class="tool-grid">
+        <div class="tool-card">
+          <p class="tool-name">ChatGPT or Claude</p>
+          <p class="tool-role">Writes the ad script from your brief. The brain of stage 1.</p>
+          <p class="tool-cost">Free tier works. Plus is about $20/mo</p>
+        </div>
+        <div class="tool-card">
+          <p class="tool-name">ElevenLabs</p>
+          <p class="tool-role">Clones your voice. Turns the script into a voiceover that sounds like you.</p>
+          <p class="tool-cost">From about $5/mo (Starter unlocks voice cloning)</p>
+        </div>
+        <div class="tool-card">
+          <p class="tool-name">HeyGen</p>
+          <p class="tool-role">Clones your face. Turns the voiceover into a talking-head video of your avatar.</p>
+          <p class="tool-cost">From about $24/mo (Creator plan)</p>
+        </div>
+        <div class="tool-card">
+          <p class="tool-name">Submagic</p>
+          <p class="tool-role">Adds captions, B-rolls, zooms, and music. Turns the raw clone video into a real ad.</p>
+          <p class="tool-cost">From about $20/mo</p>
+        </div>
+        <div class="tool-card">
+          <p class="tool-name">ClickUp</p>
+          <p class="tool-role">Runs the pipeline. Every ad is a task moving down the line so nothing gets dropped.</p>
+          <p class="tool-cost">Free tier is enough to start</p>
+        </div>
+        <div class="tool-card">
+          <p class="tool-name">Google Drive</p>
+          <p class="tool-role">Stores the finished ads in one organized place you can hand to anyone.</p>
+          <p class="tool-cost">Free</p>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Set the clone up before class, or in the first 15 minutes.</strong> Voice cloning and avatar cloning each take a few minutes to process. Start them both training early so the clone is ready when you reach stage 2.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STAGE 1                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📝</span> Stage 1: Brief + Script</h2>
+
+      <div class="stage-banner">
+        <div class="sb-icon">📝</div>
+        <div class="sb-text">
+          <strong>Stage 1 of 4</strong>
+          <span>Input: an idea &nbsp;·&nbsp; Output: a script you approved out loud</span>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">This stage decides if the ad is good. The clone and the edit are only execution. The thinking happens here, so this is where you slow down.</p>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Write the brief</h4>
+        <p>The brief is the order form for the factory. Five things, nothing more. Keep it in a simple doc or a ClickUp task.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>AD BRIEF
+
+1. Narrative / angle:  what story or angle is this ad? (2-3 sentences)
+2. Offer:              what are we selling or giving away? where does the click go?
+3. Ad type:            lead capture / sales / retargeting / awareness
+4. Audience:           who is this ad talking to?
+5. CTA:                the exact call to action plus the destination URL</pre>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Draft the script with AI</h4>
+        <p>Open ChatGPT or Claude. Paste the brief plus this prompt. You get back a spoken-word script, written for the camera instead of the page.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>You are writing a short-form video ad script for a talking-head ad.
+
+Here is the brief:
+[paste your 5-point brief]
+
+Write a 45 to 60 second spoken script. Rules:
+- First line is a scroll-stopping hook. No slow intro.
+- Write the way a person talks out loud, not the way they write.
+- One clear idea. One clear call to action at the end.
+- No hype words you cannot back up. No income guarantees.
+- Plain sentences. Short where it counts.
+
+Give me only the script, ready to be read aloud.</pre>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Approve the script. This is the gate.</h4>
+        <p>Read it out loud and time yourself. Does the hook stop you in the first 3 seconds? Does it sound like you? Is the CTA clear? If yes, approve it and move to stage 2. If no, send it back to step 2. Do not record a script you would not run.</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Reading it out loud is the test.</strong> If you stumble reading it, your clone will stumble too. A script that reads clean out loud records clean.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STAGE 2                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎬</span> Stage 2: Record</h2>
+
+      <div class="stage-banner">
+        <div class="sb-icon">🎬</div>
+        <div class="sb-text">
+          <strong>Stage 2 of 4</strong>
+          <span>Input: an approved script &nbsp;·&nbsp; Output: a raw clone video</span>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">No camera. The clone records the ad. You build the clone one time in steps 4 and 5. After that, every future ad skips straight to step 6.</p>
+
+      <div class="click-step" data-step="Step 4">
+        <h4>Clone your voice in ElevenLabs (one time)</h4>
+        <p>In ElevenLabs, go to Voices, then Add Voice, then Instant Voice Clone. Upload 1 to 2 minutes of clean audio of you talking. Name it. It is ready in seconds, and you reuse this voice on every ad after this.</p>
+        <p>Lock these settings so the voice stays consistent: stability around 0.7 so it does not invent filler words, similarity high so it stays close to you, a touch of style for energy. Save them as your default.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 5">
+        <h4>Clone your avatar in HeyGen (one time)</h4>
+        <p>In HeyGen, create an Avatar. Follow their recording guide: good lighting, plain background, look at the lens, talk naturally for the footage they ask for. HeyGen then trains the avatar. This is the slowest step, so start it first.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 6">
+        <h4>Generate the ad video</h4>
+        <p>This is the step you repeat for every ad. In HeyGen: new video, pick your avatar, set the script as the input, choose your cloned ElevenLabs voice, set the format to 9:16 vertical at 1080 by 1920. Generate, then download the raw MP4 when it finishes.</p>
+        <div class="tip-box">
+          <p><strong>💡 Steps 4 and 5 happen once. Step 6 happens every time.</strong> That gap is the leverage. The clone is a one-time build. The ads are unlimited.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STAGE 3                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✂️</span> Stage 3: Edit</h2>
+
+      <div class="stage-banner">
+        <div class="sb-icon">✂️</div>
+        <div class="sb-text">
+          <strong>Stage 3 of 4</strong>
+          <span>Input: a raw clone video &nbsp;·&nbsp; Output: a finished, captioned ad</span>
+        </div>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 16px;">The raw clone video is only a talking head. The edit turns it into an ad that holds attention.</p>
+
+      <div class="click-step" data-step="Step 7">
+        <h4>Run it through Submagic</h4>
+        <p>Upload the raw MP4 to Submagic and run Magic Edit. Set it up like this:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>SUBMAGIC SETUP
+
+Captions:   bold style (Hormozi-style). always on for paid social.
+B-rolls:    cut to your own clips, not AI-generated ones. AI b-roll looks fake.
+Zooms:      on. dynamic zooms on key lines keep the eye moving.
+Music:      one track, whisper-quiet (volume around 5 of 100). voice must dominate.
+Layout:     full-frame talking head for the first 3.5s hook, then split-screen.</pre>
+        </div>
+        <p>Download the finished ad. It now has captions, B-roll cutaways, dynamic zooms, and a music bed. This is a Meta-ready ad.</p>
+      </div>
+
+      <div class="warning-box">
+        <p><strong>⚠️ Build a B-roll library one time.</strong> Keep a folder of 15 to 20 of your own short clips: you working, driving, walking, talking. Upload them to Submagic once and reuse them on every ad. Your own clips beat AI-generated B-roll every time.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- STAGE 4                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💾</span> Stage 4: Save</h2>
+
+      <div class="stage-banner">
+        <div class="sb-icon">💾</div>
+        <div class="sb-text">
+          <strong>Stage 4 of 4</strong>
+          <span>Input: a finished ad &nbsp;·&nbsp; Output: stored in Drive, logged in ClickUp</span>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 8">
+        <h4>Save the ad and log it</h4>
+        <p>Upload the finished MP4 to a Google Drive folder organized by year, for example <code>Ad Factory / 2026 /</code>. Use a clear file name with the product, the angle, and the date. Then move the ad's task in ClickUp to Done and paste the Drive link on the task. The ad is shipped and the line is clear for the next one.</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 The whole run is about 7 minutes once the clone exists.</strong> Brief and script take a few minutes, the video generates in a couple, the edit takes a couple, and the save takes seconds. The tool credits land around 60 cents per ad.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE CLICKUP BOARD                      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> Build the Pipeline in ClickUp</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">A factory needs a conveyor belt. In ClickUp, the conveyor is a board where every ad is a card that moves through the four stages. Nothing gets forgotten, and you can see the state of every ad at a glance. This is the same structure behind the Brez ad pipeline.</p>
+
+      <p style="color: #888; font-size: 0.84rem; line-height: 1.6; margin-bottom: 4px;">Here is what the board looks like once it is running. Each card is one ad, moving left to right:</p>
+
+      <div class="kanban-mock">
+        <div class="kanban-col">
+          <div class="kc-head">📝 Brief</div>
+          <div class="kanban-card">Ad 4: cold DM angle</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kc-head">✍️ Script</div>
+          <div class="kanban-card">Ad 3: missed-it angle</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kc-head">🎬 Record</div>
+          <div class="kanban-card">Ad 2: school angle</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kc-head">✂️ Edit</div>
+          <div class="kanban-card">Ad 1: 3 mistakes</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kc-head">💾 Save</div>
+          <div class="kanban-card" style="opacity:0.4;">empty</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kc-head">✅ Done</div>
+          <div class="kanban-card done">Ad 0: launch ad</div>
+        </div>
+      </div>
+
+      <h3 style="color:#fff; font-size:1.05rem; margin:26px 0 8px;">⚡ The Fast Way: Let Your AI Build It</h3>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">You do not have to click all of this together by hand. If you have Claude Code set up (classes 5.2 and 5.3), you can hand the whole build to your AI. It talks to the ClickUp API and builds the board for you.</p>
+
+      <div class="click-step" data-step="Connect">
+        <h4>Give your AI access to ClickUp</h4>
+        <p>Get your ClickUp API token. In ClickUp, click your avatar at the bottom left, then Settings, then Apps, then API Token, then Generate. It starts with <code>pk_</code>. Copy it and treat it like a password.</p>
+        <p>Already have a ClickUp MCP connected to Claude Code? Then skip the token. Just tell your AI to use the ClickUp MCP and paste the prompt below starting from the "Build this structure" line.</p>
+      </div>
+
+      <div class="click-step" data-step="Prompt">
+        <h4>Paste this prompt into Claude Code</h4>
+        <p>Fill in the two bracketed lines, paste the whole thing, and let it run. Your AI builds the board and hands you a short list of anything the API would not let it finish.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Set up a ClickUp board for my AI ad production pipeline using the ClickUp API.
+
+My ClickUp API token: [PASTE YOUR pk_ TOKEN HERE]
+My ClickUp Workspace name: [YOUR WORKSPACE NAME]
+
+First, call the ClickUp API to find my workspace, confirm the team ID, and pick
+a Space to build in. If you are not sure which Space, ask me before creating anything.
+
+Build this structure:
+
+FOLDER: "Ad Pipeline"
+  LIST: "Ad Concepts"  (set the default view to Board)
+
+LIST STATUSES, in this exact order:
+  1. Brief    (not-started type)
+  2. Script   (active type)
+  3. Record   (active type)
+  4. Edit     (active type)
+  5. Save     (active type)
+  6. Done     (done type, terminal)
+
+CUSTOM FIELDS on the list:
+  Angle         : text
+  Ad Type       : dropdown (Lead Capture, Sales, Retargeting, Awareness)
+  CTA URL       : url
+  Final Video   : url
+  Shipped Date  : date
+
+TEMPLATE TASK: create a task named "[TEMPLATE] New Ad" in the Brief status,
+with one checklist inside it containing these 8 items in order:
+  1. Write the 5-point brief
+  2. Draft the script with AI
+  3. Approve the script out loud (the gate)
+  4. Generate the clone video in HeyGen
+  5. Run it through Submagic
+  6. Download the finished ad
+  7. Upload the ad to Google Drive
+  8. Move this task to Done and paste the Drive link
+
+Rules:
+- Do everything you can through the API. Do not stop at the first thing that fails.
+- ClickUp restricts some status and custom-field operations through the API. If you
+  hit one, skip it, keep going, and at the end give me a short numbered list of the
+  exact manual clicks I need to do to finish those pieces.
+- When you are done, give me the direct URL to the new "Ad Concepts" list.</pre>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 What the AI builds vs what you finish.</strong> Through the API your AI creates the folder, the list, the template task, and all 8 checklist items on its own. ClickUp limits a couple of status and custom-field operations through the API, so your AI finishes everything it can and gives you a 2-minute punch list of the exact clicks to do by hand. Still far faster than building the whole thing yourself.</p>
+      </div>
+
+      <h3 style="color:#fff; font-size:1.05rem; margin:26px 0 8px;">Or Build It By Hand</h3>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">If you want to understand every piece, or you are not on Claude Code yet, build it manually. These are the same steps the prompt above automates.</p>
+
+      <div class="click-step" data-step="Step 1">
+        <h4>Create the list</h4>
+        <p>Make a new Space or Folder called <strong>Ad Pipeline</strong>. Inside it, create a List called <strong>Ad Concepts</strong>. Switch the List view to <strong>Board</strong> so you see it as a kanban.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 2">
+        <h4>Set the statuses to the four stages</h4>
+        <p>Edit the List statuses so the columns match the pipeline. The stage is the status. The status of a card tells you exactly where that ad sits on the line.</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>📝 Brief        writing the 5-point brief
+✍️ Script       AI drafted, waiting on your approval (the gate)
+🎬 Record       approved, generating the clone video
+✂️ Edit         raw video going through Submagic
+💾 Save         finished, uploading to Drive
+✅ Done         shipped and logged (terminal status)</pre>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 3">
+        <h4>Add custom fields</h4>
+        <p>On the List, add a few custom fields so each ad card carries its own data:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre>Angle          (text)      the narrative or angle of this ad
+Ad type        (dropdown)  lead capture / sales / retargeting / awareness
+CTA URL        (URL)       where the click goes
+Final video    (URL)       the Google Drive link, filled at Save
+Shipped date   (date)      filled when it hits Done</pre>
+        </div>
+      </div>
+
+      <div class="click-step" data-step="Step 4">
+        <h4>Make a template task</h4>
+        <p>Create one task called <strong>[TEMPLATE] New Ad</strong> with a checklist inside it covering all 8 steps from this class. Save it as a ClickUp Task Template. Every new ad starts by applying this template, so the steps are always identical. Same order, every time. That is what keeps the line reliable.</p>
+      </div>
+
+      <div class="click-step" data-step="Step 5">
+        <h4>Run an ad through it</h4>
+        <p>A new ad is a new task made from the template, dropped in the 📝 Brief column. As you finish each stage, drag the card one column to the right. When it lands in ✅ Done, that ad is shipped. Start the next card and the line keeps moving.</p>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 Advanced version: the atomic Lock.</strong> The full Brez pipeline goes deeper. Every stage is broken into tiny locked micro-tasks, each one specifying exact content, sequence, timing, and pass criteria. That is the Toyota Production System standard-work principle. Start with the simple 6-column board above. Once you are running ads daily, break each stage into atoms so you can hand the whole line to a team member or an agent without losing quality.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE MASTER PROMPT                      -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚙️</span> Advanced: The Master Prompt</h2>
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 12px;">Everything above is the no-code way, where you run each stage by hand. This is the other end of the spectrum. One prompt that turns your AI into a build agent and has it wire the entire pipeline together: ClickUp, ElevenLabs, HeyGen, Submagic, Google Drive, and an orchestrator that moves every ad through the stages on its own.</p>
+
+      <div class="warning-box">
+        <p><strong>⚠️ This is the advanced path.</strong> It needs Claude Code (class 5.2) and paid API access on ElevenLabs, HeyGen, and Submagic. Your AI asks you for each API key as it goes. Run the manual flow at least once first so you understand what the machine is doing before you automate it.</p>
+      </div>
+
+      <p style="color: #ccc; font-size: 0.92rem; line-height: 1.6; margin-bottom: 8px;">Paste the whole prompt below into Claude Code. It works in 8 phases, asks you for each key when it needs it, tests every piece, and keeps a setup log so you can see what is done.</p>
+
+      <div class="code-block">
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        <pre>You are my pipeline build agent. Your job is to build me a complete AI video ad pipeline from scratch, working through it phase by phase. Read this whole brief before you start anything.
+
+WHAT WE ARE BUILDING
+
+A system where I type a short brief and get back a finished, captioned, vertical video ad. The ad is performed by my AI clone, which is my cloned voice plus my cloned avatar. It is edited automatically. It is saved to cloud storage. Every ad moves through a ClickUp board so I can see exactly what stage it is at.
+
+THE 4-STAGE PIPELINE
+
+Stage 1, BRIEF + SCRIPT: I fill in a short brief. You draft an ad script from it. I approve the script before anything else runs. This approval is the only human gate.
+Stage 2, RECORD: ElevenLabs turns the approved script into a voiceover in my cloned voice. HeyGen turns that voiceover into a talking-head video of my cloned avatar, 9:16 vertical.
+Stage 3, EDIT: Submagic takes the raw video and adds captions, b-roll, zooms, and music.
+Stage 4, SAVE: the finished ad is uploaded to Google Drive and the ClickUp task is moved to Done.
+
+HOW I WANT YOU TO WORK
+
+1. Work in phases, in order. Do not try to do everything in one step.
+2. At the start of each phase, tell me in one line what you are about to do.
+3. Whenever you need an API key, an ID, or a decision from me, STOP and ask. Never guess a key or an ID.
+4. Put every secret in a .env file. Never hardcode a key in code. Add .env to .gitignore.
+5. After you build each integration, run a small test on it before moving to the next phase.
+6. If an API call fails, show me the real error and tell me what you think is wrong. Do not silently skip it.
+7. Keep a running file called SETUP-LOG.md where you record what is done, which IDs and settings we locked, and what is still pending.
+
+PHASE 0, PROJECT SETUP
+- Create a project folder called ad-pipeline.
+- Inside it create folders: integrations, briefs, runs.
+- Create a .env file and a .gitignore that excludes .env and runs.
+- Create SETUP-LOG.md.
+
+PHASE 1, CLICKUP (the pipeline board)
+- Ask me for my ClickUp API token. It starts with pk_.
+- Using the ClickUp API, create a Folder called "Ad Pipeline" and inside it a List called "Ad Concepts" set to Board view.
+- Give the list these 6 statuses in order: Brief, Script, Record, Edit, Save, Done.
+- Add custom fields: Angle (text), Ad Type (dropdown with Lead Capture, Sales, Retargeting, Awareness), CTA URL (url), Final Video (url), Shipped Date (date).
+- If the API cannot create a status or a field, finish the rest and give me a short list of the manual clicks.
+- Build integrations/clickup.py with functions to create a task, update a task status, set a custom field, and attach a link.
+- Save the list ID and the field IDs in .env and SETUP-LOG.md.
+
+PHASE 2, ELEVENLABS (voice clone)
+- Ask me for my ElevenLabs API key.
+- Call the ElevenLabs API to list my voices. Show me the list and ask which one is my cloned voice. Save that voice ID.
+- Lock these voice settings: stability 0.7, similarity 0.9, style 0.3, speaker boost on.
+- Build integrations/elevenlabs.py with a function that takes a script string and returns a saved audio file.
+- Test it: generate a one-sentence sample and confirm the audio file plays.
+
+PHASE 3, HEYGEN (avatar clone)
+- Ask me for my HeyGen API key.
+- Call the HeyGen API to list my avatars. Show me the list and ask which one is mine. Save that avatar ID.
+- Build integrations/heygen.py with a function that takes the approved script and the ElevenLabs voice, submits a video render at 9:16 vertical 1080 by 1920, polls until it is done, and downloads the MP4.
+- Test it: render one short video and confirm the file downloads.
+
+PHASE 4, SUBMAGIC (auto-edit)
+- Ask me for my Submagic API key.
+- Build integrations/submagic.py with a function that uploads the raw HeyGen MP4, runs an edit with bold captions, dynamic zooms on, and a quiet music bed, then downloads the finished ad.
+- If Submagic has no public API on my plan, tell me. Instead build a clean handoff: the script saves the raw file and prints the exact Submagic settings for me to apply by hand.
+- Test it on the video from Phase 3.
+
+PHASE 5, GOOGLE DRIVE (save)
+- Ask me how I want to connect Google Drive, OAuth or a service account, and walk me through it.
+- Build integrations/drive.py with a function that uploads a file to a folder named "Ad Factory" then the year, and returns a shareable link.
+
+PHASE 6, THE ORCHESTRATOR
+- Build run-pipeline.py. It does this in order:
+  - Reads a brief file from the briefs folder.
+  - Stage 1: drafts the script with an LLM, saves it, then STOPS and asks me to approve, reject, or edit.
+  - On approval, creates a ClickUp task and sets its status to Record.
+  - Stage 2: calls elevenlabs.py then heygen.py. Updates the ClickUp status to Edit.
+  - Stage 3: calls submagic.py. Updates the ClickUp status to Save.
+  - Stage 4: calls drive.py, pastes the Drive link on the ClickUp task, sets the status to Done.
+  - Prints the final ad location.
+- Build a brief template at briefs/_template.md with the 5 fields: narrative or angle, offer, ad type, audience, CTA plus destination URL.
+
+PHASE 7, FULL TEST RUN
+- Help me write one real brief.
+- Run run-pipeline.py end to end on it.
+- Watch the ClickUp task move from Brief to Done as it runs.
+- Show me the finished ad and confirm every stage worked.
+- Update SETUP-LOG.md to mark the build complete.
+
+START NOW with Phase 0. After Phase 0 is done, ask me for my ClickUp API token and begin Phase 1.</pre>
+      </div>
+
+      <div class="tip-box">
+        <p><strong>💡 What to expect.</strong> This is a real build, not a one-click. Your AI works through it with you over one focused session, pausing for keys and decisions. When it finishes you have the same machine the manual class describes, except it runs itself and moves every ad through ClickUp without you touching it.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HOMEWORK CHECKLIST                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">☑️</span> Homework Checklist</h2>
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Factory Build Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="factoryChecklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Cloned your voice in ElevenLabs</strong>
+            <span>1 to 2 minutes of clean audio, settings locked</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Cloned your avatar in HeyGen</strong>
+            <span>Recorded the training footage, avatar trained</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Built the ClickUp pipeline board</strong>
+            <span>6 statuses, custom fields, and a template task</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Wrote your first brief and approved a script</strong>
+            <span>The 5-point brief, AI draft, read out loud, approved</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Generated your first AI clone ad in HeyGen</strong>
+            <span>9:16 vertical, your avatar, your cloned voice</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Edited it in Submagic</strong>
+            <span>Captions, B-rolls, zooms, quiet music bed</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c7">
+          <label class="check-content" for="c7">
+            <strong>Saved it to Drive and logged it in ClickUp</strong>
+            <span>First ad shipped, card in the Done column</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c8">
+          <label class="check-content" for="c8">
+            <strong>Ran a second ad in under 10 minutes</strong>
+            <span>This proves the factory works. The clone is built, now it just runs.</span>
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>ai-clones</span><span>ad-pipeline</span><span>heygen</span><span>elevenlabs</span><span>submagic</span><span>clickup</span><span>systems</span><span>scaling</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.16-first-7-days-with-mcp.html" class="nav-link">← First 7 Days With MCP</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="bonus-mega-brain-tour.html" class="nav-link">Bonus Classes →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.17-clone-factory-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100)+'%';
+      pCount.textContent = n+' / '+total+' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.textContent.trim();
+      navigator.clipboard.writeText(code);
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5.20: Paper Design for Claude Code — Design + Code, United</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Slim helpers */
+    .lede { color: #ccc; font-size: 1rem; line-height: 1.65; margin: 0 0 18px; max-width: 720px; }
+
+    /* Hero product card (what is Paper) */
+    .product-card { background: linear-gradient(135deg, #0d0d0d, #161616); border: 1px solid rgba(59,130,246,0.25); border-radius: 20px; padding: 32px; margin: 20px 0; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+    .product-card .pc-brand { color: #3B82F6; font-size: 0.72rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .product-card .pc-title { color: #fff; font-size: 2rem; font-weight: 900; line-height: 1.1; margin-bottom: 10px; }
+    .product-card .pc-sub { color: #bbb; font-size: 1rem; line-height: 1.55; margin-bottom: 18px; max-width: 480px; }
+    .product-card .pc-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .product-card .pc-tag { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; font-size: 0.75rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
+    .product-card .pc-visual { width: 220px; height: 220px; background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .product-card .pc-visual::before { content: ''; position: absolute; inset: 20px; border: 2px dashed rgba(59,130,246,0.3); border-radius: 10px; }
+    .product-card .pc-visual .icon { font-size: 5rem; z-index: 1; }
+    @media (max-width: 720px) { .product-card { grid-template-columns: 1fr; } .product-card .pc-visual { width: 100%; height: 180px; } }
+
+    /* Trap */
+    .vs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .vs-card { background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 22px; }
+    .vs-card.bad { border-color: rgba(239,68,68,0.3); background: linear-gradient(135deg, rgba(239,68,68,0.06), transparent); }
+    .vs-card.good { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.07), transparent); }
+    .vs-card .label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+    .vs-card.bad .label { color: #ef4444; }
+    .vs-card.good .label { color: #22c55e; }
+    .vs-card ul { margin: 0; padding-left: 18px; color: #ccc; font-size: 0.9rem; line-height: 1.85; }
+
+    /* Feature grid */
+    .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 16px; }
+    .feature-card { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 22px; }
+    .feature-card .ficon { font-size: 2.2rem; margin-bottom: 8px; }
+    .feature-card .ftag { color: #3B82F6; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+    .feature-card .ftitle { color: #fff; font-weight: 800; font-size: 1.05rem; margin-bottom: 6px; }
+    .feature-card .fdesc { color: #aaa; font-size: 0.85rem; line-height: 1.55; margin-bottom: 12px; }
+    .feature-card .code { background: #0a0a0a; border-radius: 8px; padding: 8px 12px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.72rem; color: #93c5fd; margin-top: 8px; }
+
+    /* Workflow steps */
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
+    .flow-step { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; text-align: center; position: relative; }
+    .flow-step .sn { color: #3B82F6; font-weight: 800; font-size: 0.7rem; letter-spacing: 1px; }
+    .flow-step .sicon { font-size: 2rem; margin: 8px 0 6px; }
+    .flow-step .stitle { color: #fff; font-weight: 700; font-size: 0.9rem; }
+    .flow-step .sdesc { color: #888; font-size: 0.74rem; margin-top: 4px; line-height: 1.5; }
+    @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } }
+
+    /* Live class steps timeline */
+    .timeline { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+    .tl-row { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px 22px; display: grid; grid-template-columns: 80px 1fr; gap: 18px; align-items: start; }
+    .tl-row .tl-time { color: #3B82F6; font-weight: 800; font-size: 0.75rem; letter-spacing: 1px; }
+    .tl-row .tl-title { color: #fff; font-weight: 800; font-size: 1rem; margin-bottom: 4px; }
+    .tl-row .tl-desc { color: #bbb; font-size: 0.86rem; line-height: 1.6; }
+    .tl-row .tl-hint { color: #888; font-size: 0.78rem; margin-top: 6px; font-family: 'SF Mono', Monaco, Consolas, monospace; }
+
+    /* Use case grid */
+    .use-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    .use-card { background: #111; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; }
+    .use-card .uicon { font-size: 1.8rem; margin-bottom: 6px; }
+    .use-card .utitle { color: #fff; font-weight: 800; font-size: 0.95rem; margin-bottom: 4px; }
+    .use-card .usub { color: #888; font-size: 0.78rem; line-height: 1.5; }
+    .use-card .utag { display: inline-block; margin-top: 10px; background: rgba(34,197,94,0.1); color: #22c55e; font-size: 0.66rem; font-weight: 800; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    @media (max-width: 720px) { .use-grid, .feature-grid, .vs-row { grid-template-columns: 1fr; } }
+
+    /* Prompt box */
+    .prompt-box { background: #0a0a0a; border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 22px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.82rem; color: #d4d4d4; line-height: 1.75; white-space: pre-wrap; position: relative; margin-top: 16px; }
+    .prompt-box .copy-hint { position: absolute; top: 12px; right: 14px; background: #3B82F6; color: #fff; font-size: 0.66rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Inter', sans-serif; }
+    .prompt-box .k { color: #3B82F6; font-weight: 700; }
+
+    /* Setup steps */
+    .setup { background: #0d0d0d; border: 1px solid rgba(59,130,246,0.2); border-radius: 14px; padding: 24px; margin-top: 16px; }
+    .setup ol { margin: 0; padding-left: 24px; color: #ccc; font-size: 0.92rem; line-height: 2; }
+    .setup ol li strong { color: #fff; }
+    .setup code { background: #1a1a1a; padding: 2px 8px; border-radius: 4px; color: #93c5fd; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 0.85rem; }
+
+    /* Checklist */
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 2px solid rgba(59,130,246,0.4); border-radius: 6px; background: rgba(255,255,255,0.03); cursor: pointer; margin-top: 2px; position: relative; }
+    .checklist input[type="checkbox"]:checked { background: #3B82F6; border-color: #3B82F6; }
+    .checklist input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 700; }
+    .checklist input[type="checkbox"]:checked + .check-content { opacity: 0.5; text-decoration: line-through; text-decoration-color: rgba(59,130,246,0.3); }
+    .check-content { flex: 1; }
+    .check-content strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.95rem; }
+    .check-content span { color: #888; font-size: 0.86rem; line-height: 1.5; }
+
+    .section { margin-bottom: 40px; }
+    .section h2 { margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Lesson 5.20 — Module 5: AI Integration</div>
+      <h1>Paper Design for <span>Claude Code</span></h1>
+      <div class="subtitle">
+        <span class="tag">Design + Code</span>
+        <span class="tag">Live Build</span>
+        <span class="tag">~40 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">You don't need a designer. You need a design tool that Claude Code can actually see and edit. That tool is Paper. Today we build a real client landing page together — visual + code, one canvas.</div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 1: WHAT IS PAPER                -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎨</span> 1. What Is Paper Design?</h2>
+
+      <p class="lede">Paper is a professional design tool — a 2D canvas where you compose interfaces, like Figma. The difference: Claude Code can <strong style="color:#fff;">read what's on the canvas AND write designs back into it</strong>. Design and code live in the same room.</p>
+
+      <div class="product-card">
+        <div>
+          <div class="pc-brand">PAPER · design canvas</div>
+          <div class="pc-title">Your designer is Claude.</div>
+          <div class="pc-sub">Open a blank artboard. Tell Claude Code what you want. It reads your canvas, writes the HTML directly into it, and takes a screenshot. You iterate in natural language until it ships.</div>
+          <div class="pc-tags">
+            <div class="pc-tag">2D canvas</div>
+            <div class="pc-tag">MCP native</div>
+            <div class="pc-tag">HTML output</div>
+            <div class="pc-tag">JSX export</div>
+          </div>
+        </div>
+        <div class="pc-visual">
+          <div class="icon">📐</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 2: THE TRAP                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚠️</span> 2. The Design Bottleneck</h2>
+
+      <p class="lede">Every agency owner has the same problem: you close a client, you need a landing page or ad creative, and now you're stuck. Either hire a designer (slow + expensive) or DIY in Canva (looks amateur).</p>
+
+      <div class="vs-row">
+        <div class="vs-card bad">
+          <div class="label">⚠ The Old Way</div>
+          <ul>
+            <li>Brief a designer (30 min)</li>
+            <li>Wait 3-5 days for the first draft</li>
+            <li>Client feedback → 2 more rounds</li>
+            <li>$400-800 per landing page</li>
+            <li>Static image → dev builds it (another 2-3 days)</li>
+            <li><strong style="color:#fff;">2 weeks + $800 for one page</strong></li>
+          </ul>
+        </div>
+        <div class="vs-card good">
+          <div class="label">✓ The Paper + Claude Way</div>
+          <ul>
+            <li>Open a Paper artboard (10 sec)</li>
+            <li>Describe what you want to Claude (2 min)</li>
+            <li>Watch it render live in the canvas (30 sec)</li>
+            <li>Iterate in natural language (5 min)</li>
+            <li>Export production HTML/JSX directly</li>
+            <li><strong style="color:#fff;">10 minutes + $0 for one page</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 3: WHAT CLAUDE CAN DO IN PAPER  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛠️</span> 3. What Claude Code Can Do in Paper</h2>
+
+      <p class="lede">Paper exposes tools to Claude via MCP. Claude uses them to see and edit your canvas the same way you would — but at AI speed.</p>
+
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <div class="ficon">👁️</div>
+          <div class="ftag">Read</div>
+          <div class="ftitle">See your canvas</div>
+          <div class="fdesc">Claude reads the current design — artboards, layers, what you have selected, what fonts are already in use.</div>
+          <div class="code">get_basic_info · get_selection · get_tree_summary</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">✍️</div>
+          <div class="ftag">Write</div>
+          <div class="ftitle">Design in HTML directly</div>
+          <div class="fdesc">Claude writes visual groups (hero, cards, nav, forms) as HTML that renders as real design nodes on your canvas.</div>
+          <div class="code">write_html · create_artboard · create_page</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">🎨</div>
+          <div class="ftag">Edit</div>
+          <div class="ftitle">Surgical updates</div>
+          <div class="fdesc">Change text or styles on existing nodes without rebuilding. Duplicate a card, tweak the copy, move it around.</div>
+          <div class="code">set_text_content · update_styles · duplicate_nodes</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">📸</div>
+          <div class="ftag">Verify</div>
+          <div class="ftitle">Screenshot & review</div>
+          <div class="fdesc">Claude can grab a screenshot of what it just made to verify it looks right before handing off. Real self-check, no guessing.</div>
+          <div class="code">get_screenshot</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">📦</div>
+          <div class="ftag">Export</div>
+          <div class="ftitle">Ship to production</div>
+          <div class="fdesc">Once the design is right, export as JSX with real computed styles + fill images. Drop straight into your Next.js / Vercel project.</div>
+          <div class="code">get_jsx · get_computed_styles · get_fill_image</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="ficon">💬</div>
+          <div class="ftag">Iterate</div>
+          <div class="ftitle">Natural language edits</div>
+          <div class="fdesc">"Make it more urgent." "Add a countdown timer." "Match this brand color." "Add trust badges." Claude executes on your canvas.</div>
+          <div class="code">any tool + your words</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 4: THE WORKFLOW                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔁</span> 4. The Workflow (Design → Code → Ship)</h2>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="sn">Step 1</div>
+          <div class="sicon">📄</div>
+          <div class="stitle">Open a blank artboard</div>
+          <div class="sdesc">New Paper file, set canvas size (e.g. 1440×900 for desktop hero).</div>
+        </div>
+        <div class="flow-step">
+          <div class="sn">Step 2</div>
+          <div class="sicon">💬</div>
+          <div class="stitle">Prompt Claude Code</div>
+          <div class="sdesc">Describe what you want with context, brand, constraints.</div>
+        </div>
+        <div class="flow-step">
+          <div class="sn">Step 3</div>
+          <div class="sicon">🎨</div>
+          <div class="stitle">Watch it render</div>
+          <div class="sdesc">HTML written into the canvas. Screenshot for review.</div>
+        </div>
+        <div class="flow-step">
+          <div class="sn">Step 4</div>
+          <div class="sicon">🚀</div>
+          <div class="stitle">Export + deploy</div>
+          <div class="sdesc">Grab the JSX, drop into your repo, ship on Vercel.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 5: LIVE CLASS — BUILD TOGETHER  -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🎬</span> 5. Live Class — Build a Roofing Landing Page Hero (Together)</h2>
+
+      <p class="lede">In class we're going to open Paper, spin up a blank artboard, and build a real client landing page hero from scratch — live. Follow along on your own screen if you can. If not, watch closely because this is exactly the process you'll reuse.</p>
+
+      <div class="timeline">
+
+        <div class="tl-row">
+          <div class="tl-time">0:00 · 1 min</div>
+          <div>
+            <div class="tl-title">📄 Open Paper + create a blank artboard</div>
+            <div class="tl-desc">New file → new artboard at 1440×900 (desktop hero size). Leave it empty.</div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">1:00 · 2 min</div>
+          <div>
+            <div class="tl-title">💬 Paste the first prompt into Claude Code</div>
+            <div class="tl-desc">The full prompt is in Section 7 below. It has context, goal, constraints, brand system, and evaluation criteria — the 7-part structure from Lesson 5.0.</div>
+            <div class="tl-hint">→ Copy the prompt block below and paste into Claude Code</div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">3:00 · 1 min</div>
+          <div>
+            <div class="tl-title">🎨 Watch Claude write the hero into the canvas</div>
+            <div class="tl-desc">Claude calls get_basic_info + get_font_family_info first (as its guide instructs), then write_html to lay down the hero section as a visual group. Screenshots it. Verifies.</div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">4:00 · 2 min</div>
+          <div>
+            <div class="tl-title">💬 Iterate #1 — "Make it more urgent"</div>
+            <div class="tl-desc">Ask Claude to add a countdown timer (48-hour storm window offer). Watch it update the hero on-canvas surgically instead of rebuilding.</div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">6:00 · 2 min</div>
+          <div>
+            <div class="tl-title">💬 Iterate #2 — "Add trust signals + lead form"</div>
+            <div class="tl-desc">"Add a row of trust badges (Licensed · Insured · 300+ Roofs Done) and a 4-field lead form (Name, Phone, Address, Roof Age) below the CTA."</div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">8:00 · 2 min</div>
+          <div>
+            <div class="tl-title">📦 Export as JSX + copy computed styles</div>
+            <div class="tl-desc">Claude calls get_jsx and get_computed_styles. We copy that output into a new Next.js page in the ai-advertiser-hq project.</div>
+          </div>
+        </div>
+
+        <div class="tl-row">
+          <div class="tl-time">10:00 · 2 min</div>
+          <div>
+            <div class="tl-title">🚀 Deploy to Vercel + show live URL</div>
+            <div class="tl-desc">Push to Vercel, share the live URL in class chat. Total time from blank artboard to live client landing page: ~12 min.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 18px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #22c55e;">🏆 What we're proving:</strong> A landing page that would cost $800 and take 2 weeks — done in 12 min, for free, with only YOU in the room. That's the leverage.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 6: USE CASES                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">💼</span> 6. Real Use Cases for Agency Owners</h2>
+
+      <div class="use-grid">
+        <div class="use-card">
+          <div class="uicon">🏠</div>
+          <div class="utitle">Client landing pages</div>
+          <div class="usub">Every new client needs one. Now 10 min instead of 3 hours.</div>
+          <div class="utag">Highest ROI</div>
+        </div>
+        <div class="use-card">
+          <div class="uicon">🖼️</div>
+          <div class="utitle">Ad creative variations</div>
+          <div class="usub">One brief → 5 static ad variations laid out on one artboard.</div>
+          <div class="utag">Scale creative</div>
+        </div>
+        <div class="use-card">
+          <div class="uicon">📊</div>
+          <div class="utitle">Client pitch decks</div>
+          <div class="usub">Polished sales decks without hiring a designer. Export to PDF.</div>
+          <div class="utag">Close deals</div>
+        </div>
+        <div class="use-card">
+          <div class="uicon">🎯</div>
+          <div class="utitle">Onboarding portals</div>
+          <div class="usub">Branded client onboarding forms designed + deployed same day.</div>
+          <div class="utag">Look pro</div>
+        </div>
+        <div class="use-card">
+          <div class="uicon">📱</div>
+          <div class="utitle">Social post templates</div>
+          <div class="usub">Reusable Instagram/LinkedIn templates for content batching.</div>
+          <div class="utag">Personal brand</div>
+        </div>
+        <div class="use-card">
+          <div class="uicon">🧪</div>
+          <div class="utitle">A/B test variants</div>
+          <div class="usub">3 hero variations in one artboard, screenshot, run as split test.</div>
+          <div class="utag">Data-driven</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 7: THE LIVE-CLASS PROMPT        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📋</span> 7. The Live-Class Prompt (Paste into Claude Code)</h2>
+
+      <p class="lede">This is the exact prompt for the live build. Structured in the 7-part Playbook anatomy from Lesson 5.0.</p>
+
+      <div class="prompt-box"><span class="copy-hint">COPY ALL</span><span class="k">ROLE / CONTEXT:</span>
+You're helping me design a client landing page hero in Paper. The client is a residential roofing company in Tampa, FL, offering free drone inspections + insurance-covered replacements. Their target: homeowners after recent storm damage. Tone: urgent but trustworthy. Read the current Paper artboard first with get_basic_info, then get_font_family_info before any typography.
+
+<span class="k">GOAL:</span>
+Design a landing page hero section as a single visual group written into the current empty artboard. Above the fold on a 1440×900 canvas.
+
+<span class="k">CONSTRAINTS:</span>
+- No em dashes anywhere
+- No "unlock / empower / leverage / dive in"
+- No fake stats — only credible numbers like "300+ roofs done in Tampa"
+- Fits above the fold (all content within 900px height)
+- Single visual group so I can duplicate/move it as one unit
+- Use system fonts already in the file if any exist; otherwise Inter
+
+<span class="k">INPUTS:</span>
+Brand system:
+- Dark navy background: #0A2540
+- Orange accent (for CTA + urgency): #FF6B35
+- White primary text: #FFFFFF
+- Muted secondary text: #B8C5D6
+- Generous whitespace (min 80px vertical padding)
+
+Content:
+- Eyebrow: "STORM DAMAGE · TAMPA HOMEOWNERS"
+- Headline: "Your Insurance May Cover a Brand New Roof."
+- Subhead: "Free drone inspection this week. We handle the claim."
+- Trust badges row: Licensed · Insured · 300+ Roofs Done · Lifetime Warranty
+- CTA: "Get Free Inspection" (orange button, large)
+- Below CTA: "5-star rated on Google · Same-week appointments"
+
+<span class="k">OUTPUT FORMAT:</span>
+Write a single HTML block via write_html into the current artboard. Semantic tags. Inline styles only. Wrap as one visual group. Then get_screenshot to verify. Then finish_working_on_nodes.
+
+<span class="k">EXAMPLES:</span>
+Visual style: dark, high-contrast, urgent but professional (think GEICO's clarity crossed with a modern SaaS hero). Not corporate-photo cheesy.
+
+<span class="k">EVALUATION:</span>
+Before finishing, confirm:
+1. Hero fits within 900px height
+2. Accent color is #FF6B35 on the CTA
+3. No em dashes in any copy
+4. Trust badges visible in the hero, not scrolled below
+5. CTA button is high-contrast and impossible to miss
+6. Screenshot looks polished, not amateur</div>
+
+      <div style="background: rgba(234,179,8,0.06); border: 1px solid rgba(234,179,8,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 18px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #eab308;">💡 The follow-up prompts</strong> (paste one at a time, in order):<br><br>
+          <strong>Iterate #1:</strong> "Add a countdown timer above the headline — 48-hour storm inspection window. Match the accent color."<br><br>
+          <strong>Iterate #2:</strong> "Add a lead form below the CTA with 4 fields: Name, Phone, Address, Age of Roof. Make it match the hero's dark theme with white input backgrounds."<br><br>
+          <strong>Export:</strong> "Now give me the JSX for the whole hero, plus computed styles. I'm dropping it into a Next.js page."
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 8: SETUP                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚙️</span> 8. One-Time Setup (5 min)</h2>
+
+      <p class="lede">Do this before class if you can. If not, we'll walk through it live.</p>
+
+      <div class="setup">
+        <ol>
+          <li><strong>Sign up for Paper</strong> at <code>paper.design</code> — free tier is enough to follow along.</li>
+          <li><strong>Install the Paper MCP</strong> — in Claude Code, add the Paper MCP server (they publish a one-liner installer).</li>
+          <li><strong>Fully quit VS Code + reopen</strong> — MCP servers only load on restart.</li>
+          <li><strong>Verify</strong> — type <code>/mcp</code> in Claude Code, confirm "paper" shows connected.</li>
+          <li><strong>Open a test Paper file</strong> — create a new file with one artboard. Claude Code will now be able to see it.</li>
+        </ol>
+      </div>
+
+      <div style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2); border-radius: 10px; padding: 16px 20px; margin-top: 16px;">
+        <p style="color: #ccc; font-size: 0.88rem; line-height: 1.6; margin: 0;"><strong style="color: #ef4444;">🚨 If /mcp shows "paper" but with an auth error:</strong> known Meta-MCP style OAuth bug in some Claude Code versions. Fix: authenticate Paper in the browser first, then reopen VS Code. Same fix pattern as the Meta Ads MCP situation in 5.3.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECTION 9: HOMEWORK                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 9. Homework</h2>
+
+      <div style="margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: #888; font-size: 14px; font-weight: 600;">Progress</span>
+          <span style="color: #888; font-size: 14px;" id="progressCount">0 / 0 complete</span>
+        </div>
+        <div style="background: #1a1a1a; border-radius: 8px; height: 8px; overflow: hidden;">
+          <div id="progressFill" style="background: #3B82F6; height: 100%; width: 0%; border-radius: 8px; transition: width 0.3s;"></div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="c1">
+          <label class="check-content" for="c1">
+            <strong>Signed up for Paper + connected the MCP</strong>
+            <span>paper.design → install MCP → /mcp shows connected. 5 min.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c2">
+          <label class="check-content" for="c2">
+            <strong>Re-ran today's live prompt on your own machine</strong>
+            <span>Same roofing hero. Same 3 iterations. Prove the workflow works for you.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c3">
+          <label class="check-content" for="c3">
+            <strong>Designed 1 landing page hero for a REAL client (or prospect)</strong>
+            <span>Not roofing. Your actual niche. Their real offer. Your real brand palette.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c4">
+          <label class="check-content" for="c4">
+            <strong>Exported the JSX and deployed the page to Vercel</strong>
+            <span>End-to-end: Paper → JSX → Vercel URL. This is the proof it works.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c5">
+          <label class="check-content" for="c5">
+            <strong>Sent the URL to the client / prospect</strong>
+            <span>The point of the class isn't the design. It's the CLOSE. Send it, get feedback.</span>
+          </label>
+        </li>
+        <li>
+          <input type="checkbox" id="c6">
+          <label class="check-content" for="c6">
+            <strong>Posted the URL + a screenshot in #wins</strong>
+            <span>Cohort accountability + inspiration for the students still stuck on Canva.</span>
+          </label>
+        </li>
+      </ul>
+
+      <div style="background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02)); border: 1px solid rgba(34,197,94,0.3); border-radius: 12px; padding: 20px; margin-top: 22px;">
+        <div style="color: #22c55e; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">🏆 The unlock</div>
+        <p style="color: #ccc; font-size: 0.92rem; line-height: 1.65; margin: 0;">Every client asks for landing pages, mockups, and creative variations. The agencies that can't deliver fast lose the deal to the ones that can. Paper + Claude turns you from "I need to find a designer" into "here's the mockup 10 min after our call." That speed IS the differentiator.</p>
+      </div>
+    </div>
+
+    <!-- TAGS -->
+    <div class="section">
+      <h2><span class="icon">🏷️</span> Tags</h2>
+      <div class="tags"><span>paper</span><span>design</span><span>claude-code</span><span>mcp</span><span>landing-pages</span><span>ad-creative</span><span>no-designer</span></div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="5.19-build-your-life-os.html" class="nav-link">← 5.19 Life OS</a>
+      <a href="../index.html" class="nav-link">All Lessons</a>
+      <a href="5.0-ai-operators-playbook.html" class="nav-link">5.0 The Playbook →</a>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ai-adv-5.20-paper-design-v1';
+    const cbs = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = cbs.length;
+    const pFill = document.getElementById('progressFill');
+    const pCount = document.getElementById('progressCount');
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    cbs.forEach(cb => { if (saved[cb.id]) cb.checked = true; });
+    function updateProgress() {
+      const n = document.querySelectorAll('.checklist input:checked').length;
+      pFill.style.width = Math.round((n/total)*100) + '%';
+      pCount.textContent = n + ' / ' + total + ' complete';
+      const s = {}; cbs.forEach(cb => s[cb.id] = cb.checked); localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+    }
+    cbs.forEach(cb => cb.addEventListener('change', updateProgress));
+    updateProgress();
+  </script>
+</body>
+</html>

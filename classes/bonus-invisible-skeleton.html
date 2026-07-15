@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonus: The Invisible Skeleton — Rip Winning Ads with AI — AI Advertiser by Brez Scales</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .prompt-box {
+      background: #0d1117;
+      border: 1px solid rgba(59,130,246,0.4);
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 0.86rem;
+      color: #c9d1d9;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      position: relative;
+      margin: 16px 0;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: #3B82F6;
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .copy-btn.copied { color: #22c55e; border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.1); }
+
+    .talk-box {
+      background: rgba(59,130,246,0.04);
+      border-left: 3px solid #3B82F6;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 22px;
+      margin: 18px 0;
+      color: #ccc;
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+    .talk-box em { color: #fff; font-style: normal; font-weight: 600; }
+
+    .ad-card {
+      background: #0f1218;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 22px 26px;
+      margin: 18px 0;
+    }
+    .ad-card .brand {
+      font-size: 0.75rem;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: #f59e0b;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .ad-line {
+      display: flex;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+      align-items: flex-start;
+    }
+    .ad-line:last-child { border-bottom: none; }
+    .ad-text {
+      flex: 1.2;
+      color: #e7e7e7;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      font-style: italic;
+    }
+    .ad-job {
+      flex: 1;
+      color: #60a5fa;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      padding-top: 3px;
+    }
+
+    .job-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 18px 0;
+    }
+    .job-pill {
+      background: #0d1117;
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .job-pill .num {
+      color: #3B82F6;
+      font-weight: 800;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+    .job-pill .name {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin: 4px 0 4px;
+    }
+    .job-pill .desc {
+      color: #888;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .tool-row {
+      display: grid;
+      grid-template-columns: 220px 1fr 110px;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 18px;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .tool-row .tool-name {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.98rem;
+    }
+    .tool-row .tool-desc {
+      color: #aaa;
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+    .tool-row .tool-price {
+      color: #22c55e;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-align: right;
+    }
+    .tool-row.hot {
+      border-color: rgba(245,158,11,0.4);
+      background: rgba(245,158,11,0.04);
+    }
+    .tool-row.hot .tool-name::after {
+      content: "★ THE ONE";
+      margin-left: 10px;
+      background: #f59e0b;
+      color: #0a0a0a;
+      font-size: 0.65rem;
+      padding: 3px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #0d0d0d;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .brand-row .brand-name {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .brand-row .brand-note {
+      color: #888;
+      font-size: 0.8rem;
+      flex: 1;
+      margin: 0 14px;
+    }
+    .brand-row a {
+      color: #3B82F6;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: rgba(59,130,246,0.08);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(59,130,246,0.2);
+      white-space: nowrap;
+    }
+    .brand-row a:hover { background: rgba(59,130,246,0.15); }
+
+    .step-card {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-bottom: 12px;
+    }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 50%;
+      color: #3B82F6;
+      font-weight: 800;
+      font-size: 0.82rem;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .step-head { display: flex; align-items: center; margin-bottom: 8px; }
+    .step-title { color: #fff; font-weight: 700; font-size: 1rem; }
+    .step-body { color: #aaa; font-size: 0.9rem; line-height: 1.65; padding-left: 38px; }
+
+    .warning-box {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      display: flex;
+      gap: 12px;
+    }
+    .warning-box .icon { font-size: 1.2rem; flex-shrink: 0; }
+    .warning-box .text { color: #d4a441; font-size: 0.9rem; line-height: 1.6; }
+
+    .highlight-var { color: #f59e0b; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Bonus SOP — Live Class Edition</div>
+      <h1><span>The Invisible Skeleton: Rip Winning Ads with AI</span></h1>
+      <div class="subtitle">
+        <span class="tag">Direct Response</span>
+        <span class="tag">Ad Creation</span>
+        <span class="tag">Reverse Engineering</span>
+        <span class="tag">~75 min</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      Every great ad on the internet is built on an invisible skeleton. Once you can see the skeleton, you can copy it legally, swap your product into it, and let AI write a brand new ad in any niche. This class teaches you to do that in 75 minutes. By the end you'll have a method, a prompt, a list of brands to study, and the exact tool the top direct response people on X use to spy on scaled ads.
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 1. THE BIG IDEA                          -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧠</span> 1. The Big Idea</h2>
+
+      <div class="talk-box">
+        ok so listen. everybody teaches you frameworks. PAS, AIDA, BAB, all that stuff. cool, those work. but here's the thing nobody tells you. <em>the pros don't think in frameworks. they think in jobs.</em>
+        <br><br>
+        every line in a winning ad has a job to do. one line stops the scroll. one line says "yes this is for you." one line tells you why what you've been doing is wrong. one line introduces the new way. and so on. the words change from ad to ad but the jobs don't.
+        <br><br>
+        if you only see the words you'll spend your life copying ads. if you see the jobs underneath the words, you can write a winning ad in any niche, in 5 minutes, with AI doing the typing for you.
+        <br><br>
+        that's what we're learning today. i call it the invisible skeleton.
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 2. THE 10 UNIVERSAL JOBS                 -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔧</span> 2. The 10 Jobs Every Great Ad Does</h2>
+
+      <div class="talk-box">
+        before we look at any ads, write these 10 jobs down. or screenshot them. these are the legos every winning ad is built from. some ads use 6, some use 10, some repeat 2 or 3 of them, but they all come from this list.
+      </div>
+
+      <div class="job-grid">
+        <div class="job-pill">
+          <div class="num">JOB 01</div>
+          <div class="name">Pattern Interrupt</div>
+          <div class="desc">stops the scroll. usually a contrarian statement, weird visual, or a "wait what" moment.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 02</div>
+          <div class="name">Audience ID</div>
+          <div class="desc">tells the right person "this is for you." geography, age, profession, situation.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 03</div>
+          <div class="name">Problem Statement</div>
+          <div class="desc">names the pain so they nod along. specific, recognized, daily.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 04</div>
+          <div class="name">Agitate</div>
+          <div class="desc">twists the knife. why this pain is worse than they think or growing fast.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 05</div>
+          <div class="name">Villain / Old Way</div>
+          <div class="desc">blames something external. "it's not your fault, it's X." big emotional unlock.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 06</div>
+          <div class="name">Mechanism / New Way</div>
+          <div class="desc">the unique angle. what's different about this. the reason it works when nothing else has.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 07</div>
+          <div class="name">Proof</div>
+          <div class="desc">reviews, numbers, press logos, before/after, doctors, years in business.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 08</div>
+          <div class="name">Benefit Stack</div>
+          <div class="desc">the 3 outcomes they actually care about. usually short and rhythmic.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 09</div>
+          <div class="name">Offer + Risk Reversal</div>
+          <div class="desc">price, bonus, guarantee, free trial. removes the "what if it doesn't work" fear.</div>
+        </div>
+        <div class="job-pill">
+          <div class="num">JOB 10</div>
+          <div class="name">Urgency + CTA</div>
+          <div class="desc">deadline, low stock, limited spots, plus the clear next step.</div>
+        </div>
+      </div>
+
+      <div class="talk-box">
+        when you read an ad now your brain should auto-tag each line. line 1 is a pattern interrupt. line 2 is audience ID. line 3 is problem statement. you'll see it everywhere once you know the list. that's the goal.
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 3. LIVE X-RAY: GLP-1 LOCAL               -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔬</span> 3. Live X-Ray #1 — GLP-1 / Weight Loss Clinic (Local)</h2>
+
+      <div class="talk-box">
+        let's start with the niche that's printing money on Meta in the US right now. weight loss clinics doing GLP-1, semaglutide, tirzepatide. you've seen these ads if you've been on instagram in the last 12 months. they all look the same because they all work the same way. let me show you the skeleton.
+      </div>
+
+      <div class="ad-card">
+        <div class="brand">Reference Ad — GLP-1 Med Clinic, US</div>
+
+        <div class="ad-line">
+          <div class="ad-text">"Houston women over 35, losing weight isn't about willpower."</div>
+          <div class="ad-job">Pattern Interrupt + Audience ID</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"It's about the hormone your doctor never tested for."</div>
+          <div class="ad-job">Villain / Old Way</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"At [Clinic], MDs prescribe semaglutide and run full hormone panels."</div>
+          <div class="ad-job">Mechanism / New Way</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"800+ patients, average 22 lbs lost in 90 days."</div>
+          <div class="ad-job">Proof</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"First consult plus labs is $49 this month, normally $299."</div>
+          <div class="ad-job">Offer</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"FDA-approved meds. Real MDs. No gimmicks."</div>
+          <div class="ad-job">Risk Reversal</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Only 12 spots left for May."</div>
+          <div class="ad-job">Urgency</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Tap below to book →"</div>
+          <div class="ad-job">CTA</div>
+        </div>
+      </div>
+
+      <div class="talk-box">
+        notice the structure. they didn't waste a line. every sentence does one job. and look at the order. interrupt first, audience second, villain third. that order is intentional because that's the order of the customer's brain when they're scrolling.
+        <br><br>
+        also notice what's missing. no big benefit stack, no agitate. why? because in this niche the audience is already in pain every day. you don't need to remind them they want to lose weight. you skip agitate and go straight to the new mechanism. that's a niche-specific call.
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 4. LIVE X-RAY: CRYO LOCAL                -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🧊</span> 4. Live X-Ray #2 — Cryo Practice / Wellness Clinic (Local)</h2>
+
+      <div class="talk-box">
+        cryo is a different game. people don't wake up wanting cryo. they wake up wanting less back pain or faster recovery. so the ad starts somewhere else and bridges into cryo as the answer. watch.
+      </div>
+
+      <div class="ad-card">
+        <div class="brand">Reference Ad — Cryo / Recovery Studio, US</div>
+
+        <div class="ad-line">
+          <div class="ad-text">"Stretching isn't fixing your back. You need to fix the inflammation."</div>
+          <div class="ad-job">Pattern Interrupt + Villain</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Austin people over 30 with chronic back, knee, or shoulder pain, this is for you."</div>
+          <div class="ad-job">Audience ID + Problem</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Three minutes in our cryo chamber drops your body temp 40 degrees and shuts off inflammation at the source."</div>
+          <div class="ad-job">Mechanism / New Way</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"NFL teams, UFC fighters, and 1,400+ Austin locals use it every week."</div>
+          <div class="ad-job">Proof</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"First session free. Bring a friend, theirs is free too."</div>
+          <div class="ad-job">Offer + Risk Reversal</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"This week only. We block 20 free sessions then we're done."</div>
+          <div class="ad-job">Urgency</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Book your free session in 30 seconds →"</div>
+          <div class="ad-job">CTA</div>
+        </div>
+      </div>
+
+      <div class="talk-box">
+        same skeleton, different tone. cryo lives or dies on the mechanism. that's why the line about 40 degrees and shutting off inflammation is the longest in the ad. when your audience doesn't want your service yet, the mechanism does the heavy lifting. it has to make them go "oh, that's actually clever."
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 5. LIVE X-RAY: ECOM                       -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🛒</span> 5. Live X-Ray #3 — Ecom Brand (Skincare Serum)</h2>
+
+      <div class="talk-box">
+        ecom is its own beast. these ads are 10 seconds long and the visual does half the work. but the script underneath is still the skeleton. just denser, more punchy, with the mechanism and offer doing 80 percent of the lift.
+      </div>
+
+      <div class="ad-card">
+        <div class="brand">Reference Ad — Anti-Aging Retinol Serum, DTC</div>
+
+        <div class="ad-line">
+          <div class="ad-text">"Stop using retinol at night. It's making your skin worse."</div>
+          <div class="ad-job">Pattern Interrupt + Villain</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"99% of retinols oxidize in 3 weeks. That's why your skin gets red and flaky."</div>
+          <div class="ad-job">Problem + Agitate</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Ours uses encapsulated retinaldehyde. 11x stronger, zero irritation."</div>
+          <div class="ad-job">Mechanism / New Way</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"24,000+ five-star reviews. Featured in Vogue and Allure."</div>
+          <div class="ad-job">Proof</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Smoother skin in 14 days. Fewer lines in 30. No peeling."</div>
+          <div class="ad-job">Benefit Stack</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"40% off plus free serum sample today."</div>
+          <div class="ad-job">Offer</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"60-day glow guarantee or full refund."</div>
+          <div class="ad-job">Risk Reversal</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Sold out 3 times this year. Restock just dropped."</div>
+          <div class="ad-job">Urgency</div>
+        </div>
+        <div class="ad-line">
+          <div class="ad-text">"Shop Now →"</div>
+          <div class="ad-job">CTA</div>
+        </div>
+      </div>
+
+      <div class="talk-box">
+        this is dense. 9 jobs in 8 lines. ecom doesn't have time to breathe. the visual is doing audience ID and pattern interrupt at the same time. so the script can skip ahead and start with the villain.
+        <br><br>
+        the takeaway. ecom skeletons are denser. local skeletons are slower and trust-heavy. info products and high ticket are even slower because they need a "big idea" up top. same legos, different stacks.
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 6. THE AI PROMPT                          -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 6. The Master Prompt — Skeleton to Ad with AI</h2>
+
+      <div class="talk-box">
+        here's where the magic happens. once you can read an ad and pull its skeleton, you can give that skeleton to AI and tell it "write me a new ad in my niche using the exact same job order." you don't copy the words. you copy the structure. that's not plagiarism, that's how every great copywriter has worked for 80 years.
+        <br><br>
+        copy this prompt. use it forever. it works for any niche.
+      </div>
+
+      <div class="prompt-box">You are a senior direct response copywriter. I'll give you a skeleton, which is a list of JOBS each line must perform. Write a Facebook ad for my product following this exact skeleton.
+
+Rules:
+- Don't copy any words from any example
+- Replicate only the JOBS, in the same order
+- Match the rhythm: short, punchy, conversational
+- One sentence per line, max 12 words per line
+- Total ad length under 90 words
+- No corporate language, no em dashes, no triple structures
+- Write like a human texts a friend
+
+PRODUCT: <span class="highlight-var">[your product or service]</span>
+AUDIENCE: <span class="highlight-var">[who buys this, age, situation]</span>
+PAIN: <span class="highlight-var">[what's keeping them up at night]</span>
+OFFER: <span class="highlight-var">[price, bonus, guarantee]</span>
+TONE: <span class="highlight-var">[friendly / urgent / authoritative]</span>
+
+SKELETON:
+1. Pattern Interrupt
+2. Audience ID
+3. Villain / Old Way
+4. Mechanism / New Way
+5. Proof
+6. Offer
+7. Risk Reversal
+8. Urgency
+9. CTA
+
+Now write 5 different ads following this exact skeleton. Number each one. After each ad, in one short sentence, explain what's different about that variation.<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+      </div>
+
+      <div class="talk-box">
+        you can run this in claude, chatgpt, or gemini. claude tends to write the most natural lines. chatgpt is faster. either works. the magic isn't the AI, it's the skeleton you're feeding it.
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 7. WHERE TO FIND WINNING ADS             -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔍</span> 7. Where to Find Winning Ads to Rip</h2>
+
+      <div class="talk-box">
+        ok so the method works only if you're feeding it skeletons of <em>actual winning ads</em>, not random ads. random ads aren't proven. winning ads have been spending money on Meta for weeks or months, which means the brand is making more money than they're spending, which means the ad works. those are the ones we want to study.
+        <br><br>
+        there are two ways to hunt them. free way and pro way.
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:24px;margin-bottom:12px;">7a. The Free Way — Meta Ad Library</h3>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">1</span><span class="step-title">Open the Library</span></div>
+        <div class="step-body">go to <a href="https://www.facebook.com/ads/library" target="_blank" style="color:#3B82F6;">facebook.com/ads/library</a>. set country to United States. set ad category depending on niche. for med spas, GLP-1, and cryo set it to "Issues, Elections or Politics" off and just leave it as "All ads."</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">2</span><span class="step-title">Search the brand name</span></div>
+        <div class="step-body">type the brand name in the search bar. you'll see every active ad they're running. that's the goldmine.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">3</span><span class="step-title">Filter for active ads</span></div>
+        <div class="step-body">use the "Active" filter only. you don't care about ads they killed. you care about what's running right now.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">4</span><span class="step-title">Check the start date</span></div>
+        <div class="step-body">for each ad, look at the date it started running. anything running 30+ days = working. anything running 60+ days = scaling. anything running 90+ days = a control they're not gonna change anytime soon. those are the ones to copy.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">5</span><span class="step-title">Copy the headline and body</span></div>
+        <div class="step-body">paste the headline and body text into a doc. now apply the 10-job framework. tag each line. boom, you've got your skeleton.</div>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:32px;margin-bottom:12px;">7b. The Pro Way — Spy Tools</h3>
+
+      <div class="talk-box">
+        meta ad library is free but slow. you have to know the brand name to search. you can't sort by spend, you can't see hooks across the whole industry, you can't save anything. that's where spy tools come in. let me show you the ones the top direct response people actually use, ranked.
+      </div>
+
+      <div class="tool-row hot">
+        <div class="tool-name">Foreplay.co</div>
+        <div class="tool-desc">the one every DR person on twitter uses. the "Spyder" feature auto-tracks any brand you follow and pulls every ad they run. has a curated library of winning ads tagged by hook type, format, and angle. used by Andrew Faris, Barry Hott, Nick Shackelford, and basically every 8-figure ecom brand on Meta. start here.</div>
+        <div class="tool-price">$49–99/mo</div>
+      </div>
+
+      <div class="tool-row">
+        <div class="tool-name">Atria</div>
+        <div class="tool-desc">newer, AI-powered. scores ads, surfaces winning hooks automatically, generates new scripts based on patterns. great if you're already running $5K+/mo in ads and want the AI to do the analysis for you.</div>
+        <div class="tool-price">~$99/mo</div>
+      </div>
+
+      <div class="tool-row">
+        <div class="tool-name">Magic Brief</div>
+        <div class="tool-desc">creative brief tool with built-in ad library. popular with UGC agencies. good if you're producing a lot of video.</div>
+        <div class="tool-price">~$99/mo</div>
+      </div>
+
+      <div class="tool-row">
+        <div class="tool-name">AdSpy</div>
+        <div class="tool-desc">the OG. 155+ million ads in 88 languages. massive database, advanced filters, can search by call-to-action. powerful but the UI feels old.</div>
+        <div class="tool-price">$149/mo</div>
+      </div>
+
+      <div class="tool-row">
+        <div class="tool-name">Minea</div>
+        <div class="tool-desc">ecom-focused spy. drop a competitor URL and see all their ads, plus the products they're testing. great for dropshippers.</div>
+        <div class="tool-price">$49–99/mo</div>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">🎯</div>
+        <div class="text"><strong>If you only buy one, buy Foreplay.</strong> Every direct response person worth following on X uses it. The Spyder feature alone is worth the price because it builds your swipe file automatically while you sleep. Start with the $49 plan.</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 8. BRANDS TO STUDY                       -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📚</span> 8. The Brands to Study (Bookmark This)</h2>
+
+      <div class="talk-box">
+        these are the brands to study right now. they spend big on Meta, they've been at it for years, and their ads are dialed. open meta ad library, search each one, and start tagging skeletons. by the end of the week you'll have 30+ proven skeletons in your swipe file.
+      </div>
+
+      <h3 style="color:#fff;font-size:1.05rem;margin-top:22px;margin-bottom:10px;">💉 GLP-1 / Weight Loss Telehealth</h3>
+
+      <div class="brand-row">
+        <span class="brand-name">Hims &amp; Hers</span>
+        <span class="brand-note">biggest GLP-1 advertiser. studies the long-form curiosity hook angle.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=hims" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Ro (Ro Body)</span>
+        <span class="brand-note">premium positioning, clean creative, MD-led trust angle.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=ro%20body" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Henry Meds</span>
+        <span class="brand-note">aggressive offers, low-friction signup. masters of risk reversal.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=henry%20meds" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Mochi Health</span>
+        <span class="brand-note">female-targeted, beauty-adjacent positioning. soft sell.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=mochi%20health" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Found</span>
+        <span class="brand-note">"personalized weight loss" angle, hormone testing positioning.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=found%20health" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">LifeMD</span>
+        <span class="brand-note">scaled telehealth brand. strong UGC + testimonial library.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=lifemd" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Calibrate</span>
+        <span class="brand-note">premium positioning, science-heavy mechanism, slower funnel.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=calibrate" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Sequence (WeightWatchers)</span>
+        <span class="brand-note">brand authority + GLP-1 angle. lifestyle-led creative.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=sequence" target="_blank">Ad Library →</a>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.05rem;margin-top:30px;margin-bottom:10px;">🧊 Cryo / Wellness / Recovery</h3>
+
+      <div class="brand-row">
+        <span class="brand-name">Restore Hyper Wellness</span>
+        <span class="brand-name"></span>
+        <span class="brand-note">biggest US chain, IV + cryo + red light. masters of "menu" ads.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=restore%20hyper%20wellness" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">iCRYO</span>
+        <span class="brand-note">franchise model, local-targeted ads city by city. study geo-hooks.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=icryo" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Perspire Sauna Studio</span>
+        <span class="brand-note">infrared sauna chain, female wellness positioning.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=perspire%20sauna" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">The Cold Plunge</span>
+        <span class="brand-note">cold plunge tubs + studios. studies the "biohacking" angle.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=cold%20plunge" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">CryoUSA</span>
+        <span class="brand-note">old-school cryo, but their offers + local hooks are dialed.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=cryousa" target="_blank">Ad Library →</a>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.05rem;margin-top:30px;margin-bottom:10px;">🛒 Ecom DR Brands (the ones to copy forever)</h3>
+
+      <div class="brand-row">
+        <span class="brand-name">True Classic</span>
+        <span class="brand-note">$300M apparel brand built on Meta. UGC king. study their hook + offer stacking.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=true%20classic" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Hexclad</span>
+        <span class="brand-note">cookware. masters of the "old way vs new way" mechanism reveal.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=hexclad" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Olipop</span>
+        <span class="brand-note">soda alternative. study how they reframe a category in 5 seconds.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=olipop" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">AG1 (Athletic Greens)</span>
+        <span class="brand-note">supplement giant. textbook authority + benefit stack scripts.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=ag1" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Magic Spoon</span>
+        <span class="brand-note">cereal. brilliant villain framing of "kids cereal but for adults."</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=magic%20spoon" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Manscaped</span>
+        <span class="brand-note">grooming. masters of humor as pattern interrupt.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=manscaped" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Liquid Death</span>
+        <span class="brand-note">water company that prints money on Meta. brand-led but with DR mechanics underneath.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=liquid%20death" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Ridge Wallet</span>
+        <span class="brand-note">DTC OG. study their offer stack and risk reversal language.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=ridge%20wallet" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Lume Deodorant</span>
+        <span class="brand-note">"problem you didn't know you had" angle. masters of agitate.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=lume" target="_blank">Ad Library →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">Tushy</span>
+        <span class="brand-note">bidet. masters of taking a boring product and making it scroll-stopping.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=tushy" target="_blank">Ad Library →</a>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 9. KEYWORD HUNTING                       -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">🔑</span> 9. Keyword Hunting (Find Brands You Don't Know Yet)</h2>
+
+      <div class="talk-box">
+        the brand list above is great but it's only the brands i already know. the real goldmine is the brands you haven't heard of yet. the way you find them is by searching keywords, not brand names. meta ad library lets you type any keyword and it pulls every active US ad with that keyword in the body text. that means you can find every advertiser running ads about, say, "compounded semaglutide" in one click.
+        <br><br>
+        this also tells you how scaled a niche is. if a keyword pulls 5,000 active ads, that niche is hot and competitive. if it pulls 80, it's small or early. that's free intel.
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:24px;margin-bottom:10px;">9a. How Meta Ad Library keyword search works</h3>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">1</span><span class="step-title">Set country to United States, ad category to "All ads"</span></div>
+        <div class="step-body">otherwise you'll see ads from brazil and india too. filter early, save yourself time.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">2</span><span class="step-title">Search by keyword, not by brand</span></div>
+        <div class="step-body">switch the toggle from "Advertiser" to "Ad Content." now you're searching ad copy, not page names.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">3</span><span class="step-title">Use specific niche language</span></div>
+        <div class="step-body">"weight loss" returns 50,000+ ads, useless. "tirzepatide" returns 800-ish, all GLP-1 brands. specific beats broad every time.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">4</span><span class="step-title">Use quotes for exact phrases</span></div>
+        <div class="step-body">"stop using retinol" finds every ad opening with that exact hook. great way to find people copying winning hooks (and steal them yourself).</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">5</span><span class="step-title">Count the result number</span></div>
+        <div class="step-body">meta shows how many ads match your keyword. that's your scale signal. 5,000+ = hot niche. 500-2,000 = healthy. under 200 = small or early.</div>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:32px;margin-bottom:10px;">9b. GLP-1 / Weight Loss Keywords</h3>
+
+      <div class="brand-row">
+        <span class="brand-name">"semaglutide"</span>
+        <span class="brand-note">the drug name itself. catches every brand selling it.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=semaglutide&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"tirzepatide"</span>
+        <span class="brand-note">newer drug, newer brands. less crowded than semaglutide.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=tirzepatide&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"compounded GLP-1"</span>
+        <span class="brand-note">finds telehealth brands selling cheaper compounded versions.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=compounded%20GLP-1&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"weight loss injection"</span>
+        <span class="brand-note">consumer-facing language. catches different ad style than the drug-name searches.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=weight%20loss%20injection&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"ozempic alternative"</span>
+        <span class="brand-note">positioning keyword. brands using "we're not ozempic but..." angle.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=ozempic%20alternative&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"telehealth weight loss"</span>
+        <span class="brand-note">finds the entire telehealth model, not just GLP-1.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=telehealth%20weight%20loss&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"stubborn belly fat"</span>
+        <span class="brand-note">classic DR pain hook. used by GLP-1 and supplement brands.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=stubborn%20belly%20fat&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"hormone weight loss"</span>
+        <span class="brand-note">female-targeted angle. menopause and metabolism positioning.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=hormone%20weight%20loss&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:32px;margin-bottom:10px;">9c. Cryo / Wellness / Recovery Keywords</h3>
+
+      <div class="brand-row">
+        <span class="brand-name">"cryotherapy"</span>
+        <span class="brand-note">core term. catches both local clinics and at-home equipment.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=cryotherapy&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"cold plunge"</span>
+        <span class="brand-note">huge in 2026. plunge tub brands plus local studios.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=cold%20plunge&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"infrared sauna"</span>
+        <span class="brand-note">crossover wellness/beauty. female-skewed audiences.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=infrared%20sauna&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"red light therapy"</span>
+        <span class="brand-note">at-home devices and clinic combos. premium price points.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=red%20light%20therapy&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"recovery studio"</span>
+        <span class="brand-note">local-only positioning. catches multi-service wellness chains.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=recovery%20studio&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"chronic inflammation"</span>
+        <span class="brand-note">pain-based hook. catches cryo, supplements, biohacking ads.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=chronic%20inflammation&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"biohacking"</span>
+        <span class="brand-note">wellness category umbrella. catches premium DTC plus clinics.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=biohacking&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"first session free"</span>
+        <span class="brand-note">offer-based search. finds local wellness offers with tripwire structure.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=first%20session%20free&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:32px;margin-bottom:10px;">9d. Ecom Keywords by Sub-Niche</h3>
+
+      <div class="brand-row">
+        <span class="brand-name">"retinol serum"</span>
+        <span class="brand-note">skincare, anti-aging. one of the most ad-saturated niches.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=retinol%20serum&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"peptide serum"</span>
+        <span class="brand-note">newer skincare angle, premium positioning, less competitive.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=peptide%20serum&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"gut health"</span>
+        <span class="brand-note">supplements category. probiotic and digestion brands.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=gut%20health&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"bloating"</span>
+        <span class="brand-note">pain hook for supplements. used by gut, probiotic, hormone brands.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=bloating&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"berberine"</span>
+        <span class="brand-note">"natural ozempic" play. supplement brands riding GLP-1 wave.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=berberine&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"non toxic cookware"</span>
+        <span class="brand-note">home category, premium positioning. heavy use of "old way vs new way."</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=non%20toxic%20cookware&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"premium tee"</span>
+        <span class="brand-note">apparel category. true classic style ads, tons of UGC variations.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=premium%20tee&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"as seen on shark tank"</span>
+        <span class="brand-note">authority/proof keyword. finds DR brands using the press logo angle.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=as%20seen%20on%20shark%20tank&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:32px;margin-bottom:10px;">9e. Hook-Based Keywords (find ads using winning openers)</h3>
+
+      <div class="talk-box">
+        these aren't niche keywords, these are hook keywords. searching them returns ads from any niche that opens with one of these proven patterns. great way to study hooks across categories.
+      </div>
+
+      <div class="brand-row">
+        <span class="brand-name">"stop using"</span>
+        <span class="brand-note">classic villain pattern interrupt. "stop using X, it's making you Y."</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=%22stop%20using%22&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"the truth about"</span>
+        <span class="brand-note">curiosity gap opener. tons of supplement and skincare ads use this.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=%22the%20truth%20about%22&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"not your fault"</span>
+        <span class="brand-note">reframe + villain combo. shifts blame to something external.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=%22not%20your%20fault%22&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"why your X isn't"</span>
+        <span class="brand-note">pattern of blame: why your skincare isn't working, why your diet isn't working.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=%22why%20your%22&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"99% of"</span>
+        <span class="brand-note">authority + villain. "99% of products use the wrong X."</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=%2299%25%20of%22&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+      <div class="brand-row">
+        <span class="brand-name">"doctor approved"</span>
+        <span class="brand-note">authority hook. heavy in supplements, GLP-1, skincare.</span>
+        <a href="https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=US&q=%22doctor%20approved%22&search_type=keyword_unordered" target="_blank">Search →</a>
+      </div>
+
+      <h3 style="color:#fff;font-size:1.1rem;margin-top:32px;margin-bottom:10px;">9f. The Scaled-Ad Filter Workflow</h3>
+
+      <div class="talk-box">
+        once you've got a list of ads from a keyword search, you don't read all of them. you filter for the ones that are clearly working. here's the order of operations.
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">1</span><span class="step-title">Sort by start date, oldest first</span></div>
+        <div class="step-body">old + still active = scaled. anything still running 60+ days after launch is making the brand money. start there.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">2</span><span class="step-title">Look for repeat creative</span></div>
+        <div class="step-body">if a brand has the same hook in 5+ different videos or formats, that hook is their winner. they're testing variations of the same skeleton.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">3</span><span class="step-title">Click "see ad details"</span></div>
+        <div class="step-body">expands the ad. shows you all platforms it runs on (Facebook, Instagram, Reels). multiplatform = bigger budget.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">4</span><span class="step-title">Check the page library</span></div>
+        <div class="step-body">click the brand name → "see all ads from this advertiser." brands with 50+ active ads are scaling. brands with 5 are testing.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">5</span><span class="step-title">Save the winners to a swipe file</span></div>
+        <div class="step-body">screenshot the ad + paste the body text into a notion doc, or save the URL in foreplay if you have it. you're building inventory of proven skeletons.</div>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">🎯</div>
+        <div class="text"><strong>Rule of thumb:</strong> if a keyword returns 200+ active ads <em>and</em> the same 5-10 brands keep showing up, that's a hot scaled niche. those 5-10 brands are your skeleton library. study them, X-ray them, replicate the structure.</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════ -->
+    <!-- 10. HOMEWORK                              -->
+    <!-- ════════════════════════════════════════ -->
+    <div class="section">
+      <h2><span class="icon">📝</span> 10. Homework</h2>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">A</span><span class="step-title">Pick 5 brands from section 8</span></div>
+        <div class="step-body">choose brands close to your niche or your client's niche. open meta ad library, find one ad per brand that's been running 60+ days.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">B</span><span class="step-title">Tag every line with a job</span></div>
+        <div class="step-body">use the 10-job list. paste the ad into a doc, write the job next to each line. you should now have 5 skeletons.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">C</span><span class="step-title">Find the common skeleton</span></div>
+        <div class="step-body">across all 5 ads, what jobs show up the most? in what order? that's the master skeleton for that vertical. write it down.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-head"><span class="step-num">D</span><span class="step-title">Feed the master skeleton into the AI prompt</span></div>
+        <div class="step-body">use your client's product or your own. generate 5 ads. pick the strongest 2. that's your launch creative.</div>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">⚡</div>
+        <div class="text"><strong>The shift:</strong> after one week of doing this, you stop reading ads as words. you read them as skeletons. that's the single biggest unlock in direct response. once it clicks, you never go back.</div>
+      </div>
+    </div>
+
+    <!-- BACK TO COURSE -->
+    <div class="section" style="text-align:center;margin-top:40px;">
+      <a href="../index.html" style="color:#3B82F6;text-decoration:none;font-weight:600;">← Back to all classes</a>
+    </div>
+  </div>
+
+  <script>
+    function copyPrompt(btn) {
+      const box = btn.parentElement;
+      const text = box.innerText.replace(/Copy$/, '').trim();
+      navigator.clipboard.writeText(text);
+      btn.classList.add('copied');
+      btn.innerText = 'Copied';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerText = 'Copy';
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

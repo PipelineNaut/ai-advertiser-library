@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonus SOP: Build a Niche Landing Page in 10 Minutes with Claude — AI Advertiser by Brez Scales</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .prompt-box {
+      background: #0d1117;
+      border: 1px solid rgba(59,130,246,0.4);
+      border-radius: 10px;
+      padding: 20px 24px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #c9d1d9;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      position: relative;
+      margin: 16px 0;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: #3B82F6;
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(59,130,246,0.25); }
+    .copy-btn.copied { color: #22c55e; border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.1); }
+    .step-card {
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+    }
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: rgba(59,130,246,0.15);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 50%;
+      color: #3B82F6;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .step-title {
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .step-body {
+      color: #aaa;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      padding-left: 44px;
+    }
+    .niche-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .niche-table th { background: rgba(59,130,246,0.1); color: #3B82F6; padding: 10px 14px; text-align: left; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid rgba(59,130,246,0.2); }
+    .niche-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); color: #ccc; font-size: 0.9rem; vertical-align: top; }
+    .niche-table tr:last-child td { border-bottom: none; }
+    .niche-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .highlight-var { color: #f59e0b; font-weight: 600; }
+    .result-preview {
+      background: #0d1117;
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 16px 0;
+    }
+    .result-preview .label { color: #22c55e; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .result-preview .content { color: #ccc; font-size: 0.9rem; line-height: 1.6; }
+    .warning-box {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+    }
+    .warning-box .icon { font-size: 1.2rem; flex-shrink: 0; }
+    .warning-box .text { color: #d4a441; font-size: 0.9rem; line-height: 1.6; }
+    .deploy-step {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .deploy-step:last-child { border-bottom: none; }
+    .deploy-icon { font-size: 1.4rem; flex-shrink: 0; width: 32px; text-align: center; }
+    .deploy-content h4 { color: #fff; font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .deploy-content p { color: #888; font-size: 0.88rem; line-height: 1.5; margin: 0; }
+    .deploy-content code { background: rgba(59,130,246,0.1); color: #7dd3fc; padding: 2px 7px; border-radius: 4px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <div class="class-number">Bonus SOP — Live Class Edition</div>
+      <h1><span>Build a Niche Landing Page in 10 Minutes with Claude</span></h1>
+      <div class="subtitle">
+        <span class="tag">Outreach</span>
+        <span class="tag">Authority</span>
+        <span class="tag">~10 min to build</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      You send 50 outreach messages. Someone replies: "Sounds interesting — send me more info." They Google you. What do they find?<br><br>
+      If the answer is nothing — or some generic page that isn't about <em>their</em> industry — you just lost the deal. This SOP teaches you to build a fully customized, prospect-specific landing page in under 10 minutes using Claude + Vercel. One prompt. One deploy. Done.
+    </div>
+
+    <!-- WHY -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 1. Why Niche-Specific Pages Win</h2>
+
+      <p style="color:#ccc;line-height:1.7;margin-bottom:18px;">
+        When a plumber gets your outreach and looks you up, they want to see that you work with plumbers. Not "local businesses." Not "service companies." <strong>Plumbers.</strong>
+      </p>
+
+      <p style="color:#ccc;line-height:1.7;margin-bottom:18px;">
+        A niche-specific landing page does 3 things instantly:
+      </p>
+
+      <div style="display:grid;gap:10px;margin-bottom:20px;">
+        <div style="background:#111;border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;">
+          <span style="font-size:1.3rem;">✅</span>
+          <div>
+            <strong style="color:#fff;display:block;margin-bottom:4px;">Signals expertise</strong>
+            <span style="color:#888;font-size:0.88rem;">You understand their industry, their language, their problems</span>
+          </div>
+        </div>
+        <div style="background:#111;border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;">
+          <span style="font-size:1.3rem;">✅</span>
+          <div>
+            <strong style="color:#fff;display:block;margin-bottom:4px;">Eliminates "is this legit?" doubt</strong>
+            <span style="color:#888;font-size:0.88rem;">Professional site = real business. No site = spam risk</span>
+          </div>
+        </div>
+        <div style="background:#111;border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;">
+          <span style="font-size:1.3rem;">✅</span>
+          <div>
+            <strong style="color:#fff;display:block;margin-bottom:4px;">Pre-sells the call</strong>
+            <span style="color:#888;font-size:0.88rem;">When they book, they're already 70% sold — the page did the work</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">⚡</div>
+        <div class="text"><strong>The rule:</strong> You don't need one generic agency site. You need a new page for each niche you're targeting. One for plumbers. One for dentists. One for real estate agents. Claude builds each one in minutes.</div>
+      </div>
+    </div>
+
+    <!-- WHAT YOU NEED -->
+    <div class="section">
+      <h2><span class="icon">🛠</span> 2. What You Need</h2>
+      <div style="display:grid;gap:10px;">
+        <div class="deploy-step">
+          <div class="deploy-icon">🤖</div>
+          <div class="deploy-content">
+            <h4>Claude.ai account</h4>
+            <p>Free tier works. Pro is faster. Go to <code>claude.ai</code></p>
+          </div>
+        </div>
+        <div class="deploy-step">
+          <div class="deploy-icon">🚀</div>
+          <div class="deploy-content">
+            <h4>Vercel account (free)</h4>
+            <p>Go to <code>vercel.com</code> → Sign up with GitHub. Takes 2 minutes.</p>
+          </div>
+        </div>
+        <div class="deploy-step">
+          <div class="deploy-icon">💻</div>
+          <div class="deploy-content">
+            <h4>GitHub account (free)</h4>
+            <p>If you don't have one: <code>github.com</code> → Sign up. Vercel deploys from GitHub.</p>
+          </div>
+        </div>
+        <div class="deploy-step">
+          <div class="deploy-icon">📋</div>
+          <div class="deploy-content">
+            <h4>Your prospect's info</h4>
+            <p>Business name, niche, city. That's it. You'll fill this into the prompt below.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE NICHE VARIABLES -->
+    <div class="section">
+      <h2><span class="icon">📊</span> 3. Niche Variables Table</h2>
+      <p style="color:#ccc;margin-bottom:16px;font-size:0.9rem;">Before building, know your niche's specific pain points. This table gives you the copy angles per niche — plug them into the prompt.</p>
+
+      <table class="niche-table">
+        <thead>
+          <tr>
+            <th>Niche</th>
+            <th>Their #1 Pain</th>
+            <th>Their Dream Outcome</th>
+            <th>Proof Point to Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:#fff;">🔧 Plumber</strong></td>
+            <td>Seasonal slow months, depending on word-of-mouth</td>
+            <td>Booked solid 52 weeks/year</td>
+            <td>Avg # of booked jobs/mo from ads</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">🦷 Dentist</strong></td>
+            <td>Empty appointment slots, high no-show rate</td>
+            <td>Full schedule, higher-value patients (implants, Invisalign)</td>
+            <td>New patient cost per acquisition</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">🏠 Real Estate Agent</strong></td>
+            <td>Zillow leads are expensive and low quality</td>
+            <td>Consistent stream of motivated buyers/sellers</td>
+            <td>Cost per qualified lead</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">💆 Med Spa</strong></td>
+            <td>Hard to stand out, promotions kill margins</td>
+            <td>Fully booked high-ticket services (Botox, laser)</td>
+            <td>Booking cost + repeat client rate</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">🏋️ Gym / Fitness</strong></td>
+            <td>High churn, competing with big chains on price</td>
+            <td>Full membership, low churn, loyal community</td>
+            <td>New member acquisition cost</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">🏗️ Home Services (HVAC, roofing, etc.)</strong></td>
+            <td>Job boards are expensive, seasonality kills cash flow</td>
+            <td>Consistent inbound leads year-round</td>
+            <td>Cost per estimate booked</td>
+          </tr>
+          <tr>
+            <td><strong style="color:#fff;">🛍️ Ecommerce</strong></td>
+            <td>Rising ad costs eating margins, iOS killing attribution</td>
+            <td>Profitable ROAS with predictable CAC</td>
+            <td>ROAS achieved for similar stores</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- THE MASTER PROMPT -->
+    <div class="section">
+      <h2><span class="icon">⚡</span> 4. The Master Claude Prompt</h2>
+
+      <p style="color:#ccc;margin-bottom:8px;font-size:0.9rem;">Copy this entire prompt. Replace everything in <span class="highlight-var">[BRACKETS]</span> with your prospect's details. Paste into Claude. That's it.</p>
+
+      <div class="prompt-box" id="masterPrompt">Build me a single-page HTML/CSS landing page for my AI advertising agency. I'm targeting <span class="highlight-var">[NICHE — e.g. "plumbing businesses"]</span> in <span class="highlight-var">[CITY/REGION]</span>.
+
+The prospect I'm reaching is: <span class="highlight-var">[BUSINESS NAME]</span>
+
+The page should:
+
+1. HEADLINE: Lead with their specific pain point, e.g. "Are You Still Relying on Word-of-Mouth to Get [Niche] Jobs?" — then hit the dream outcome in the subheadline
+
+2. SECTION — What We Do: Explain that we run AI-powered Meta ads specifically for [niche] businesses. Use their industry language. Mention the AI Arbitrage System as the mechanism (AI builds creatives, writes copy, optimizes daily — no guessing).
+
+3. SECTION — Results We Get: 2-3 bullet points with specific outcomes a [niche] business would care about (cost per lead, booked appointments, ROAS). Use realistic ranges, not fake specifics.
+
+4. SECTION — How It Works: 3-step process
+   - Step 1: Discovery call (we learn your business)
+   - Step 2: We build & launch AI-powered campaigns in 7 days
+   - Step 3: Ongoing optimization — we only win when you win
+
+5. SECTION — About Us: 1-2 sentences. "We're a performance marketing agency that works exclusively with [niche] businesses. We use AI to do what traditional agencies charge $5K/month for — at a fraction of the cost."
+
+6. CTA: Big button — "Book a Free Strategy Call" — links to <span class="highlight-var">[YOUR CALENDLY LINK]</span>
+
+Design rules:
+- Dark background (#0A0A0A)
+- White text, blue accent (#3B82F6)
+- Clean, minimal, premium feel
+- Mobile responsive
+- No images (text only — clean and fast-loading)
+- Single HTML file with inline CSS (no external dependencies)
+
+Output ONLY the complete HTML file. Nothing else. No explanation. Start with &lt;!DOCTYPE html&gt;
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+      </div>
+
+      <div class="result-preview">
+        <div class="label">✅ What Claude will output</div>
+        <div class="content">A complete, deployable HTML file. Dark background, blue accents, mobile-responsive. All copy is niche-specific and uses the prospect's business context. Ready to deploy in 60 seconds.</div>
+      </div>
+    </div>
+
+    <!-- PERSONALIZATION LAYER -->
+    <div class="section">
+      <h2><span class="icon">🎯</span> 5. Personalize with the Prospect's Name</h2>
+
+      <p style="color:#ccc;margin-bottom:16px;font-size:0.9rem;">Once Claude gives you the HTML, add one extra prompt to personalize it with the exact prospect's name:</p>
+
+      <div class="prompt-box" id="personalizePrompt">Take this HTML and add the prospect's business name in two places:
+1. In the hero headline: add "[BUSINESS NAME]," at the start — e.g. "Mike's Plumbing, Are You Still..."
+2. In the About section: "We've specifically reviewed your business and we know we can help."
+
+Also add this line near the CTA: "We only work with one [niche] business per city — currently accepting one new client in [city]."
+
+Return the complete updated HTML file.
+
+[PASTE YOUR HTML HERE]
+<button class="copy-btn" onclick="copyPrompt2(this)">Copy</button>
+      </div>
+
+      <div class="warning-box">
+        <div class="icon">💡</div>
+        <div class="text"><strong>Pro tip:</strong> The "one client per city" line creates scarcity. Even if it's not technically true yet, you should only be running one client per niche per city anyway — so it's honest and powerful.</div>
+      </div>
+    </div>
+
+    <!-- DEPLOY TO VERCEL -->
+    <div class="section">
+      <h2><span class="icon">🚀</span> 6. Deploy to Vercel in 60 Seconds</h2>
+
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <div class="step-title">Save the HTML file</div>
+        </div>
+        <div class="step-body">Save Claude's output as <code style="background:rgba(59,130,246,0.1);color:#7dd3fc;padding:2px 6px;border-radius:4px;">index.html</code> on your computer</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <div class="step-title">Create a GitHub repo</div>
+        </div>
+        <div class="step-body">Go to <code style="background:rgba(59,130,246,0.1);color:#7dd3fc;padding:2px 6px;border-radius:4px;">github.com/new</code> → Name it something like <code style="background:rgba(59,130,246,0.1);color:#7dd3fc;padding:2px 6px;border-radius:4px;">plumbing-ads</code> → Upload your index.html → Commit</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <div class="step-title">Deploy on Vercel</div>
+        </div>
+        <div class="step-body">Go to <code style="background:rgba(59,130,246,0.1);color:#7dd3fc;padding:2px 6px;border-radius:4px;">vercel.com</code> → New Project → Import your GitHub repo → Deploy. Takes 30 seconds. You get a live URL immediately: <code style="background:rgba(59,130,246,0.1);color:#7dd3fc;padding:2px 6px;border-radius:4px;">yourproject.vercel.app</code></div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">4</div>
+          <div class="step-title">Send it in your outreach</div>
+        </div>
+        <div class="step-body">When a prospect asks for more info, send: <em style="color:#ccc;">"Here's our page specifically for [niche] businesses: [your vercel URL]"</em></div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number">5</div>
+          <div class="step-title">(Optional) Connect a custom domain</div>
+        </div>
+        <div class="step-body">Buy a domain like <code style="background:rgba(59,130,246,0.1);color:#7dd3fc;padding:2px 6px;border-radius:4px;">plumbingadsagency.com</code> ($12/year on Namecheap). Connect it in Vercel settings → Domain tab. Now it looks like a real business, not a test project.</div>
+      </div>
+    </div>
+
+    <!-- SCALE THIS -->
+    <div class="section">
+      <h2><span class="icon">📈</span> 7. Scale: Build One Page Per Niche</h2>
+
+      <p style="color:#ccc;margin-bottom:16px;font-size:0.9rem;">The system: one Claude prompt per niche, one Vercel deploy per niche. Total time: 10 minutes per page.</p>
+
+      <table class="niche-table">
+        <thead>
+          <tr>
+            <th>Page</th>
+            <th>URL</th>
+            <th>Time to Build</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plumbing ads</td>
+            <td><code style="color:#7dd3fc;font-size:0.82rem;">plumbing-ads.vercel.app</code></td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td>Dental ads</td>
+            <td><code style="color:#7dd3fc;font-size:0.82rem;">dental-ads.vercel.app</code></td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td>Real estate ads</td>
+            <td><code style="color:#7dd3fc;font-size:0.82rem;">realestate-ads.vercel.app</code></td>
+            <td>10 min</td>
+          </tr>
+          <tr>
+            <td>Med spa ads</td>
+            <td><code style="color:#7dd3fc;font-size:0.82rem;">medspa-ads.vercel.app</code></td>
+            <td>10 min</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warning-box">
+        <div class="icon">🔑</div>
+        <div class="text"><strong>The unlock:</strong> When you have these pages ready BEFORE you start outreach, your conversion rate on replied messages doubles. Instead of scrambling to look legit after someone responds, you're already legit.</div>
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="section">
+      <h2><span class="icon">✅</span> 8. Action Checklist</h2>
+      <div class="onboarding-checklist">
+        <div class="onboarding-header">
+          <h3>Complete this after the live class</h3>
+        </div>
+        <div class="onboarding-body">
+          <div class="phase-label">TODAY</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c1">
+              <label class="check-content" for="c1">
+                <strong>Pick your niche</strong>
+                <span>Choose ONE niche to start: plumbing, dental, real estate, med spa, or fitness</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c2">
+              <label class="check-content" for="c2">
+                <strong>Create GitHub + Vercel accounts</strong>
+                <span>Both are free. Takes 5 minutes. Do it now.</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c3">
+              <label class="check-content" for="c3">
+                <strong>Run the master prompt in Claude</strong>
+                <span>Fill in [NICHE], [CITY], [BUSINESS NAME], and [CALENDLY LINK]</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c4">
+              <label class="check-content" for="c4">
+                <strong>Deploy to Vercel</strong>
+                <span>You should have a live URL within 60 seconds of copy-pasting the HTML</span>
+              </label>
+            </li>
+          </ul>
+          <div class="phase-label">THIS WEEK</div>
+          <ul class="checklist">
+            <li>
+              <input type="checkbox" id="c5">
+              <label class="check-content" for="c5">
+                <strong>Build 2 more niche pages</strong>
+                <span>Cover your top 3 target niches so you're ready for any outreach reply</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c6">
+              <label class="check-content" for="c6">
+                <strong>Send your page URL in your next outreach reply</strong>
+                <span>When someone responds, link them to the niche-specific page — not your main site</span>
+              </label>
+            </li>
+            <li>
+              <input type="checkbox" id="c7">
+              <label class="check-content" for="c7">
+                <strong>(Optional) Buy a niche domain</strong>
+                <span>$12/year on Namecheap. Makes you look 10x more credible instantly.</span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:24px;margin-top:40px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:10px;">🚀</div>
+      <h3 style="color:#fff;margin-bottom:8px;">Remember the goal</h3>
+      <p style="color:#888;max-width:500px;margin:0 auto;line-height:1.7;">You're not building a website. You're building a trust machine. Every minute a prospect spends on your niche-specific page is a minute they're convincing themselves to book the call. Let Claude do the writing. Let Vercel do the hosting. You focus on closing.</p>
+    </div>
+
+    <!-- BONUS SECTION: PERSONAL AUTHORITY PAGE -->
+    <div class="section" style="margin-top:60px;">
+      <h2><span class="icon">🧑‍💼</span> Bonus: Build YOUR Own Authority Page (No Case Studies Needed)</h2>
+
+      <p style="color:#ccc;margin-bottom:18px;font-size:0.95rem;line-height:1.7;">
+        Before you start sending outreach, you need <em>your own</em> page. Not a client page — a page about YOU and your agency. This is what prospects find when they Google your name after your DM. If it doesn't exist, you lose. If it's generic, you lose. If it's specific and professional, you win.
+      </p>
+
+      <div class="warning-box">
+        <div class="icon">🔑</div>
+        <div class="text"><strong>The No-Case-Studies Solution:</strong> Most of you are starting from scratch. No results yet. No clients. That's fine — you don't lead with case studies. You lead with <strong>the mechanism</strong> (AI Arbitrage System), <strong>your niche specificity</strong>, and <strong>your process</strong>. That's enough to close calls.</div>
+      </div>
+
+      <h3 style="color:#fff;margin:28px 0 12px;font-size:1.05rem;">The 7-Section Authority Page Structure</h3>
+
+      <div style="display:grid;gap:12px;margin-bottom:24px;">
+        <div class="step-card">
+          <div class="step-header"><div class="step-number">1</div><div class="step-title">Hero — Photo + What You Do + Who You Help</div></div>
+          <div class="step-body">
+            Your photo (real, professional or not), headline: <em>"I Help [NICHE] Businesses in [REGION] Get More [LEADS/CLIENTS/JOBS] with AI-Powered Ads"</em><br>
+            CTA: "Book a Free Strategy Call" (Calendly).<br>
+            Sub-CTA: "No pitch. Just an honest look at what's possible for your business."
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-header"><div class="step-number">2</div><div class="step-title">Who You Work With (Niche Specificity)</div></div>
+          <div class="step-body">
+            "I specialize in [NICHE 1], [NICHE 2], and [NICHE 3] businesses in [REGION]."<br>
+            3 niche cards with icons. Each shows the niche name + 1-line value prop.<br>
+            Message: When I know your industry, I can launch in days — not weeks.
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-header"><div class="step-number">3</div><div class="step-title">What I Do — 3-Step Process</div></div>
+          <div class="step-body">
+            Step 1: Discovery Call (30 min) — I learn your business, goals, constraints<br>
+            Step 2: AI-Powered Campaign Build (7 days) — AI writes copy, builds creatives, targets audience. You approve first.<br>
+            Step 3: Launch + Optimize — Weekly reporting. I handle everything else.
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-header"><div class="step-number">4</div><div class="step-title">The AI Arbitrage System — Your Credibility Anchor</div></div>
+          <div class="step-body">
+            This replaces case studies. The mechanism IS the credibility.<br>
+            "AI writes 10+ ad variations and tests them simultaneously. AI identifies your highest-converting audience. AI optimizes daily — killing losers, scaling winners."<br>
+            Result: better results faster, at lower cost.
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-header"><div class="step-number">5</div><div class="step-title">My Commitment (Exclusivity)</div></div>
+          <div class="step-body">
+            "I only work with [X] clients at a time."<br>
+            Explain why: you're fully in, monitoring daily, analyzing weekly.<br>
+            Include: "One client per niche per area."
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-header"><div class="step-number">6</div><div class="step-title">About Me — Real, Human, Honest</div></div>
+          <div class="step-body">
+            Photo + name + 2-3 sentence bio.<br>
+            Even if you're just starting: "I'm a performance marketing specialist who uses AI to help local businesses get more customers. I work exclusively with [niche] businesses in [region]."<br>
+            Social links if you have them.
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-header"><div class="step-number">7</div><div class="step-title">Book a Call — Final CTA</div></div>
+          <div class="step-body">
+            "Ready to see what AI ads can do for your business?" + big Calendly button.<br>
+            Objection handler below the button: "Still not sure? That's fine. Book the call anyway. You'll walk away with at least 3 things you can do immediately to improve your marketing — whether we work together or not."
+          </div>
+        </div>
+      </div>
+
+      <h3 style="color:#fff;margin:28px 0 12px;font-size:1.05rem;">The Claude Prompt — Your Authority Page</h3>
+
+      <div class="prompt-box" id="authorityPrompt">Use the web-designer agent.
+
+Build my personal authority page as an AI advertiser:
+
+My name: [YOUR FULL NAME]
+My region: [YOUR CITY or "the [REGION] area"]
+Niches I work with: [e.g. "plumbing, dental, and HVAC businesses"]
+My Calendly link: [YOUR CALENDLY LINK]
+My photo: [URL to your photo, or "use a professional placeholder"]
+
+Short bio: [2 sentences about you — be honest even if you're just starting.
+Example: "I'm a performance marketing specialist who uses AI to help local businesses
+get more customers through Meta ads. I work exclusively with [niche] businesses in [region]."]
+
+Requirements:
+- Follow the 7-section authority page structure
+- Lead with my photo and what I do, who I help
+- Include the AI Arbitrage System as my mechanism (credibility anchor, no case studies)
+- Include the 3-step process: Discovery Call → Campaign Build in 7 days → Launch + Optimize
+- "One client per area" exclusivity line
+- "Free Strategy Call" framing (not sales call)
+- Dark mode, #3B82F6 blue accent, mobile responsive
+- Single HTML file, inline CSS only
+- Output ONLY the complete HTML. Start with <!DOCTYPE html>
+<button class="copy-btn" onclick="copyAuthorityPrompt(this)">Copy</button>
+      </div>
+
+      <div class="warning-box" style="margin-top:20px;">
+        <div class="icon">💡</div>
+        <div class="text">
+          <strong>No photo yet?</strong> Tell Claude "use a professional placeholder" and it'll style a circle with your initials. Replace it with a real photo once you have one — even a good selfie works.<br><br>
+          <strong>No case studies?</strong> Don't mention them. Lead with the mechanism and the process. The AI Arbitrage System IS your credibility before you have results.
+        </div>
+      </div>
+    </div>
+
+    <!-- WEB DESIGNER AGENT DOWNLOAD -->
+    <div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:28px;margin-top:48px;text-align:center;">
+      <div style="font-size:2rem;margin-bottom:10px;">🤖</div>
+      <h3 style="color:#f59e0b;margin-bottom:8px;">Web Designer Claude Code Agent</h3>
+      <p style="color:#888;max-width:550px;margin:0 auto 20px;line-height:1.7;font-size:0.9rem;">
+        Want a permanent Claude Code agent that knows all 10 niches + the authority page structure?
+        Download the agent file, drop it in your project's <code style="background:rgba(245,158,11,0.1);color:#f59e0b;padding:2px 6px;border-radius:4px;">.claude/agents/</code> folder,
+        and Claude Code will build niche pages on command.
+      </p>
+      <a href="https://drive.google.com/file/d/1L697Gk8quwQKjGw_RCg9QtQOg2kNOoxf/view?usp=sharing" target="_blank" style="display:inline-block;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#f59e0b;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.95rem;">
+        Download Web Designer Agent →
+      </a>
+    </div>
+
+    <div style="text-align:center;padding:40px 0 20px;">
+      <a href="../index.html" style="color:#3B82F6;text-decoration:none;font-size:0.9rem;">← Back to Course Index</a>
+    </div>
+  </div>
+
+  <script>
+    // Restore checkboxes from localStorage
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      const key = `ai-advertiser-${window.location.pathname}-${cb.id}`;
+      if (localStorage.getItem(key) === 'true') cb.checked = true;
+      cb.addEventListener('change', () => localStorage.setItem(key, cb.checked));
+    });
+
+    function copyPrompt(btn) {
+      const box = document.getElementById('masterPrompt');
+      const text = box.innerText.replace('Copy', '').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    function copyPrompt2(btn) {
+      const box = document.getElementById('personalizePrompt');
+      const text = box.innerText.replace('Copy', '').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    function copyAuthorityPrompt(btn) {
+      const box = document.getElementById('authorityPrompt');
+      const text = box.innerText.replace('Copy', '').trim();
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
